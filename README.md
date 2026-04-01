@@ -8,9 +8,9 @@ To deploy this application to Render, follow these steps:
 
 1.  **Create a New Web Service** on Render and connect it to your GitHub repository: `weraplatform-aistudiov1`.
 2.  **Runtime:** Select **Node**.
-3.  **Build Command:** `npm install && npm run build`
-4.  **Start Command:** `npm start` (This will run `node server.ts` as defined in `package.json`)
-5.  **Node Version:** Ensure you are using **Node 22** or higher. You can set this in Render's **Environment** tab by adding a variable `NODE_VERSION` with value `22`.
+3.  **Build Command:** `yarn install && yarn build` (or `npm install && npm run build`)
+4.  **Start Command:** `node dist/server.js`
+5.  **Node Version:** Ensure you are using **Node 22** or higher. Add a variable `NODE_VERSION` with value `22` in the Environment tab.
 6.  **Environment Variables:** Add the following keys in the Render Dashboard under **Environment**:
 
 | Key | Value |
@@ -24,9 +24,9 @@ To deploy this application to Render, follow these steps:
 | `JWT_SECRET` | `26ab8e0a-e621-4702-afb6-09856975a143` |
 | `NODE_VERSION` | `22` |
 
-### 💡 Fixing the "Cannot find module '/opt/render/project/src/dist/index.js'" Error
-This error occurs when Render tries to use its default start command instead of the one in `package.json`. 
-**Make sure the "Start Command" in your Render settings is explicitly set to `npm start`.**
+### 💡 Fixing the "Cannot find module" Error
+Your current Render settings are looking for `dist/index.js`, but our server is now bundled to **`dist/server.js`**. 
+**Please update your Render "Start Command" to: `node dist/server.js`**
 
 ## 🛠 Tech Stack
 
