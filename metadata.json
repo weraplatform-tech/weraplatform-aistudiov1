@@ -1,5 +1,5 @@
 {
-  "name": "Wera Workers ",
-  "description": "",
-  "requestFramePermissions": []
+  "name": "WÈRA Platform",
+  "description": "Kenya's Premier Labour Platform connecting skilled and semi-skilled workers with formal job opportunities.",
+  "requestFramePermissions": ["geolocation"]
 }

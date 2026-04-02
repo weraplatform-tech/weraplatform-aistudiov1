@@ -21,6 +21,8 @@ import {
 import { Button, Card, Input, cn } from './components/ui';
 import { supabase, type Profile, type Job } from './lib/supabase';
 
+import { Logo } from './components/Logo';
+
 // --- Components ---
 
 const Navbar = ({ user }: { user: any }) => {
@@ -36,23 +38,8 @@ const Navbar = ({ user }: { user: any }) => {
     <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
-          <Link to="/" className="flex items-center space-x-2 group">
-            <div className="relative w-10 h-10 flex items-center justify-center overflow-hidden rounded-lg shadow-sm border border-gray-100">
-              <img 
-                src="/logo.png" 
-                alt="Wera Logo" 
-                className="w-full h-full object-contain"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).style.display = 'none';
-                  const fallback = (e.target as HTMLImageElement).nextElementSibling as HTMLElement;
-                  if (fallback) fallback.style.display = 'flex';
-                }}
-              />
-              <div className="hidden absolute inset-0 wera-gradient items-center justify-center text-white font-bold text-xl">
-                W
-              </div>
-            </div>
-            <span className="text-xl font-bold tracking-tight group-hover:wera-text-gradient transition-all">WÈRA</span>
+          <Link to="/" className="flex items-center group">
+            <Logo className="w-12 h-12" />
           </Link>
 
           {/* Desktop Menu */}
@@ -574,6 +561,108 @@ const WorkerProfilePage = () => {
   );
 };
 
+const HireTalentPage = () => {
+  const [step, setStep] = useState(1);
+  const [formData, setFormData] = useState({
+    title: '',
+    category: '',
+    description: '',
+    budget: '',
+    location: ''
+  });
+
+  const handlePostJob = (e: React.FormEvent) => {
+    e.preventDefault();
+    setStep(3); // Move to payment/success
+  };
+
+  return (
+    <div className="max-w-3xl mx-auto px-4 py-12">
+      <div className="mb-12 text-center">
+        <h1 className="text-3xl font-bold mb-2">Post a <span className="wera-text-gradient">New Opportunity</span></h1>
+        <p className="text-gray-600">Connect with Kenya's most skilled and vetted talent.</p>
+      </div>
+
+      <Card className="p-8">
+        {step === 1 && (
+          <div className="space-y-6">
+            <div className="flex justify-between mb-8">
+              {[1, 2].map((s) => (
+                <div key={s} className={`h-1 flex-1 mx-1 rounded-full ${s <= step ? 'wera-gradient' : 'bg-gray-100'}`} />
+              ))}
+            </div>
+            <div className="space-y-4">
+              <label className="block text-sm font-bold">What do you need help with?</label>
+              <Input 
+                placeholder="e.g. Need a Plumber for kitchen renovation" 
+                value={formData.title}
+                onChange={(e) => setFormData({...formData, title: e.target.value})}
+              />
+            </div>
+            <div className="space-y-4">
+              <label className="block text-sm font-bold">Category</label>
+              <select className="w-full p-2 border border-gray-200 rounded-lg focus:ring-wera-cyan">
+                <option>Construction & Trades</option>
+                <option>Domestic & Home Care</option>
+                <option>Creative & Digital</option>
+                <option>IT & Technical</option>
+              </select>
+            </div>
+            <Button onClick={() => setStep(2)} className="w-full py-6 text-lg font-bold" variant="secondary">
+              Next: Details & Budget
+            </Button>
+          </div>
+        )}
+
+        {step === 2 && (
+          <form onSubmit={handlePostJob} className="space-y-6">
+            <div className="flex justify-between mb-8">
+              {[1, 2].map((s) => (
+                <div key={s} className={`h-1 flex-1 mx-1 rounded-full ${s <= step ? 'wera-gradient' : 'bg-gray-100'}`} />
+              ))}
+            </div>
+            <div className="space-y-4">
+              <label className="block text-sm font-bold">Describe the job</label>
+              <textarea 
+                className="w-full p-4 border border-gray-200 rounded-xl min-h-[150px] focus:ring-wera-cyan"
+                placeholder="Provide details about the work, requirements, and timeline..."
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <label className="block text-sm font-bold">Budget (KES)</label>
+                <Input type="number" placeholder="2500" />
+              </div>
+              <div className="space-y-2">
+                <label className="block text-sm font-bold">Location</label>
+                <Input placeholder="e.g. Westlands, Nairobi" />
+              </div>
+            </div>
+            <div className="flex gap-4 pt-4">
+              <Button variant="outline" onClick={() => setStep(1)} className="flex-1">Back</Button>
+              <Button type="submit" variant="secondary" className="flex-1 font-bold">Post Opportunity</Button>
+            </div>
+          </form>
+        )}
+
+        {step === 3 && (
+          <div className="text-center py-8 space-y-6">
+            <div className="w-20 h-20 bg-wera-green/10 text-wera-green rounded-full flex items-center justify-center mx-auto mb-6">
+              <Zap className="w-10 h-10" />
+            </div>
+            <h2 className="text-2xl font-bold">Opportunity Posted!</h2>
+            <p className="text-gray-600">Your job is now live on the marketplace. Would you like to secure the payment now via M-Pesa?</p>
+            <div className="pt-6 space-y-3">
+              <Button variant="secondary" className="w-full py-4 font-bold">Pay with M-Pesa</Button>
+              <Link to="/jobs" className="block text-sm text-wera-cyan font-bold hover:underline">View in Marketplace</Link>
+            </div>
+          </div>
+        )}
+      </Card>
+    </div>
+  );
+};
+
 // --- Main App ---
 
 import { aiService } from './lib/ai';
@@ -602,6 +691,7 @@ export default function App() {
           <Routes>
             <Route path="/" element={<LandingPage />} />
             <Route path="/jobs" element={<JobsPage />} />
+            <Route path="/hire" element={<HireTalentPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/profile" element={<WorkerProfilePage />} />
             {/* Add more routes as needed */}
@@ -611,23 +701,8 @@ export default function App() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid md:grid-cols-4 gap-12 mb-12">
               <div className="col-span-1 md:col-span-2">
-                <div className="flex items-center space-x-2 mb-6">
-                  <div className="relative w-10 h-10 flex items-center justify-center overflow-hidden rounded-lg bg-white/5 p-1 border border-white/10">
-                    <img 
-                      src="/logo.png" 
-                      alt="Wera Logo" 
-                      className="w-full h-full object-contain"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).style.display = 'none';
-                        const fallback = (e.target as HTMLImageElement).nextElementSibling as HTMLElement;
-                        if (fallback) fallback.style.display = 'flex';
-                      }}
-                    />
-                    <div className="hidden absolute inset-0 wera-gradient items-center justify-center text-white font-bold text-xl">
-                      W
-                    </div>
-                  </div>
-                  <span className="text-xl font-bold tracking-tight">WÈRA</span>
+                <div className="flex items-center mb-6">
+                  <Logo className="w-12 h-12" />
                 </div>
                 <p className="text-gray-400 max-w-sm mb-6">
                   Unlocking potential across Kenya by connecting skilled workers with meaningful opportunities. 
