@@ -12,6 +12,21 @@ async function startServer() {
 
   app.use(express.json());
 
+  // Redirect to HTTPS and www
+  app.use((req, res, next) => {
+    const host = req.get("host");
+    const protocol = req.get("x-forwarded-proto") || req.protocol;
+
+    // If not on https OR on the root domain without www, redirect to https://www
+    if (
+      (process.env.NODE_ENV === "production") && 
+      (protocol !== "https" || host === "weraplatform.dedyn.io")
+    ) {
+      return res.redirect(301, `https://www.weraplatform.dedyn.io${req.url}`);
+    }
+    next();
+  });
+
   // API Routes
   app.get("/api/health", (req, res) => {
     res.json({ status: "ok", message: "Wera Platform API is running" });
