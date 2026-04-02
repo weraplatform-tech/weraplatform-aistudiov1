@@ -37,7 +37,7 @@ const Navbar = ({ user }: { user: any }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
           <Link to="/" className="flex items-center space-x-2 group">
-            <div className="relative w-10 h-10 flex items-center justify-center overflow-hidden rounded-lg">
+            <div className="relative w-10 h-10 flex items-center justify-center overflow-hidden rounded-lg shadow-sm border border-gray-100">
               <img 
                 src="/logo.png" 
                 alt="Wera Logo" 
@@ -237,96 +237,187 @@ const LandingPage = () => {
 
 const JobsPage = () => {
   const [jobs, setJobs] = useState<Job[]>([]);
+  const [filteredJobs, setFilteredJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
+  const [distance, setDistance] = useState(20);
+  const [minRating, setMinRating] = useState(0);
+  const [minExperience, setMinExperience] = useState(0);
+  const [userLocation, setUserLocation] = useState<{lat: number, lng: number} | null>(null);
 
   useEffect(() => {
+    // Get user location for proximity matching
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => setUserLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+        (err) => console.warn("Location access denied. Proximity matching disabled.")
+      );
+    }
+
     const fetchJobs = async () => {
-      // In a real app, fetch from Supabase
-      // Mocking for now
-      const mockJobs: Job[] = [
-        { id: '1', title: 'Professional Plumber Needed', description: 'Fix leaking tap in Westlands', category: 'Construction', budget: 2500, status: 'open', location: 'Nairobi, Westlands', client_id: 'c1', created_at: new Date().toISOString() },
-        { id: '2', title: 'Experienced Nanny for Toddler', description: 'Full time nanny needed for 2 year old', category: 'Domestic', budget: 15000, status: 'open', location: 'Mombasa, Nyali', client_id: 'c2', created_at: new Date().toISOString() },
-        { id: '3', title: 'Graphic Designer for Logo', description: 'Create a modern logo for a new startup', category: 'Creative', budget: 5000, status: 'open', location: 'Remote', client_id: 'c3', created_at: new Date().toISOString() },
+      // Mocking enhanced data for demo
+      const mockJobs: (Job & { rating: number, experience: number, distance: number })[] = [
+        { id: '1', title: 'Professional Plumber Needed', description: 'Fix leaking tap in Westlands. Must have own tools.', category: 'Construction', budget: 2500, status: 'open', location: 'Nairobi, Westlands', client_id: 'c1', created_at: new Date().toISOString(), rating: 4.8, experience: 5, distance: 2.5 },
+        { id: '2', title: 'Experienced Nanny for Toddler', description: 'Full time nanny needed for 2 year old. CPR certified preferred.', category: 'Domestic', budget: 15000, status: 'open', location: 'Mombasa, Nyali', client_id: 'c2', created_at: new Date().toISOString(), rating: 4.5, experience: 3, distance: 12.0 },
+        { id: '3', title: 'Graphic Designer for Logo', description: 'Create a modern logo for a new startup. Quick turnaround.', category: 'Creative', budget: 5000, status: 'open', location: 'Remote', client_id: 'c3', created_at: new Date().toISOString(), rating: 4.9, experience: 7, distance: 0 },
+        { id: '4', title: 'Electrical Wiring Expert', description: 'House rewiring project in Kilimani.', category: 'Skilled Trades', budget: 35000, status: 'open', location: 'Nairobi, Kilimani', client_id: 'c4', created_at: new Date().toISOString(), rating: 4.2, experience: 10, distance: 4.8 },
+        { id: '5', title: 'House Cleaning Service', description: 'Weekly cleaning for a 3-bedroom apartment.', category: 'Domestic', budget: 1200, status: 'open', location: 'Nairobi, South B', client_id: 'c5', created_at: new Date().toISOString(), rating: 3.8, experience: 2, distance: 8.2 },
       ];
-      setJobs(mockJobs);
+      setJobs(mockJobs as any);
+      setFilteredJobs(mockJobs as any);
       setLoading(false);
     };
     fetchJobs();
   }, []);
 
+  // Filter logic
+  useEffect(() => {
+    let result = jobs.map(j => j as any);
+    
+    if (distance > 0) {
+      result = result.filter(j => j.location === 'Remote' || j.distance <= distance);
+    }
+    
+    if (minRating > 0) {
+      result = result.filter(j => j.rating >= minRating);
+    }
+
+    if (minExperience > 0) {
+      result = result.filter(j => j.experience >= minExperience);
+    }
+
+    setFilteredJobs(result);
+  }, [distance, minRating, minExperience, jobs]);
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6">
         <div>
-          <h1 className="text-3xl font-bold mb-2">Available Opportunities</h1>
-          <p className="text-gray-600">Find the perfect job that matches your skills.</p>
+          <h1 className="text-3xl font-bold mb-2">WÈRA <span className="wera-text-gradient">Marketplace</span></h1>
+          <p className="text-gray-600">Find vetted opportunities in your immediate proximity.</p>
         </div>
         <div className="flex w-full md:w-auto gap-2">
-          <Input placeholder="Search jobs..." className="max-w-xs" />
-          <Button variant="primary"><Search className="w-4 h-4 mr-2" /> Search</Button>
+          <Input placeholder="Search skills (e.g. Plumber)..." className="max-w-xs" />
+          <Button variant="secondary"><Search className="w-4 h-4 mr-2" /> Search</Button>
         </div>
       </div>
 
-      <div className="grid md:grid-cols-3 gap-8">
-        {/* Filters Sidebar */}
-        <div className="md:col-span-1 space-y-8">
-          <Card className="p-6">
-            <h3 className="font-bold mb-4">Categories</h3>
-            <div className="space-y-2">
-              {['Construction', 'Domestic', 'Creative', 'IT & Tech', 'Skilled Trades'].map((cat) => (
-                <label key={cat} className="flex items-center space-x-2 cursor-pointer hover:text-wera-cyan transition-colors">
-                  <input type="checkbox" className="rounded border-gray-300 text-wera-cyan focus:ring-wera-cyan" />
-                  <span className="text-sm font-medium">{cat}</span>
-                </label>
+      <div className="grid md:grid-cols-4 gap-8">
+        {/* Advanced Filters Sidebar */}
+        <div className="md:col-span-1 space-y-6">
+          <Card className="p-6 border-wera-cyan/10">
+            <h3 className="font-bold mb-4 flex items-center"><MapPin className="w-4 h-4 mr-2 text-wera-cyan" /> Proximity (km)</h3>
+            <div className="space-y-4">
+              <input 
+                type="range" 
+                min="1" 
+                max="100" 
+                value={distance} 
+                onChange={(e) => setDistance(parseInt(e.target.value))}
+                className="w-full accent-wera-cyan" 
+              />
+              <div className="flex justify-between text-xs font-bold text-wera-cyan">
+                <span>1km</span>
+                <span>{distance}km</span>
+                <span>100km+</span>
+              </div>
+            </div>
+          </Card>
+
+          <Card className="p-6 border-wera-cyan/10">
+            <h3 className="font-bold mb-4 flex items-center"><Star className="w-4 h-4 mr-2 text-yellow-400" /> Min. Rating</h3>
+            <div className="flex gap-2">
+              {[3, 4, 4.5].map((r) => (
+                <button 
+                  key={r}
+                  onClick={() => setMinRating(minRating === r ? 0 : r)}
+                  className={cn(
+                    "flex-1 py-2 text-xs font-bold rounded-lg border transition-all",
+                    minRating === r ? "bg-wera-cyan text-white border-wera-cyan" : "bg-white text-gray-600 border-gray-100 hover:border-wera-cyan"
+                  )}
+                >
+                  {r}+ ★
+                </button>
               ))}
             </div>
           </Card>
+
+          <Card className="p-6 border-wera-cyan/10">
+            <h3 className="font-bold mb-4 flex items-center"><TrendingUp className="w-4 h-4 mr-2 text-wera-green" /> Experience</h3>
+            <select 
+              className="w-full p-2 text-sm rounded-lg border-gray-100 focus:ring-wera-cyan"
+              onChange={(e) => setMinExperience(parseInt(e.target.value))}
+            >
+              <option value="0">Any Experience</option>
+              <option value="2">2+ Years</option>
+              <option value="5">5+ Years</option>
+              <option value="10">10+ Years</option>
+            </select>
+          </Card>
           
-          <Card className="p-6">
-            <h3 className="font-bold mb-4">Budget Range</h3>
-            <div className="space-y-4">
-              <input type="range" className="w-full accent-wera-cyan" />
-              <div className="flex justify-between text-xs font-medium text-gray-500">
-                <span>KES 500</span>
-                <span>KES 50,000+</span>
-              </div>
+          <Card className="p-6 border-wera-cyan/10">
+            <h3 className="font-bold mb-4">Categories</h3>
+            <div className="space-y-2">
+              {['Construction', 'Domestic', 'Creative', 'Skilled Trades'].map((cat) => (
+                <label key={cat} className="flex items-center space-x-2 cursor-pointer group">
+                  <input type="checkbox" className="rounded border-gray-300 text-wera-cyan focus:ring-wera-cyan" />
+                  <span className="text-sm font-medium group-hover:text-wera-cyan transition-colors">{cat}</span>
+                </label>
+              ))}
             </div>
           </Card>
         </div>
 
         {/* Job Listings */}
-        <div className="md:col-span-2 space-y-6">
+        <div className="md:col-span-3 space-y-6">
           {loading ? (
             <div className="flex justify-center py-20">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-wera-cyan"></div>
             </div>
-          ) : (
-            jobs.map((job) => (
-              <Card key={job.id} className="p-6 hover:border-wera-cyan transition-colors group cursor-pointer">
+          ) : filteredJobs.length > 0 ? (
+            filteredJobs.map((job: any) => (
+              <Card key={job.id} className="p-6 hover:border-wera-cyan/30 transition-all group cursor-pointer relative overflow-hidden">
+                {job.distance <= 5 && job.location !== 'Remote' && (
+                  <div className="absolute top-0 right-0 bg-wera-green text-white text-[10px] font-bold px-3 py-1 rounded-bl-lg">
+                    NEARBY
+                  </div>
+                )}
                 <div className="flex justify-between items-start mb-4">
                   <div>
-                    <span className="inline-block px-2 py-1 bg-gray-100 text-gray-600 text-[10px] font-bold uppercase rounded mb-2">
-                      {job.category}
-                    </span>
+                    <div className="flex items-center space-x-2 mb-2">
+                      <span className="px-2 py-0.5 bg-gray-100 text-gray-600 text-[10px] font-bold uppercase rounded">
+                        {job.category}
+                      </span>
+                      <span className="flex items-center text-yellow-500 text-xs font-bold">
+                        <Star className="w-3 h-3 mr-1 fill-yellow-500" /> {job.rating}
+                      </span>
+                    </div>
                     <h3 className="text-xl font-bold group-hover:text-wera-cyan transition-colors">{job.title}</h3>
                   </div>
                   <div className="text-right">
                     <div className="text-lg font-bold text-wera-green">KES {job.budget.toLocaleString()}</div>
-                    <div className="text-xs text-gray-500">Fixed Price</div>
+                    <div className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Fixed Budget</div>
                   </div>
                 </div>
                 <p className="text-gray-600 text-sm mb-6 line-clamp-2">
-                  {job.description || "Looking for a qualified professional to assist with this project. Requirements include reliability and attention to detail."}
+                  {job.description}
                 </p>
                 <div className="flex items-center justify-between pt-4 border-t border-gray-50">
-                  <div className="flex items-center text-xs text-gray-500 space-x-4">
-                    <span className="flex items-center"><MapPin className="w-3 h-3 mr-1" /> {job.location}</span>
-                    <span className="flex items-center"><TrendingUp className="w-3 h-3 mr-1" /> 5 Proposals</span>
+                  <div className="flex items-center text-xs text-gray-500 space-x-6">
+                    <span className="flex items-center font-medium"><MapPin className="w-3.5 h-3.5 mr-1.5 text-wera-cyan" /> {job.location} ({job.distance}km)</span>
+                    <span className="flex items-center font-medium"><Briefcase className="w-3.5 h-3.5 mr-1.5 text-wera-cyan" /> {job.experience}y Exp.</span>
                   </div>
-                  <Button variant="outline" size="sm">View Details <ChevronRight className="w-4 h-4 ml-1" /></Button>
+                  <Button variant="outline" size="sm" className="group-hover:bg-wera-cyan group-hover:text-white transition-all">
+                    View Details <ChevronRight className="w-4 h-4 ml-1" />
+                  </Button>
                 </div>
               </Card>
             ))
+          ) : (
+            <div className="text-center py-20 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200">
+              <Search className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+              <h3 className="text-lg font-bold text-gray-900">No jobs found</h3>
+              <p className="text-gray-500">Try adjusting your filters or proximity range.</p>
+            </div>
           )}
         </div>
       </div>
@@ -521,7 +612,7 @@ export default function App() {
             <div className="grid md:grid-cols-4 gap-12 mb-12">
               <div className="col-span-1 md:col-span-2">
                 <div className="flex items-center space-x-2 mb-6">
-                  <div className="relative w-10 h-10 flex items-center justify-center overflow-hidden rounded-lg bg-white/10 p-1">
+                  <div className="relative w-10 h-10 flex items-center justify-center overflow-hidden rounded-lg bg-white/5 p-1 border border-white/10">
                     <img 
                       src="/logo.png" 
                       alt="Wera Logo" 
