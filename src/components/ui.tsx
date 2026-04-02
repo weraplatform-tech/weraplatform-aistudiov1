@@ -13,8 +13,8 @@ export const Button = React.forwardRef<
   const variants = {
     primary: 'bg-wera-black text-white hover:bg-opacity-90',
     secondary: 'wera-gradient text-white hover:opacity-90',
-    outline: 'border-2 border-wera-black text-wera-black hover:bg-gray-100',
-    ghost: 'text-wera-black hover:bg-gray-100',
+    outline: 'border-2 border-wera-black text-wera-black hover:bg-yellow-400/10',
+    ghost: 'text-wera-black hover:bg-yellow-400/10',
   };
 
   return (
@@ -31,7 +31,7 @@ export const Button = React.forwardRef<
 });
 
 export const Card = ({ className, children, ...props }: { className?: string; children: React.ReactNode; [key: string]: any }) => (
-  <div className={cn('bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden', className)} {...props}>
+  <div className={cn('wera-gradient rounded-xl shadow-sm border border-black text-black overflow-hidden', className)} {...props}>
     {children}
   </div>
 );

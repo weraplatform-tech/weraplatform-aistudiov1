@@ -32,6 +32,11 @@ export type Job = {
   status: 'open' | 'assigned' | 'completed' | 'cancelled';
   location: string | null;
   requires_ai_certification: boolean;
+  scheduled_at: string | null;
+  is_for_others: boolean;
+  recipient_name: string | null;
+  recipient_phone: string | null;
+  arrival_status: 'none' | 'on_way' | 'arrived' | 'delayed' | null;
   created_at: string;
 };
 
