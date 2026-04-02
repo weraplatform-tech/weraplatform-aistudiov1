@@ -21,10 +21,12 @@ import {
   Brain,
   Sparkles,
   Send,
-  Lock
+  Lock,
+  Loader2
 } from 'lucide-react';
 import { Button, Card, Input, cn } from './components/ui';
 import { supabase, type Profile, type Job } from './lib/supabase';
+import { aiService } from './lib/ai';
 
 import { Logo } from './components/Logo';
 
@@ -1115,9 +1117,6 @@ const TrainingPage = () => {
 };
 
 // --- Main App ---
-
-import { aiService } from './lib/ai';
-import { Loader2 } from 'lucide-react';
 
 export default function App() {
   const [user, setUser] = useState<any>(null);

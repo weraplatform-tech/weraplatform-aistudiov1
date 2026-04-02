@@ -33,9 +33,9 @@ export const Logo = ({
             fontSize="55" 
             fontWeight="900" 
             fontFamily="Inter, sans-serif"
+            transform="skewX(-10)"
             style={{ 
               letterSpacing: '-2px',
-              transform: 'skewX(-10deg)',
               transformOrigin: 'center'
             }}
           >

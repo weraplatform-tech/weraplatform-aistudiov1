@@ -1,10 +1,22 @@
 import { GoogleGenAI, Type } from "@google/genai";
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+let aiInstance: GoogleGenAI | null = null;
+
+const getAI = () => {
+  if (!aiInstance) {
+    const apiKey = typeof process !== 'undefined' ? process.env.GEMINI_API_KEY : (import.meta as any).env.VITE_GEMINI_API_KEY;
+    if (!apiKey) {
+      console.warn('GEMINI_API_KEY is missing');
+    }
+    aiInstance = new GoogleGenAI({ apiKey: apiKey || '' });
+  }
+  return aiInstance;
+};
 
 export const aiService = {
   async getJobSuggestions(workerSkills: string[], jobDescriptions: string[]) {
     try {
+      const ai = getAI();
       const response = await ai.models.generateContent({
         model: "gemini-3-flash-preview",
         contents: `Worker Skills: ${workerSkills.join(', ')}\n\nJobs:\n${jobDescriptions.join('\n---\n')}`,
@@ -21,6 +33,7 @@ export const aiService = {
 
   async generateSoftSkillsQuestion(previousQuestions: string[]) {
     try {
+      const ai = getAI();
       const response = await ai.models.generateContent({
         model: "gemini-3-flash-preview",
         contents: `Previous questions asked: ${previousQuestions.join(' | ')}`,
@@ -38,6 +51,7 @@ export const aiService = {
 
   async evaluateSoftSkillsResponse(question: string, userResponse: string) {
     try {
+      const ai = getAI();
       const response = await ai.models.generateContent({
         model: "gemini-3-flash-preview",
         contents: `Question: ${question}\nWorker's Response: ${userResponse}`,
