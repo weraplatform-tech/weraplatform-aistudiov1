@@ -35,7 +35,7 @@ async function startServer() {
         {
           headers: {
             "Authorization": `Bearer ${process.env.OPENROUTER_API_KEY}`,
-            "HTTP-Referer": "http://weraplatform.dedyn.io/",
+            "HTTP-Referer": "https://www.weraplatform.dedyn.io/",
             "X-Title": "Wera Platform",
           },
         }
