@@ -18,6 +18,7 @@ export type Profile = {
   bio: string | null;
   phone: string | null;
   location: string | null;
+  is_ai_certified: boolean;
   created_at: string;
 };
 
@@ -30,6 +31,7 @@ export type Job = {
   budget: number;
   status: 'open' | 'assigned' | 'completed' | 'cancelled';
   location: string | null;
+  requires_ai_certification: boolean;
   created_at: string;
 };
 

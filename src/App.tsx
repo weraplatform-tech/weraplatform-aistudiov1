@@ -17,7 +17,11 @@ import {
   TrendingUp,
   LogOut,
   ChevronRight,
-  CheckCircle
+  CheckCircle,
+  Brain,
+  Sparkles,
+  Send,
+  Lock
 } from 'lucide-react';
 import { Button, Card, Input, cn } from './components/ui';
 import { supabase, type Profile, type Job } from './lib/supabase';
@@ -47,13 +51,8 @@ const Navbar = ({ user }: { user: any }) => {
           <div className="hidden md:flex items-center space-x-8">
             <Link to="/jobs" className="text-sm font-medium hover:text-wera-cyan transition-colors">Find Wera Work</Link>
             <Link to="/hire" className="text-sm font-medium hover:text-wera-cyan transition-colors">Hire Wera Workers</Link>
+            <Link to="/companies" className="text-sm font-bold text-wera-cyan hover:opacity-80 transition-opacity">For Companies</Link>
             
-            {/* Language Switcher */}
-            <div className="flex items-center bg-gray-50 rounded-full p-1 border border-gray-100">
-              <button className="px-3 py-1 text-[10px] font-bold rounded-full bg-white shadow-sm text-wera-cyan">EN</button>
-              <button className="px-3 py-1 text-[10px] font-bold rounded-full text-gray-400 hover:text-wera-cyan transition-colors">SW</button>
-            </div>
-
             {user ? (
               <div className="flex items-center space-x-4">
                 <Button variant="ghost" size="icon"><Bell className="w-5 h-5" /></Button>
@@ -141,13 +140,20 @@ const LandingPage = () => {
                 Connecting skilled and semi-skilled Wera Workers with formal job opportunities. 
                 Empowering the informal sector through technology, vetting, and fair labor practices.
               </p>
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
                 <Button variant="secondary" className="w-full sm:w-auto px-8 py-4 text-lg">
                   I am a Wera Worker
                 </Button>
                 <Button variant="outline" className="w-full sm:w-auto px-8 py-4 text-lg">
                   I want to Hire
                 </Button>
+              </div>
+
+              {/* Language Switcher */}
+              <div className="flex items-center justify-center space-x-6 text-sm font-bold text-black">
+                <button className="hover:text-wera-cyan transition-colors">ENGLISH</button>
+                <div className="w-px h-4 bg-gray-200" />
+                <button className="hover:text-wera-cyan transition-colors">SWAHILI</button>
               </div>
             </motion.div>
           </div>
@@ -194,6 +200,11 @@ const LandingPage = () => {
                 title: 'Stringent Vetting',
                 desc: 'Every Wera Worker undergoes a rigorous verification process to ensure quality and safety.',
                 icon: Shield,
+              },
+              {
+                title: 'Contract & Temp Staffing',
+                desc: 'Reliable short-term and contract solutions for companies and SMEs across Kenya.',
+                icon: Briefcase,
               },
               {
                 title: 'M-Pesa Integrated',
@@ -262,11 +273,12 @@ const JobsPage = () => {
     const fetchJobs = async () => {
       // Mocking enhanced data for demo
       const mockJobs: (Job & { rating: number, experience: number, distance: number })[] = [
-        { id: '1', title: 'Professional Plumber Needed', description: 'Fix leaking tap in Westlands. Must have own tools.', category: 'Construction', budget: 2500, status: 'open', location: 'Nairobi, Westlands', client_id: 'c1', created_at: new Date().toISOString(), rating: 4.8, experience: 5, distance: 2.5 },
-        { id: '2', title: 'Experienced Nanny for Toddler', description: 'Full time nanny needed for 2 year old. CPR certified preferred.', category: 'Domestic', budget: 15000, status: 'open', location: 'Mombasa, Nyali', client_id: 'c2', created_at: new Date().toISOString(), rating: 4.5, experience: 3, distance: 12.0 },
-        { id: '3', title: 'Graphic Designer for Logo', description: 'Create a modern logo for a new startup. Quick turnaround.', category: 'Creative', budget: 5000, status: 'open', location: 'Remote', client_id: 'c3', created_at: new Date().toISOString(), rating: 4.9, experience: 7, distance: 0 },
-        { id: '4', title: 'Electrical Wiring Expert', description: 'House rewiring project in Kilimani.', category: 'Skilled Trades', budget: 35000, status: 'open', location: 'Nairobi, Kilimani', client_id: 'c4', created_at: new Date().toISOString(), rating: 4.2, experience: 10, distance: 4.8 },
-        { id: '5', title: 'House Cleaning Service', description: 'Weekly cleaning for a 3-bedroom apartment.', category: 'Domestic', budget: 1200, status: 'open', location: 'Nairobi, South B', client_id: 'c5', created_at: new Date().toISOString(), rating: 3.8, experience: 2, distance: 8.2 },
+        { id: '1', title: 'Professional Plumber Needed', description: 'Fix leaking tap in Westlands. Must have own tools.', category: 'Construction', budget: 2500, status: 'open', location: 'Nairobi, Westlands', client_id: 'c1', created_at: new Date().toISOString(), rating: 4.8, experience: 5, distance: 2.5, requires_ai_certification: false },
+        { id: '2', title: 'Experienced Nanny for Toddler', description: 'Full time nanny needed for 2 year old. CPR certified preferred.', category: 'Domestic', budget: 15000, status: 'open', location: 'Mombasa, Nyali', client_id: 'c2', created_at: new Date().toISOString(), rating: 4.5, experience: 3, distance: 12.0, requires_ai_certification: false },
+        { id: '3', title: 'Graphic Designer for Logo', description: 'Create a modern logo for a new startup. Quick turnaround.', category: 'Creative', budget: 5000, status: 'open', location: 'Remote', client_id: 'c3', created_at: new Date().toISOString(), rating: 4.9, experience: 7, distance: 0, requires_ai_certification: false },
+        { id: '4', title: 'Electrical Wiring Expert', description: 'House rewiring project in Kilimani.', category: 'Skilled Trades', budget: 35000, status: 'open', location: 'Nairobi, Kilimani', client_id: 'c4', created_at: new Date().toISOString(), rating: 4.2, experience: 10, distance: 4.8, requires_ai_certification: true },
+        { id: '5', title: 'House Cleaning Service', description: 'Weekly cleaning for a 3-bedroom apartment.', category: 'Domestic', budget: 1200, status: 'open', location: 'Nairobi, South B', client_id: 'c5', created_at: new Date().toISOString(), rating: 3.8, experience: 2, distance: 8.2, requires_ai_certification: false },
+        { id: '6', title: 'Corporate Event Coordinator', description: 'Manage a large corporate launch event. High professionalism required.', category: 'Creative', budget: 50000, status: 'open', location: 'Nairobi, CBD', client_id: 'c6', created_at: new Date().toISOString(), rating: 5.0, experience: 8, distance: 1.2, requires_ai_certification: true },
       ];
       setJobs(mockJobs as any);
       setFilteredJobs(mockJobs as any);
@@ -396,8 +408,16 @@ const JobsPage = () => {
             </div>
           ) : filteredJobs.length > 0 ? (
             filteredJobs.map((job: any) => (
-              <Card key={job.id} className="p-6 hover:border-wera-cyan/30 transition-all group cursor-pointer relative overflow-hidden">
-                {job.distance <= 5 && job.location !== 'Remote' && (
+              <Card key={job.id} className={cn(
+                "p-6 transition-all group cursor-pointer relative overflow-hidden",
+                job.requires_ai_certification ? "border-wera-cyan/20 bg-wera-cyan/5" : "hover:border-wera-cyan/30"
+              )}>
+                {job.requires_ai_certification && (
+                  <div className="absolute top-0 right-0 bg-wera-cyan text-white text-[10px] font-bold px-3 py-1 rounded-bl-lg flex items-center">
+                    <Lock className="w-3 h-3 mr-1" /> AI CERTIFIED ONLY
+                  </div>
+                )}
+                {job.distance <= 5 && job.location !== 'Remote' && !job.requires_ai_certification && (
                   <div className="absolute top-0 right-0 bg-wera-green text-white text-[10px] font-bold px-3 py-1 rounded-bl-lg">
                     NEARBY
                   </div>
@@ -411,6 +431,11 @@ const JobsPage = () => {
                       <span className="flex items-center text-yellow-500 text-xs font-bold">
                         <Star className="w-3 h-3 mr-1 fill-yellow-500" /> {job.rating}
                       </span>
+                      {job.requires_ai_certification && (
+                        <span className="flex items-center text-wera-cyan text-[10px] font-bold uppercase">
+                          <Brain className="w-3 h-3 mr-1" /> Soft Skills Req.
+                        </span>
+                      )}
                     </div>
                     <h3 className="text-xl font-bold group-hover:text-wera-cyan transition-colors">{job.title}</h3>
                   </div>
@@ -427,9 +452,17 @@ const JobsPage = () => {
                     <span className="flex items-center font-medium"><MapPin className="w-3.5 h-3.5 mr-1.5 text-wera-cyan" /> {job.location} ({job.distance}km)</span>
                     <span className="flex items-center font-medium"><Briefcase className="w-3.5 h-3.5 mr-1.5 text-wera-cyan" /> {job.experience}y Exp.</span>
                   </div>
-                  <Button variant="outline" size="sm" className="group-hover:bg-wera-cyan group-hover:text-white transition-all">
-                    View Details <ChevronRight className="w-4 h-4 ml-1" />
-                  </Button>
+                  {job.requires_ai_certification ? (
+                    <Link to="/academy">
+                      <Button variant="outline" size="sm" className="border-wera-cyan text-wera-cyan hover:bg-wera-cyan hover:text-white transition-all">
+                        Get AI Certified <ChevronRight className="w-4 h-4 ml-1" />
+                      </Button>
+                    </Link>
+                  ) : (
+                    <Button variant="outline" size="sm" className="group-hover:bg-wera-cyan group-hover:text-white transition-all">
+                      View Details <ChevronRight className="w-4 h-4 ml-1" />
+                    </Button>
+                  )}
                 </div>
               </Card>
             ))
@@ -717,6 +750,7 @@ const HireTalentPage = () => {
                 <option>Domestic & Home Care</option>
                 <option>Creative & Digital</option>
                 <option>IT & Technical</option>
+                <option>Contract & Temp Staffing</option>
               </select>
             </div>
             <Button onClick={() => setStep(2)} className="w-full py-6 text-lg font-bold" variant="secondary">
@@ -774,6 +808,206 @@ const HireTalentPage = () => {
   );
 };
 
+const CompanyOnboardingPage = () => {
+  const [step, setStep] = useState(1);
+  const navigate = useNavigate();
+
+  return (
+    <div className="max-w-4xl mx-auto px-4 py-16">
+      <div className="text-center mb-12">
+        <h1 className="text-4xl font-black mb-4">Wera <span className="wera-text-gradient">for Business</span></h1>
+        <p className="text-gray-600 text-lg">Onboard your company to access reliable contract and temp Wera Workers.</p>
+      </div>
+
+      <div className="grid md:grid-cols-3 gap-8">
+        <div className="md:col-span-2">
+          <Card className="p-8">
+            {step === 1 && (
+              <div className="space-y-6">
+                <h2 className="text-2xl font-bold mb-6">Company Details</h2>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="text-sm font-bold">Company Name</label>
+                    <Input placeholder="e.g. Wera Solutions Ltd" />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-bold">Industry</label>
+                    <select className="w-full p-2 border border-gray-200 rounded-lg focus:ring-wera-cyan">
+                      <option>Logistics</option>
+                      <option>Retail</option>
+                      <option>Construction</option>
+                      <option>Hospitality</option>
+                      <option>Tech</option>
+                    </select>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-bold">Business Registration Number</label>
+                  <Input placeholder="PVT-XXXXXX" />
+                </div>
+                <Button onClick={() => setStep(2)} className="w-full py-4 font-bold" variant="secondary">Next Step</Button>
+              </div>
+            )}
+
+            {step === 2 && (
+              <div className="space-y-6">
+                <h2 className="text-2xl font-bold mb-6">Recruitment Needs</h2>
+                <div className="space-y-4">
+                  <label className="block text-sm font-bold">What type of workers are you looking for?</label>
+                  <div className="grid grid-cols-2 gap-3">
+                    {['Temp Staff', 'Contractors', 'Day Laborers', 'Specialized Pros'].map((type) => (
+                      <label key={type} className="flex items-center p-3 border border-gray-100 rounded-xl cursor-pointer hover:bg-gray-50">
+                        <input type="checkbox" className="mr-3 text-wera-cyan" />
+                        <span className="text-sm font-medium">{type}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-bold">Estimated Monthly Hires</label>
+                  <select className="w-full p-2 border border-gray-200 rounded-lg focus:ring-wera-cyan">
+                    <option>1-5 workers</option>
+                    <option>5-20 workers</option>
+                    <option>20-50 workers</option>
+                    <option>50+ workers</option>
+                  </select>
+                </div>
+                <div className="flex gap-4 pt-4">
+                  <Button variant="outline" onClick={() => setStep(1)} className="flex-1">Back</Button>
+                  <Button onClick={() => setStep(3)} variant="secondary" className="flex-1 font-bold">Complete Setup</Button>
+                </div>
+              </div>
+            )}
+
+            {step === 3 && (
+              <div className="text-center py-8 space-y-6">
+                <div className="w-20 h-20 bg-wera-green/10 text-wera-green rounded-full flex items-center justify-center mx-auto mb-6">
+                  <Shield className="w-10 h-10" />
+                </div>
+                <h2 className="text-2xl font-bold">Application Received!</h2>
+                <p className="text-gray-600">Our B2B team will review your company details and verify your registration within 24 hours.</p>
+                <Button onClick={() => navigate('/')} className="w-full py-4 font-bold" variant="secondary">Go to Dashboard</Button>
+              </div>
+            )}
+          </Card>
+        </div>
+
+        <div className="md:col-span-1 space-y-6">
+          <Card className="p-6 bg-wera-cyan/5 border-wera-cyan/20">
+            <h3 className="font-bold mb-4">Why Wera for Business?</h3>
+            <ul className="space-y-4">
+              {[
+                'Vetted & Background Checked',
+                'Automated Payroll & Tax',
+                'Dedicated Account Manager',
+                'Bulk Hiring Tools'
+              ].map((item) => (
+                <li key={item} className="flex items-start text-sm">
+                  <CheckCircle className="w-4 h-4 text-wera-cyan mr-2 mt-0.5" />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </Card>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const AISoftSkillsAssessment = ({ onComplete }: { onComplete: () => void }) => {
+  const [step, setStep] = useState<'intro' | 'question' | 'result'>('intro');
+  const [question, setQuestion] = useState('');
+  const [response, setResponse] = useState('');
+  const [evaluation, setEvaluation] = useState<{ score: number, feedback: string } | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [previousQuestions, setPreviousQuestions] = useState<string[]>([]);
+
+  const startAssessment = async () => {
+    setLoading(true);
+    const q = await aiService.generateSoftSkillsQuestion([]);
+    setQuestion(q);
+    setPreviousQuestions([q]);
+    setStep('question');
+    setLoading(false);
+  };
+
+  const submitResponse = async () => {
+    setLoading(true);
+    const result = await aiService.evaluateSoftSkillsResponse(question, response);
+    setEvaluation(result);
+    setStep('result');
+    setLoading(false);
+    if (result.score >= 70) {
+      onComplete();
+    }
+  };
+
+  return (
+    <Card className="p-8 border-wera-cyan/30 bg-wera-cyan/5">
+      {step === 'intro' && (
+        <div className="text-center space-y-6">
+          <div className="w-16 h-16 bg-wera-cyan/10 text-wera-cyan rounded-full flex items-center justify-center mx-auto">
+            <Brain className="w-8 h-8" />
+          </div>
+          <h2 className="text-2xl font-bold">AI Soft Skills Certification</h2>
+          <p className="text-gray-600 max-w-md mx-auto">
+            Our AI will assess your communication, problem-solving, and professionalism through a real-world scenario.
+          </p>
+          <Button onClick={startAssessment} disabled={loading} className="w-full sm:w-auto px-10 py-6 text-lg font-bold" variant="secondary">
+            {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : 'Start AI Assessment'}
+          </Button>
+        </div>
+      )}
+
+      {step === 'question' && (
+        <div className="space-y-6">
+          <div className="flex items-center space-x-2 text-wera-cyan mb-4">
+            <Sparkles className="w-5 h-5" />
+            <span className="text-sm font-bold uppercase tracking-wider">AI Scenario</span>
+          </div>
+          <p className="text-lg font-medium leading-relaxed italic">"{question}"</p>
+          <div className="space-y-4">
+            <label className="block text-sm font-bold">Your Response</label>
+            <textarea 
+              className="w-full p-4 border border-gray-200 rounded-xl min-h-[150px] focus:ring-wera-cyan"
+              placeholder="Type your answer here..."
+              value={response}
+              onChange={(e) => setResponse(e.target.value)}
+            />
+          </div>
+          <Button onClick={submitResponse} disabled={loading || !response.trim()} className="w-full py-4 font-bold" variant="secondary">
+            {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Submit for AI Evaluation'}
+          </Button>
+        </div>
+      )}
+
+      {step === 'result' && evaluation && (
+        <div className="text-center space-y-6">
+          <div className={cn(
+            "w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4",
+            evaluation.score >= 70 ? "bg-wera-green/10 text-wera-green" : "bg-red-50 text-red-500"
+          )}>
+            <span className="text-2xl font-black">{evaluation.score}%</span>
+          </div>
+          <h3 className="text-xl font-bold">
+            {evaluation.score >= 70 ? 'Certification Earned!' : 'Needs Improvement'}
+          </h3>
+          <p className="text-gray-600 italic">"{evaluation.feedback}"</p>
+          
+          {evaluation.score >= 70 ? (
+            <div className="bg-wera-green/10 text-wera-green p-4 rounded-xl text-sm font-bold flex items-center justify-center">
+              <CheckCircle className="w-5 h-5 mr-2" /> AI SOFT SKILLS CERTIFIED
+            </div>
+          ) : (
+            <Button onClick={() => setStep('intro')} variant="outline" className="w-full">Try Again</Button>
+          )}
+        </div>
+      )}
+    </Card>
+  );
+};
+
 const TrainingPage = () => {
   const [modules, setModules] = useState([
     { id: 1, title: 'Professionalism & Ethics', completed: true, icon: Shield },
@@ -781,8 +1015,9 @@ const TrainingPage = () => {
     { id: 3, title: 'Financial Literacy & Savings', completed: false, icon: TrendingUp },
     { id: 4, title: 'Health & Safety at Work', completed: false, icon: Zap },
   ]);
+  const [aiCertified, setAiCertified] = useState(false);
 
-  const progress = (modules.filter(m => m.completed).length / modules.length) * 100;
+  const progress = ((modules.filter(m => m.completed).length + (aiCertified ? 1 : 0)) / (modules.length + 1)) * 100;
 
   const toggleModule = (id: number) => {
     setModules(modules.map(m => m.id === id ? { ...m, completed: !m.completed } : m));
@@ -792,37 +1027,49 @@ const TrainingPage = () => {
     <div className="max-w-4xl mx-auto px-4 py-12">
       <div className="mb-12">
         <h1 className="text-3xl font-bold mb-2">WÈRA <span className="wera-text-gradient">Academy</span></h1>
-        <p className="text-gray-600">Complete all modules to become a Certified Wera Worker.</p>
+        <p className="text-gray-600">Complete all modules and AI certification to become a Certified Wera Worker.</p>
       </div>
 
       <div className="grid md:grid-cols-3 gap-8">
-        <div className="md:col-span-2 space-y-4">
-          {modules.map((mod) => (
-            <Card key={mod.id} className={cn(
-              "p-6 flex items-center justify-between transition-all",
-              mod.completed ? "border-wera-green/30 bg-wera-green/5" : "border-gray-100"
-            )}>
-              <div className="flex items-center space-x-4">
-                <div className={cn(
-                  "w-12 h-12 rounded-xl flex items-center justify-center",
-                  mod.completed ? "bg-wera-green text-white" : "bg-gray-100 text-gray-400"
+        <div className="md:col-span-2 space-y-8">
+          <div className="space-y-4">
+            <h2 className="text-xl font-bold flex items-center">
+              <Sparkles className="w-5 h-5 mr-2 text-wera-cyan" /> AI Certification
+            </h2>
+            <AISoftSkillsAssessment onComplete={() => setAiCertified(true)} />
+          </div>
+
+          <div className="space-y-4">
+            <h2 className="text-xl font-bold">Standard Modules</h2>
+            <div className="space-y-4">
+              {modules.map((mod) => (
+                <Card key={mod.id} className={cn(
+                  "p-6 flex items-center justify-between transition-all",
+                  mod.completed ? "border-wera-green/30 bg-wera-green/5" : "border-gray-100"
                 )}>
-                  <mod.icon className="w-6 h-6" />
-                </div>
-                <div>
-                  <h3 className="font-bold">{mod.title}</h3>
-                  <p className="text-xs text-gray-500">{mod.completed ? 'Completed' : '45 mins • Video & Quiz'}</p>
-                </div>
-              </div>
-              <Button 
-                variant={mod.completed ? "ghost" : "secondary"} 
-                size="sm"
-                onClick={() => toggleModule(mod.id)}
-              >
-                {mod.completed ? <CheckCircle className="w-5 h-5 text-wera-green" /> : 'Start Module'}
-              </Button>
-            </Card>
-          ))}
+                  <div className="flex items-center space-x-4">
+                    <div className={cn(
+                      "w-12 h-12 rounded-xl flex items-center justify-center",
+                      mod.completed ? "bg-wera-green text-white" : "bg-gray-100 text-gray-400"
+                    )}>
+                      <mod.icon className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold">{mod.title}</h3>
+                      <p className="text-xs text-gray-500">{mod.completed ? 'Completed' : '45 mins • Video & Quiz'}</p>
+                    </div>
+                  </div>
+                  <Button 
+                    variant={mod.completed ? "ghost" : "secondary"} 
+                    size="sm"
+                    onClick={() => toggleModule(mod.id)}
+                  >
+                    {mod.completed ? <CheckCircle className="w-5 h-5 text-wera-green" /> : 'Start Module'}
+                  </Button>
+                </Card>
+              ))}
+            </div>
+          </div>
         </div>
 
         <div className="md:col-span-1">
@@ -839,14 +1086,26 @@ const TrainingPage = () => {
             {progress === 100 ? (
               <div className="text-center space-y-4">
                 <div className="bg-wera-green/10 text-wera-green p-3 rounded-lg text-xs font-bold">
-                  🎉 CONGRATULATIONS! YOU ARE CERTIFIED
+                  🎉 CONGRATULATIONS! YOU ARE FULLY CERTIFIED
                 </div>
                 <Button className="w-full bg-wera-black text-white font-bold">Download Certificate</Button>
               </div>
             ) : (
-              <p className="text-xs text-gray-500 text-center">
-                Complete {modules.length - modules.filter(m => m.completed).length} more modules to unlock your WÈRA Certified Badge.
-              </p>
+              <div className="space-y-4">
+                <p className="text-xs text-gray-500 text-center">
+                  Complete all modules and the AI assessment to unlock your WÈRA Certified Badge.
+                </p>
+                <div className="space-y-2">
+                  <div className="flex justify-between text-[10px] font-bold">
+                    <span>AI CERTIFICATION</span>
+                    <span className={aiCertified ? "text-wera-green" : "text-gray-400"}>{aiCertified ? 'DONE' : 'PENDING'}</span>
+                  </div>
+                  <div className="flex justify-between text-[10px] font-bold">
+                    <span>MODULES</span>
+                    <span>{modules.filter(m => m.completed).length}/{modules.length}</span>
+                  </div>
+                </div>
+              </div>
             )}
           </Card>
         </div>
@@ -885,6 +1144,7 @@ export default function App() {
             <Route path="/jobs" element={<JobsPage />} />
             <Route path="/hire" element={<HireTalentPage />} />
             <Route path="/academy" element={<TrainingPage />} />
+            <Route path="/companies" element={<CompanyOnboardingPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/profile" element={<WorkerProfilePage />} />
             {/* Add more routes as needed */}
@@ -895,7 +1155,7 @@ export default function App() {
             <div className="grid md:grid-cols-4 gap-12 mb-12">
               <div className="col-span-1 md:col-span-2">
                 <div className="flex items-center mb-6">
-                  <Logo className="w-12 h-12" />
+                  <Logo className="w-12 h-12" isDark={true} />
                 </div>
                 <p className="text-gray-400 max-w-sm mb-6">
                   Unlocking potential across Kenya by connecting skilled Wera Workers with meaningful opportunities. 
@@ -917,10 +1177,10 @@ export default function App() {
               <div>
                 <h4 className="font-bold mb-6">Company</h4>
                 <ul className="space-y-4 text-gray-400 text-sm">
+                  <li><Link to="/companies" className="hover:text-white transition-colors">Wera for Business</Link></li>
                   <li><a href="#" className="hover:text-white transition-colors">About Us</a></li>
                   <li><a href="#" className="hover:text-white transition-colors">Contact</a></li>
                   <li><a href="#" className="hover:text-white transition-colors">Privacy Policy</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">Terms of Service</a></li>
                 </ul>
               </div>
             </div>
