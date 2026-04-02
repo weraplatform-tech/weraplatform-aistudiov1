@@ -70,12 +70,24 @@ async function startServer() {
     app.use(vite.middlewares);
   } else {
     const distPath = path.join(process.cwd(), "dist");
-    console.log(`Serving static files from: ${distPath}`);
-    app.use(express.static(distPath));
+    const fs = await import("fs");
+    
+    if (fs.existsSync(distPath)) {
+      console.log(`Serving static files from: ${distPath}`);
+      app.use(express.static(distPath));
+    } else {
+      console.error(`ERROR: dist folder NOT FOUND at: ${distPath}`);
+    }
+
     app.get("*", (req, res) => {
       const indexPath = path.join(distPath, "index.html");
-      console.log(`Sending index.html from: ${indexPath}`);
-      res.sendFile(indexPath);
+      if (fs.existsSync(indexPath)) {
+        console.log(`Sending index.html from: ${indexPath}`);
+        res.sendFile(indexPath);
+      } else {
+        console.error(`ERROR: index.html NOT FOUND at: ${indexPath}`);
+        res.status(404).send("Wera Platform: Build files not found. Please check Render logs.");
+      }
     });
   }
 
