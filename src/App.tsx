@@ -16,7 +16,8 @@ import {
   Zap,
   TrendingUp,
   LogOut,
-  ChevronRight
+  ChevronRight,
+  CheckCircle
 } from 'lucide-react';
 import { Button, Card, Input, cn } from './components/ui';
 import { supabase, type Profile, type Job } from './lib/supabase';
@@ -44,8 +45,15 @@ const Navbar = ({ user }: { user: any }) => {
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-8">
-            <Link to="/jobs" className="text-sm font-medium hover:text-wera-cyan transition-colors">Find Work</Link>
-            <Link to="/hire" className="text-sm font-medium hover:text-wera-cyan transition-colors">Hire Talent</Link>
+            <Link to="/jobs" className="text-sm font-medium hover:text-wera-cyan transition-colors">Find Wera Work</Link>
+            <Link to="/hire" className="text-sm font-medium hover:text-wera-cyan transition-colors">Hire Wera Workers</Link>
+            
+            {/* Language Switcher */}
+            <div className="flex items-center bg-gray-50 rounded-full p-1 border border-gray-100">
+              <button className="px-3 py-1 text-[10px] font-bold rounded-full bg-white shadow-sm text-wera-cyan">EN</button>
+              <button className="px-3 py-1 text-[10px] font-bold rounded-full text-gray-400 hover:text-wera-cyan transition-colors">SW</button>
+            </div>
+
             {user ? (
               <div className="flex items-center space-x-4">
                 <Button variant="ghost" size="icon"><Bell className="w-5 h-5" /></Button>
@@ -103,6 +111,17 @@ const Navbar = ({ user }: { user: any }) => {
 const LandingPage = () => {
   return (
     <div className="flex flex-col">
+      {/* Trust & Escrow Banner */}
+      <div className="bg-wera-black text-white py-3">
+        <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-center gap-4 text-center">
+          <span className="flex items-center text-xs font-bold tracking-wide">
+            <Shield className="w-4 h-4 mr-2 text-wera-green" /> 100% SECURE PAYMENTS VIA M-PESA ESCROW
+          </span>
+          <div className="hidden sm:block w-px h-4 bg-white/20" />
+          <span className="text-[10px] opacity-70 uppercase tracking-widest">Money is only released when you approve the work</span>
+        </div>
+      </div>
+
       {/* Hero Section */}
       <section className="relative py-20 lg:py-32 overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -116,15 +135,15 @@ const LandingPage = () => {
                 Unlocking Potential
               </span>
               <h1 className="text-5xl lg:text-7xl font-extrabold tracking-tight mb-8">
-                Kenya's Premier <span className="wera-text-gradient">Labour Platform</span>
+                Kenya's Premier <span className="wera-text-gradient">Wera Workers</span> Platform
               </h1>
               <p className="text-xl text-gray-600 mb-10 leading-relaxed">
-                Connecting skilled and semi-skilled workers with formal job opportunities. 
+                Connecting skilled and semi-skilled Wera Workers with formal job opportunities. 
                 Empowering the informal sector through technology, vetting, and fair labor practices.
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <Button variant="secondary" className="w-full sm:w-auto px-8 py-4 text-lg">
-                  I want to Work
+                  I am a Wera Worker
                 </Button>
                 <Button variant="outline" className="w-full sm:w-auto px-8 py-4 text-lg">
                   I want to Hire
@@ -142,18 +161,18 @@ const LandingPage = () => {
       </section>
 
       {/* Stats Section */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-wera-green/10 border-y border-wera-green/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {[
-              { label: 'Active Workers', value: '50K+' },
+              { label: 'Active Wera Workers', value: '50K+' },
               { label: 'Jobs Completed', value: '120K+' },
               { label: 'Trust Rating', value: '4.9/5' },
               { label: 'Counties Covered', value: '47' },
             ].map((stat, i) => (
               <div key={i} className="text-center">
-                <div className="text-3xl font-bold text-wera-black mb-1">{stat.value}</div>
-                <div className="text-sm text-gray-500 font-medium">{stat.label}</div>
+                <div className="text-3xl font-black text-wera-black mb-1">{stat.value}</div>
+                <div className="text-xs text-wera-green font-bold uppercase tracking-widest">{stat.label}</div>
               </div>
             ))}
           </div>
@@ -164,7 +183,7 @@ const LandingPage = () => {
       <section className="py-24 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold mb-4">Why Choose Wera?</h2>
+            <h2 className="text-3xl font-bold mb-4">Why Choose Wera Workers?</h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
               We're building more than just a marketplace. We're building a sustainable ecosystem for the future of work in Kenya.
             </p>
@@ -173,7 +192,7 @@ const LandingPage = () => {
             {[
               {
                 title: 'Stringent Vetting',
-                desc: 'Every worker undergoes a rigorous verification process to ensure quality and safety.',
+                desc: 'Every Wera Worker undergoes a rigorous verification process to ensure quality and safety.',
                 icon: Shield,
               },
               {
@@ -206,7 +225,7 @@ const LandingPage = () => {
             <div className="relative z-10">
               <h2 className="text-4xl font-bold mb-6">Ready to Unlock Your Potential?</h2>
               <p className="text-xl mb-10 opacity-90 max-w-2xl mx-auto">
-                Join thousands of workers and employers already using Wera to build a better future.
+                Join thousands of Wera Workers and employers already using Wera to build a better future.
               </p>
               <Button className="bg-white text-wera-black hover:bg-gray-100 px-10 py-4 text-lg font-bold">
                 Get Started Now
@@ -283,6 +302,9 @@ const JobsPage = () => {
           <p className="text-gray-600">Find vetted opportunities in your immediate proximity.</p>
         </div>
         <div className="flex w-full md:w-auto gap-2">
+          <Button variant="outline" className="border-wera-cyan text-wera-cyan hover:bg-wera-cyan/5">
+            <Zap className="w-4 h-4 mr-2" /> AI Job Matcher
+          </Button>
           <Input placeholder="Search skills (e.g. Plumber)..." className="max-w-xs" />
           <Button variant="secondary"><Search className="w-4 h-4 mr-2" /> Search</Button>
         </div>
@@ -291,6 +313,18 @@ const JobsPage = () => {
       <div className="grid md:grid-cols-4 gap-8">
         {/* Advanced Filters Sidebar */}
         <div className="md:col-span-1 space-y-6">
+          <Card className="p-6 border-wera-cyan/10">
+            <h3 className="font-bold mb-4 flex items-center"><MapPin className="w-4 h-4 mr-2 text-wera-cyan" /> County</h3>
+            <select className="w-full p-2 text-sm rounded-lg border-gray-100 focus:ring-wera-cyan">
+              <option>All Counties</option>
+              <option>Nairobi</option>
+              <option>Mombasa</option>
+              <option>Kiambu</option>
+              <option>Kisumu</option>
+              <option>Nakuru</option>
+            </select>
+          </Card>
+
           <Card className="p-6 border-wera-cyan/10">
             <h3 className="font-bold mb-4 flex items-center"><MapPin className="w-4 h-4 mr-2 text-wera-cyan" /> Proximity (km)</h3>
             <div className="space-y-4">
@@ -556,6 +590,17 @@ const WorkerProfilePage = () => {
             <div className="flex justify-center space-x-1 mb-6">
               {[1, 2, 3, 4, 5].map((s) => <Star key={s} className="w-4 h-4 fill-yellow-400 text-yellow-400" />)}
             </div>
+            
+            {/* Vetting Status */}
+            <div className="space-y-2 mb-6">
+              <div className="flex items-center justify-center text-[10px] font-bold text-wera-green bg-wera-green/10 py-1.5 rounded-full">
+                <Shield className="w-3 h-3 mr-1.5" /> POLICE CLEARED (GOOD CONDUCT)
+              </div>
+              <div className="flex items-center justify-center text-[10px] font-bold text-wera-cyan bg-wera-cyan/10 py-1.5 rounded-full">
+                <Zap className="w-3 h-3 mr-1.5" /> SOFT SKILLS CERTIFIED
+              </div>
+            </div>
+
             <Button variant="outline" className="w-full mb-2">Edit Profile</Button>
             <Button variant="ghost" className="w-full text-red-500 hover:text-red-600 hover:bg-red-50">Logout</Button>
           </Card>
@@ -645,7 +690,7 @@ const HireTalentPage = () => {
   return (
     <div className="max-w-3xl mx-auto px-4 py-12">
       <div className="mb-12 text-center">
-        <h1 className="text-3xl font-bold mb-2">Post a <span className="wera-text-gradient">New Opportunity</span></h1>
+        <h1 className="text-3xl font-bold mb-2">Hire <span className="wera-text-gradient">Wera Workers</span></h1>
         <p className="text-gray-600">Connect with Kenya's most skilled and vetted talent.</p>
       </div>
 
@@ -729,6 +774,87 @@ const HireTalentPage = () => {
   );
 };
 
+const TrainingPage = () => {
+  const [modules, setModules] = useState([
+    { id: 1, title: 'Professionalism & Ethics', completed: true, icon: Shield },
+    { id: 2, title: 'Customer Service Excellence', completed: false, icon: MessageSquare },
+    { id: 3, title: 'Financial Literacy & Savings', completed: false, icon: TrendingUp },
+    { id: 4, title: 'Health & Safety at Work', completed: false, icon: Zap },
+  ]);
+
+  const progress = (modules.filter(m => m.completed).length / modules.length) * 100;
+
+  const toggleModule = (id: number) => {
+    setModules(modules.map(m => m.id === id ? { ...m, completed: !m.completed } : m));
+  };
+
+  return (
+    <div className="max-w-4xl mx-auto px-4 py-12">
+      <div className="mb-12">
+        <h1 className="text-3xl font-bold mb-2">WÈRA <span className="wera-text-gradient">Academy</span></h1>
+        <p className="text-gray-600">Complete all modules to become a Certified Wera Worker.</p>
+      </div>
+
+      <div className="grid md:grid-cols-3 gap-8">
+        <div className="md:col-span-2 space-y-4">
+          {modules.map((mod) => (
+            <Card key={mod.id} className={cn(
+              "p-6 flex items-center justify-between transition-all",
+              mod.completed ? "border-wera-green/30 bg-wera-green/5" : "border-gray-100"
+            )}>
+              <div className="flex items-center space-x-4">
+                <div className={cn(
+                  "w-12 h-12 rounded-xl flex items-center justify-center",
+                  mod.completed ? "bg-wera-green text-white" : "bg-gray-100 text-gray-400"
+                )}>
+                  <mod.icon className="w-6 h-6" />
+                </div>
+                <div>
+                  <h3 className="font-bold">{mod.title}</h3>
+                  <p className="text-xs text-gray-500">{mod.completed ? 'Completed' : '45 mins • Video & Quiz'}</p>
+                </div>
+              </div>
+              <Button 
+                variant={mod.completed ? "ghost" : "secondary"} 
+                size="sm"
+                onClick={() => toggleModule(mod.id)}
+              >
+                {mod.completed ? <CheckCircle className="w-5 h-5 text-wera-green" /> : 'Start Module'}
+              </Button>
+            </Card>
+          ))}
+        </div>
+
+        <div className="md:col-span-1">
+          <Card className="p-6 sticky top-24 border-wera-cyan/20">
+            <h3 className="font-bold mb-6">Certification Progress</h3>
+            <div className="relative w-32 h-32 mx-auto mb-6">
+              <svg className="w-full h-full" viewBox="0 0 36 36">
+                <path className="text-gray-100" strokeWidth="3" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                <path className="text-wera-cyan" strokeWidth="3" strokeDasharray={`${progress}, 100`} strokeLinecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                <text x="18" y="20.35" className="text-[8px] font-bold fill-wera-black" textAnchor="middle">{Math.round(progress)}%</text>
+              </svg>
+            </div>
+            
+            {progress === 100 ? (
+              <div className="text-center space-y-4">
+                <div className="bg-wera-green/10 text-wera-green p-3 rounded-lg text-xs font-bold">
+                  🎉 CONGRATULATIONS! YOU ARE CERTIFIED
+                </div>
+                <Button className="w-full bg-wera-black text-white font-bold">Download Certificate</Button>
+              </div>
+            ) : (
+              <p className="text-xs text-gray-500 text-center">
+                Complete {modules.length - modules.filter(m => m.completed).length} more modules to unlock your WÈRA Certified Badge.
+              </p>
+            )}
+          </Card>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // --- Main App ---
 
 import { aiService } from './lib/ai';
@@ -758,6 +884,7 @@ export default function App() {
             <Route path="/" element={<LandingPage />} />
             <Route path="/jobs" element={<JobsPage />} />
             <Route path="/hire" element={<HireTalentPage />} />
+            <Route path="/academy" element={<TrainingPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/profile" element={<WorkerProfilePage />} />
             {/* Add more routes as needed */}
@@ -771,7 +898,7 @@ export default function App() {
                   <Logo className="w-12 h-12" />
                 </div>
                 <p className="text-gray-400 max-w-sm mb-6">
-                  Unlocking potential across Kenya by connecting skilled workers with meaningful opportunities. 
+                  Unlocking potential across Kenya by connecting skilled Wera Workers with meaningful opportunities. 
                   Building a trusted ecosystem for the future of work.
                 </p>
                 <div className="flex space-x-4">
@@ -781,8 +908,8 @@ export default function App() {
               <div>
                 <h4 className="font-bold mb-6">Platform</h4>
                 <ul className="space-y-4 text-gray-400 text-sm">
-                  <li><Link to="/jobs" className="hover:text-white transition-colors">Find Work</Link></li>
-                  <li><Link to="/hire" className="hover:text-white transition-colors">Hire Talent</Link></li>
+                  <li><Link to="/jobs" className="hover:text-white transition-colors">Find Wera Work</Link></li>
+                  <li><Link to="/hire" className="hover:text-white transition-colors">Hire Wera Workers</Link></li>
                   <li><Link to="/categories" className="hover:text-white transition-colors">Categories</Link></li>
                   <li><Link to="/pricing" className="hover:text-white transition-colors">Pricing</Link></li>
                 </ul>
