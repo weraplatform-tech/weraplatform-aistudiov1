@@ -135,7 +135,7 @@ const LandingPage = () => {
                 Unlocking Potential
               </span>
               <h1 className="text-5xl lg:text-7xl font-extrabold tracking-tight mb-8">
-                Kenya's Premier <span className="wera-text-gradient">Wera Workers</span> Platform
+                Uko <span className="wera-text-gradient">wera</span> ama Uko <span className="wera-text-gradient">where?</span>
               </h1>
               <p className="text-xl text-gray-600 mb-10 leading-relaxed">
                 Connecting skilled and semi-skilled Wera Workers with formal job opportunities. 
@@ -172,7 +172,7 @@ const LandingPage = () => {
             ].map((stat, i) => (
               <div key={i} className="text-center">
                 <div className="text-3xl font-black text-wera-black mb-1">{stat.value}</div>
-                <div className="text-xs text-wera-green font-bold uppercase tracking-widest">{stat.label}</div>
+                <div className="text-xs text-black font-bold uppercase tracking-widest">{stat.label}</div>
               </div>
             ))}
           </div>
