@@ -17,12 +17,7 @@ async function startServer() {
     const host = req.get("host");
     const protocol = req.get("x-forwarded-proto") || req.protocol;
 
-    // Only redirect if we are on the custom domain
-    if (process.env.NODE_ENV === "production" && host === "weraplatform.dedyn.io") {
-      return res.redirect(301, `https://www.weraplatform.dedyn.io${req.url}`);
-    }
-    
-    // Force HTTPS only on the custom domain
+    // Force HTTPS only on the custom domain, but don't force 'www'
     if (process.env.NODE_ENV === "production" && host?.includes("weraplatform.dedyn.io") && protocol !== "https") {
       return res.redirect(301, `https://${host}${req.url}`);
     }

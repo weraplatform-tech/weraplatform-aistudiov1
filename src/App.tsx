@@ -56,11 +56,15 @@ const Navbar = ({ user }: { user: any }) => {
   };
 
   return (
-    <nav className="sticky top-0 z-50 bg-yellow-200/80 backdrop-blur-md border-b border-yellow-300/20">
+    <nav className="sticky top-0 z-50 bg-yellow-50/80 backdrop-blur-md border-b border-yellow-300/20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
           <Link to="/" className="flex items-center group">
             <Logo className="w-12 h-12" />
+            <div className="ml-3 hidden lg:flex flex-col">
+              <span className="text-[10px] font-black text-wera-green uppercase tracking-tighter leading-none">Platform Live</span>
+              <span className="text-[8px] font-bold text-black/40 uppercase tracking-widest">weraplatform.dedyn.io</span>
+            </div>
           </Link>
 
           {/* Desktop Menu */}
@@ -68,6 +72,7 @@ const Navbar = ({ user }: { user: any }) => {
             <Link to="/jobs" className="text-sm font-medium hover:underline transition-all text-black">Find Wera Work</Link>
             <Link to="/hire" className="text-sm font-medium hover:underline transition-all text-black">Hire Wera Workers</Link>
             <Link to="/academy" className="text-sm font-medium hover:underline transition-all text-black">Academy</Link>
+            <Link to="/verify" className="text-sm font-medium hover:underline transition-all text-black">Verify</Link>
             <a href="#about" className="text-sm font-medium hover:underline transition-all text-black">About Us</a>
             <Link to="/companies" className="text-sm font-bold text-black hover:opacity-80 transition-opacity">For Companies</Link>
             
@@ -104,7 +109,7 @@ const Navbar = ({ user }: { user: any }) => {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-yellow-200 border-b border-black/10 overflow-hidden"
+            className="md:hidden bg-yellow-50 border-b border-black/10 overflow-hidden"
           >
             <div className="px-4 pt-2 pb-6 space-y-2">
               <Link to="/jobs" className="block px-3 py-2 rounded-md text-base font-medium hover:bg-black/10 text-black">Find Work</Link>
@@ -130,14 +135,20 @@ const LandingPage = () => {
   return (
     <div className="flex flex-col">
       {/* Trust & Escrow Banner */}
-      <div className="bg-wera-black text-white py-3">
-        <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-center gap-4 text-center">
+      <div className="bg-wera-black text-white py-3 relative overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-center gap-4 text-center relative z-10">
           <span className="flex items-center text-xs font-bold tracking-wide">
             <Shield className="w-4 h-4 mr-2 text-wera-green" /> 100% SECURE PAYMENTS VIA M-PESA ESCROW
           </span>
-          <div className="hidden sm:block w-px h-4 bg-yellow-100/20" />
+          <div className="hidden sm:block w-px h-4 bg-yellow-50/20" />
           <span className="text-[10px] opacity-70 uppercase tracking-widest">Money is only released when you approve the work</span>
+          <div className="hidden lg:flex items-center ml-8 px-3 py-1 bg-wera-green/20 rounded-full border border-wera-green/30">
+            <div className="w-2 h-2 bg-wera-green rounded-full animate-pulse mr-2" />
+            <span className="text-[10px] font-black text-wera-green uppercase tracking-tighter">Live: weraplatform.dedyn.io</span>
+          </div>
         </div>
+        {/* Animated background glow */}
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-wera-green/5 to-transparent animate-shimmer" />
       </div>
 
       {/* Hero Section */}
@@ -149,29 +160,29 @@ const LandingPage = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <span className="inline-block px-4 py-1.5 mb-6 text-sm font-semibold tracking-wide uppercase wera-gradient text-white rounded-full">
-                Unlocking Potential
+              <span className="inline-flex items-center px-4 py-1.5 mb-6 text-sm font-semibold tracking-wide uppercase wera-gradient text-white rounded-full shadow-lg">
+                <Sparkles className="w-4 h-4 mr-2 animate-spin-slow" /> Unlocking Potential
               </span>
               <h1 className="text-5xl lg:text-7xl font-extrabold tracking-tight mb-8 text-black">
-                Uko <span className="wera-text-gradient">wera</span> ama Uko <span className="wera-text-gradient">where?</span>
+                Uko wera ama Uko where?
               </h1>
               <p className="text-xl text-black/60 mb-10 leading-relaxed">
                 Connecting skilled and semi-skilled Wera Workers with formal job opportunities. 
                 Empowering the informal sector through technology, vetting, and fair labor practices.
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
+                <Link to="/hire">
+                  <Button variant="primary" className="w-full sm:w-auto px-8 py-4 text-lg">
+                    I want to Hire
+                  </Button>
+                </Link>
                 <Link to="/jobs">
                   <Button variant="primary" className="w-full sm:w-auto px-8 py-4 text-lg">
                     I am a Wera Worker
                   </Button>
                 </Link>
-                <Link to="/hire">
-                  <Button variant="outline" className="w-full sm:w-auto px-8 py-4 text-lg border-black text-black">
-                    I want to Hire
-                  </Button>
-                </Link>
                 <Link to="/academy">
-                  <Button variant="ghost" className="w-full sm:w-auto px-8 py-4 text-lg text-black font-bold">
+                  <Button variant="primary" className="w-full sm:w-auto px-8 py-4 text-lg">
                     Visit Academy
                   </Button>
                 </Link>
@@ -214,7 +225,7 @@ const LandingPage = () => {
       </section>
 
       {/* Features Section */}
-      <section className="py-24 bg-yellow-200">
+      <section className="py-24 bg-yellow-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold mb-4 text-black">Why Choose Wera Workers?</h2>
@@ -258,7 +269,7 @@ const LandingPage = () => {
       </section>
 
       {/* Mission & Vision Section */}
-      <section id="about" className="py-24 bg-yellow-200 border-y border-black/5">
+      <section id="about" className="py-24 bg-yellow-50 border-y border-black/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-2 gap-16 items-center">
             <div className="space-y-8">
@@ -295,7 +306,7 @@ const LandingPage = () => {
                 { label: 'Trust', icon: Lock, color: 'bg-black' },
                 { label: 'Growth', icon: TrendingUp, color: 'bg-wera-cyan' },
               ].map((val, i) => (
-                <div key={i} className="p-10 bg-yellow-100 rounded-[2.5rem] border-2 border-black/10 flex flex-col items-center text-center group hover:bg-black hover:text-white transition-all duration-500 hover:scale-105 shadow-sm">
+                <div key={i} className="p-10 bg-yellow-50 rounded-[2.5rem] border-2 border-black/10 flex flex-col items-center text-center group hover:bg-black hover:text-white transition-all duration-500 hover:scale-105 shadow-sm">
                   <div className={cn("w-14 h-14 rounded-2xl flex items-center justify-center mb-4 text-white shadow-lg", val.color)}>
                     <val.icon className="w-7 h-7" />
                   </div>
@@ -308,7 +319,7 @@ const LandingPage = () => {
       </section>
 
       {/* Audience Segmentation Section */}
-      <section className="py-24 bg-yellow-200/50">
+      <section className="py-24 bg-yellow-50/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-black mb-4">Who is WÈRA For?</h2>
@@ -329,7 +340,7 @@ const LandingPage = () => {
                   { title: 'The Mavericks', desc: 'Independent thinkers seeking flexibility and unconventional niche opportunities.', icon: Sparkles },
                   { title: 'The Traditionalists', desc: 'Reliable workers who value stability and trust-based community referrals.', icon: Shield },
                 ].map((item, i) => (
-                  <Card key={i} className="p-6 border-black/10 bg-yellow-100 hover:border-wera-cyan transition-all group">
+                  <Card key={i} className="p-6 border-black/10 bg-yellow-50 hover:border-wera-cyan transition-all group">
                     <div className="flex items-start space-x-4">
                       <div className="w-10 h-10 rounded-xl bg-black/5 flex items-center justify-center text-black group-hover:bg-wera-cyan group-hover:text-white transition-colors">
                         <item.icon className="w-5 h-5" />
@@ -355,7 +366,7 @@ const LandingPage = () => {
                   { title: 'Established Corporates', desc: 'Enterprises focused on compliance, quality, and long-term workforce reliability.', icon: Shield },
                   { title: 'NGOs & Nonprofits', desc: 'Purpose-driven organizations seeking ethical hiring and fair labour practices.', icon: Heart },
                 ].map((item, i) => (
-                  <Card key={i} className="p-6 border-black/10 bg-yellow-100 hover:border-wera-green transition-all group">
+                  <Card key={i} className="p-6 border-black/10 bg-yellow-50 hover:border-wera-green transition-all group">
                     <div className="flex items-start space-x-4">
                       <div className="w-10 h-10 rounded-xl bg-black/5 flex items-center justify-center text-black group-hover:bg-wera-green group-hover:text-white transition-colors">
                         <item.icon className="w-5 h-5" />
@@ -388,7 +399,7 @@ const LandingPage = () => {
                   { title: 'Rigorous Vetting', desc: 'Background checks, skill verification, and identity audits for all workers.', icon: Shield },
                   { title: 'Dispute Resolution', desc: 'Dedicated 24/7 support team to mediate and resolve any project issues.', icon: MessageSquare },
                 ].map((item, i) => (
-                  <div key={i} className="flex items-start space-x-4 p-4 rounded-2xl bg-yellow-100/5 border border-white/10">
+                  <div key={i} className="flex items-start space-x-4 p-4 rounded-2xl bg-yellow-50/5 border border-white/10">
                     <div className="w-10 h-10 rounded-xl bg-wera-cyan/20 flex items-center justify-center text-wera-cyan">
                       <item.icon className="w-5 h-5" />
                     </div>
@@ -402,7 +413,7 @@ const LandingPage = () => {
             </div>
             <div className="relative">
               <div className="absolute -top-20 -right-20 w-64 h-64 bg-wera-green/20 rounded-full blur-[100px]" />
-              <Card className="p-8 bg-yellow-100/5 backdrop-blur-xl border-white/10 relative z-10">
+              <Card className="p-8 bg-yellow-50/5 backdrop-blur-xl border-white/10 relative z-10">
                 <div className="text-center mb-8">
                   <div className="w-16 h-16 bg-wera-green rounded-full flex items-center justify-center mx-auto mb-4 text-black">
                     <Shield className="w-8 h-8" />
@@ -411,19 +422,19 @@ const LandingPage = () => {
                   <p className="text-white/60 text-sm">The gold standard for labour in Kenya</p>
                 </div>
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between p-3 rounded-lg bg-yellow-100/5 border border-white/10">
+                  <div className="flex items-center justify-between p-3 rounded-lg bg-yellow-50/5 border border-white/10">
                     <span className="text-xs font-bold">Identity Verified</span>
                     <CheckCircle className="w-4 h-4 text-wera-green" />
                   </div>
-                  <div className="flex items-center justify-between p-3 rounded-lg bg-yellow-100/5 border border-white/10">
+                  <div className="flex items-center justify-between p-3 rounded-lg bg-yellow-50/5 border border-white/10">
                     <span className="text-xs font-bold">Background Check Passed</span>
                     <CheckCircle className="w-4 h-4 text-wera-green" />
                   </div>
-                  <div className="flex items-center justify-between p-3 rounded-lg bg-yellow-100/5 border border-white/10">
+                  <div className="flex items-center justify-between p-3 rounded-lg bg-yellow-50/5 border border-white/10">
                     <span className="text-xs font-bold">Soft Skills Certified</span>
                     <CheckCircle className="w-4 h-4 text-wera-green" />
                   </div>
-                  <div className="flex items-center justify-between p-3 rounded-lg bg-yellow-100/5 border border-white/10">
+                  <div className="flex items-center justify-between p-3 rounded-lg bg-yellow-50/5 border border-white/10">
                     <span className="text-xs font-bold">Insurance Covered</span>
                     <CheckCircle className="w-4 h-4 text-wera-green" />
                   </div>
@@ -436,7 +447,7 @@ const LandingPage = () => {
       </section>
 
       {/* Success Stories Section */}
-      <section className="py-24 bg-yellow-100">
+      <section className="py-24 bg-yellow-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-black mb-4 text-black">Real Stories, Real <span className="wera-text-gradient">Impact</span></h2>
@@ -514,13 +525,13 @@ const LandingPage = () => {
                 ))}
               </ul>
               <Link to="/academy">
-                <Button className="bg-wera-green text-black hover:bg-yellow-100 px-8 py-4 text-lg font-bold">
+                <Button className="bg-wera-green text-black hover:bg-yellow-50 px-8 py-4 text-lg font-bold">
                   Start Training Now
                 </Button>
               </Link>
             </div>
             <div className="relative">
-              <Card className="p-8 border-wera-green/30 bg-yellow-100/5 backdrop-blur-sm relative z-10">
+              <Card className="p-8 border-wera-green/30 bg-yellow-50/5 backdrop-blur-sm relative z-10">
                 <div className="flex items-center space-x-4 mb-8">
                   <div className="w-12 h-12 bg-wera-green rounded-full flex items-center justify-center text-black">
                     <Brain className="w-6 h-6" />
@@ -531,14 +542,14 @@ const LandingPage = () => {
                   </div>
                 </div>
                 <div className="space-y-6">
-                  <div className="p-4 bg-yellow-100/5 rounded-xl border border-white/10">
+                  <div className="p-4 bg-yellow-50/5 rounded-xl border border-white/10">
                     <p className="text-sm italic text-white/80">"How would you handle a situation where a client is unhappy with the progress of a job?"</p>
                   </div>
                   <div className="flex justify-between items-center text-xs font-bold uppercase tracking-widest">
                     <span className="text-white/40">Assessment Progress</span>
                     <span className="text-wera-green">85% Complete</span>
                   </div>
-                  <div className="w-full bg-yellow-100/10 h-2 rounded-full overflow-hidden">
+                  <div className="w-full bg-yellow-50/10 h-2 rounded-full overflow-hidden">
                     <div className="bg-wera-green h-full w-[85%]" />
                   </div>
                 </div>
@@ -559,13 +570,13 @@ const LandingPage = () => {
               <p className="text-xl mb-10 opacity-90 max-w-2xl mx-auto">
                 Join thousands of Wera Workers and employers already using Wera to build a better future.
               </p>
-              <Button className="bg-wera-green text-black hover:bg-yellow-100 px-10 py-4 text-lg font-bold">
+              <Button className="bg-wera-green text-black hover:bg-yellow-50 px-10 py-4 text-lg font-bold">
                 Get Started Now
               </Button>
             </div>
             {/* Decorative circles */}
             <div className="absolute -top-24 -left-24 w-64 h-64 bg-wera-green/10 rounded-full blur-3xl" />
-            <div className="absolute -bottom-24 -right-24 w-64 h-64 bg-yellow-100/10 rounded-full blur-3xl" />
+            <div className="absolute -bottom-24 -right-24 w-64 h-64 bg-yellow-50/10 rounded-full blur-3xl" />
           </div>
         </div>
       </section>
@@ -788,7 +799,7 @@ const JobsPage = () => {
               </Card>
             ))
           ) : (
-            <div className="text-center py-20 bg-yellow-200/20 rounded-2xl border-2 border-dashed border-yellow-300/30">
+            <div className="text-center py-20 bg-yellow-50/20 rounded-2xl border-2 border-dashed border-yellow-300/30">
               <Search className="w-12 h-12 text-gray-300 mx-auto mb-4" />
               <h3 className="text-lg font-bold text-gray-900">No jobs found</h3>
               <p className="text-gray-500">Try adjusting your filters or proximity range.</p>
@@ -820,7 +831,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-[calc(100vh-64px)] flex items-center justify-center p-4 bg-yellow-200">
+    <div className="min-h-[calc(100vh-64px)] flex items-center justify-center p-4 bg-yellow-50">
       <Card className="w-full max-w-md p-8 border-black">
         <div className="text-center mb-8">
           <div className="w-12 h-12 bg-black rounded-xl flex items-center justify-center mx-auto mb-4">
@@ -870,7 +881,7 @@ const LoginPage = () => {
 
         <div className="relative mb-8">
           <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-gray-200"></div></div>
-          <div className="relative flex justify-center text-xs uppercase"><span className="bg-yellow-100 px-2 text-gray-500">Or continue with email</span></div>
+          <div className="relative flex justify-center text-xs uppercase"><span className="bg-yellow-50 px-2 text-gray-500">Or continue with email</span></div>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-6">
@@ -1058,7 +1069,7 @@ const WorkerProfilePage = () => {
                       
                       <div className="flex items-center space-x-3">
                         {job.status === 'on_way' ? (
-                          <Button variant="primary" size="sm" className="bg-wera-green text-black hover:bg-yellow-100 border-black">
+                          <Button variant="primary" size="sm" className="bg-wera-green text-black hover:bg-yellow-50 border-black">
                             <BellRing className="w-4 h-4 mr-2" /> Mark as Arrived
                           </Button>
                         ) : (
@@ -1233,7 +1244,7 @@ const HireTalentPage = () => {
               </div>
             </div>
             <div className="flex gap-4 pt-4">
-              <Button variant="outline" onClick={() => setStep(1)} className="flex-1 border-black text-black">Back</Button>
+              <Button variant="primary" onClick={() => setStep(1)} className="flex-1 font-bold">Back</Button>
               <Button type="submit" variant="primary" className="flex-1 font-bold">Post Opportunity</Button>
             </div>
           </form>
@@ -1384,6 +1395,34 @@ const CompanyOnboardingPage = () => {
               ))}
             </ul>
           </Card>
+
+          <Card className="p-6 border-wera-green/30 bg-wera-green/5">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-bold text-xs uppercase tracking-widest text-black/60">System Status</h3>
+              <div className="flex items-center">
+                <div className="w-2 h-2 bg-wera-green rounded-full animate-pulse mr-2" />
+                <span className="text-[10px] font-black text-wera-green uppercase">Operational</span>
+              </div>
+            </div>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between text-[10px] font-bold">
+                <span className="text-black/40">Domain Status</span>
+                <span className="text-wera-green flex items-center">
+                  <CheckCircle className="w-3 h-3 mr-1" /> Verified
+                </span>
+              </div>
+              <div className="flex items-center justify-between text-[10px] font-bold">
+                <span className="text-black/40">SSL/TLS</span>
+                <span className="text-wera-green flex items-center">
+                  <Lock className="w-3 h-3 mr-1" /> Active
+                </span>
+              </div>
+              <div className="flex items-center justify-between text-[10px] font-bold">
+                <span className="text-black/40">Custom Domain</span>
+                <span className="text-black font-mono">weraplatform.dedyn.io</span>
+              </div>
+            </div>
+          </Card>
         </div>
       </div>
     </div>
@@ -1483,20 +1522,337 @@ const AISoftSkillsAssessment = ({ onComplete }: { onComplete: () => void }) => {
   );
 };
 
+const ModuleContent = ({ module, onComplete, onBack }: { module: any, onComplete: () => void, onBack: () => void }) => {
+  const [step, setStep] = useState<'video' | 'quiz' | 'result'>('video');
+  const [quizAnswers, setQuizAnswers] = useState<number[]>([]);
+  const [quizResult, setQuizResult] = useState<{ score: number, passed: boolean } | null>(null);
+
+  const quizQuestions = [
+    {
+      q: `In ${module.title}, what is the most important first step?`,
+      options: ['Assess the situation', 'Start working immediately', 'Call for help', 'Wait for instructions'],
+      correct: 0
+    },
+    {
+      q: 'How do you ensure quality in your work?',
+      options: ['Work as fast as possible', 'Follow the standard operating procedures', 'Only do what the client sees', 'Ignore minor details'],
+      correct: 1
+    }
+  ];
+
+  const handleQuizSubmit = () => {
+    const correctCount = quizAnswers.filter((ans, i) => ans === quizQuestions[i].correct).length;
+    const score = (correctCount / quizQuestions.length) * 100;
+    const passed = score >= 70;
+    setQuizResult({ score, passed });
+    setStep('result');
+    if (passed) onComplete();
+  };
+
+  return (
+    <div className="space-y-8">
+      <div className="flex items-center justify-between">
+        <Button variant="ghost" onClick={onBack} className="text-black">
+          <ArrowRight className="w-4 h-4 mr-2 rotate-180" /> Back to Academy
+        </Button>
+        <div className="flex items-center space-x-2 text-wera-cyan">
+          <module.icon className="w-5 h-5" />
+          <span className="text-sm font-bold uppercase tracking-widest">{module.title}</span>
+        </div>
+      </div>
+
+      {step === 'video' && (
+        <div className="space-y-8">
+          <div className="aspect-video bg-black rounded-[2.5rem] overflow-hidden relative group cursor-pointer border-4 border-black shadow-2xl">
+            <img 
+              src={`https://picsum.photos/seed/${module.id}/1280/720`} 
+              alt={module.title} 
+              className="w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-700"
+            />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-20 h-20 bg-wera-green rounded-full flex items-center justify-center text-black shadow-2xl group-hover:scale-110 transition-transform">
+                <Zap className="w-10 h-10 fill-black" />
+              </div>
+            </div>
+            <div className="absolute bottom-8 left-8 right-8">
+              <div className="flex items-center justify-between text-white">
+                <span className="text-sm font-bold uppercase tracking-widest">Module {module.id} • Video Lesson</span>
+                <span className="text-sm font-bold">12:45</span>
+              </div>
+              <div className="w-full bg-white/20 h-1.5 rounded-full mt-4 overflow-hidden">
+                <div className="bg-wera-green h-full w-1/3" />
+              </div>
+            </div>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="md:col-span-2 space-y-10">
+              <section>
+                <h2 className="text-3xl font-black mb-6">Learning Objectives</h2>
+                <p className="text-lg text-gray-600 leading-relaxed mb-8">
+                  This module covers the essential skills required for {module.title.toLowerCase()}. 
+                  By the end of this lesson, you will be able to demonstrate professional competence 
+                  and adhere to WÈRA's high standards of service delivery.
+                </p>
+                <div className="grid sm:grid-cols-2 gap-4">
+                  {['Industry Standards', 'Best Practices', 'Safety Protocols', 'Client Communication'].map((item, i) => (
+                    <div key={i} className="flex items-center p-4 bg-yellow-50 rounded-2xl border border-black/5">
+                      <CheckCircle className="w-5 h-5 mr-3 text-wera-green" />
+                      <span className="font-bold text-sm">{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </section>
+
+              <section>
+                <h3 className="text-xl font-bold mb-6">Course Curriculum</h3>
+                <div className="space-y-3">
+                  {[
+                    { title: 'Introduction to the Topic', duration: '2:30' },
+                    { title: 'Key Principles & Frameworks', duration: '5:45' },
+                    { title: 'Real-world Case Studies', duration: '4:15' },
+                    { title: 'Summary & Key Takeaways', duration: '1:15' },
+                  ].map((lesson, i) => (
+                    <div key={i} className="flex items-center justify-between p-4 rounded-xl border border-black/5 hover:bg-black/5 transition-colors cursor-pointer">
+                      <div className="flex items-center space-x-4">
+                        <div className="w-8 h-8 rounded-lg bg-black/5 flex items-center justify-center text-xs font-bold">
+                          {i + 1}
+                        </div>
+                        <span className="font-medium">{lesson.title}</span>
+                      </div>
+                      <span className="text-xs font-bold text-black/40">{lesson.duration}</span>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            </div>
+            <div className="space-y-6">
+              <Card className="p-6 border-black bg-yellow-50">
+                <h3 className="font-bold mb-4 uppercase text-xs tracking-widest opacity-50">Resources</h3>
+                <div className="space-y-3">
+                  <Button variant="outline" className="w-full justify-start border-black/10 text-black">
+                    <Download className="w-4 h-4 mr-2" /> Study Guide (PDF)
+                  </Button>
+                  <Button variant="outline" className="w-full justify-start border-black/10 text-black">
+                    <ExternalLink className="w-4 h-4 mr-2" /> Reference Material
+                  </Button>
+                </div>
+              </Card>
+              <Button onClick={() => setStep('quiz')} className="w-full py-6 text-lg font-bold" variant="primary">
+                Take Module Quiz
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {step === 'quiz' && (
+        <div className="max-w-2xl mx-auto space-y-8 py-12">
+          <div className="text-center">
+            <h2 className="text-3xl font-black mb-2">Module Quiz</h2>
+            <p className="text-gray-600">Answer the following questions to earn your badge.</p>
+          </div>
+          <div className="space-y-10">
+            {quizQuestions.map((q, i) => (
+              <div key={i} className="space-y-4">
+                <h3 className="text-lg font-bold flex items-start">
+                  <span className="w-8 h-8 bg-black text-white rounded-lg flex items-center justify-center mr-4 shrink-0">{i + 1}</span>
+                  {q.q}
+                </h3>
+                <div className="grid gap-3 ml-12">
+                  {q.options.map((opt, optIdx) => (
+                    <button
+                      key={optIdx}
+                      onClick={() => {
+                        const newAns = [...quizAnswers];
+                        newAns[i] = optIdx;
+                        setQuizAnswers(newAns);
+                      }}
+                      className={cn(
+                        "p-4 text-left rounded-xl border-2 transition-all font-medium",
+                        quizAnswers[i] === optIdx 
+                          ? "border-black bg-black text-white" 
+                          : "border-black/5 bg-yellow-50 hover:border-black/20"
+                      )}
+                    >
+                      {opt}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+          <Button 
+            onClick={handleQuizSubmit} 
+            disabled={quizAnswers.length < quizQuestions.length}
+            className="w-full py-6 text-lg font-bold mt-12"
+          >
+            Submit Quiz
+          </Button>
+        </div>
+      )}
+
+      {step === 'result' && quizResult && (
+        <div className="max-w-md mx-auto text-center space-y-8 py-20">
+          <div className={cn(
+            "w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6 shadow-2xl",
+            quizResult.passed ? "bg-wera-green text-black" : "bg-red-500 text-white"
+          )}>
+            {quizResult.passed ? <Trophy className="w-12 h-12" /> : <X className="w-12 h-12" />}
+          </div>
+          <div>
+            <h2 className="text-4xl font-black mb-2">{quizResult.passed ? 'Congratulations!' : 'Try Again'}</h2>
+            <p className="text-gray-600">You scored {quizResult.score}% on the {module.title} quiz.</p>
+          </div>
+          {quizResult.passed ? (
+            <div className="space-y-4">
+              <div className="p-6 bg-wera-green/10 rounded-2xl border border-wera-green/20">
+                <p className="text-sm font-bold text-wera-green uppercase tracking-widest mb-2">New Badge Unlocked</p>
+                <div className="flex items-center justify-center space-x-3">
+                  <module.icon className="w-8 h-8 text-wera-green" />
+                  <span className="text-xl font-black text-black">{module.title}</span>
+                </div>
+              </div>
+              <Button onClick={onBack} className="w-full py-4 font-bold" variant="primary">
+                Return to Academy
+              </Button>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              <p className="text-sm text-red-500 font-bold">You need at least 70% to pass.</p>
+              <Button onClick={() => { setStep('quiz'); setQuizAnswers([]); }} className="w-full py-4 font-bold" variant="primary">
+                Retake Quiz
+              </Button>
+              <Button onClick={onBack} variant="ghost" className="w-full text-black">
+                Back to Lessons
+              </Button>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+
+const CertificateVerificationPage = () => {
+  const [certId, setCertId] = useState('');
+  const [result, setResult] = useState<any>(null);
+  const [loading, setLoading] = useState(false);
+
+  const verifyCert = () => {
+    setLoading(true);
+    // Mock verification logic
+    setTimeout(() => {
+      if (certId.toUpperCase().startsWith('WERA-')) {
+        setResult({
+          valid: true,
+          name: 'WERA WORKER #4412',
+          date: 'April 5, 2026',
+          modules: ['Professionalism', 'Customer Service', 'Financial Literacy', 'Health & Safety', 'Digital Literacy']
+        });
+      } else {
+        setResult({ valid: false });
+      }
+      setLoading(false);
+    }, 1500);
+  };
+
+  return (
+    <div className="max-w-4xl mx-auto px-4 py-20">
+      <div className="text-center mb-12">
+        <div className="w-16 h-16 bg-wera-green/10 text-wera-green rounded-full flex items-center justify-center mx-auto mb-4">
+          <Shield className="w-8 h-8" />
+        </div>
+        <h1 className="text-4xl font-black mb-4 uppercase tracking-tight">Verify <span className="wera-text-gradient">Credentials</span></h1>
+        <p className="text-gray-600 max-w-lg mx-auto">
+          Enter a WÈRA Certificate ID to verify the professional standing and completed training of a worker.
+        </p>
+      </div>
+
+      <Card className="p-8 border-black max-w-md mx-auto">
+        <div className="space-y-6">
+          <div className="space-y-2">
+            <label className="text-xs font-black uppercase tracking-widest opacity-50">Certificate ID</label>
+            <Input 
+              placeholder="e.g. WERA-2026-XXXX" 
+              value={certId}
+              onChange={(e) => setCertId(e.target.value)}
+              className="border-black font-mono"
+            />
+          </div>
+          <Button onClick={verifyCert} disabled={loading || !certId} className="w-full py-6 font-black" variant="primary">
+            {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Verify Certificate'}
+          </Button>
+        </div>
+
+        <AnimatePresence>
+          {result && (
+            <motion.div 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mt-8 pt-8 border-t border-black/5"
+            >
+              {result.valid ? (
+                <div className="space-y-4">
+                  <div className="flex items-center space-x-3 text-wera-green">
+                    <CheckCircle className="w-5 h-5" />
+                    <span className="font-bold uppercase tracking-widest text-xs">Verified Credential</span>
+                  </div>
+                  <div className="space-y-1">
+                    <h3 className="text-xl font-black">{result.name}</h3>
+                    <p className="text-sm text-gray-500">Issued on {result.date}</p>
+                  </div>
+                  <div className="bg-yellow-50 p-4 rounded-xl space-y-2">
+                    <p className="text-[10px] font-black uppercase opacity-40">Completed Curriculum</p>
+                    <div className="flex flex-wrap gap-2">
+                      {result.modules.map((m: string, i: number) => (
+                        <span key={i} className="px-2 py-1 bg-black/5 rounded-md text-[10px] font-bold">{m}</span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex items-center space-x-3 text-red-500">
+                  <X className="w-5 h-5" />
+                  <span className="font-bold uppercase tracking-widest text-xs">Invalid Certificate ID</span>
+                </div>
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </Card>
+    </div>
+  );
+};
+
 const TrainingPage = () => {
   const [modules, setModules] = useState([
-    { id: 1, title: 'Professionalism & Ethics', completed: true, icon: Shield },
-    { id: 2, title: 'Customer Service Excellence', completed: false, icon: MessageSquare },
-    { id: 3, title: 'Financial Literacy & Savings', completed: false, icon: TrendingUp },
-    { id: 4, title: 'Health & Safety at Work', completed: false, icon: Zap },
+    { id: 1, title: 'Professionalism & Ethics', completed: true, icon: Shield, desc: 'Master the core values of integrity and professional conduct in the workplace.' },
+    { id: 2, title: 'Customer Service Excellence', completed: false, icon: MessageSquare, desc: 'Learn how to exceed client expectations and build lasting professional relationships.' },
+    { id: 3, title: 'Financial Literacy & Savings', completed: false, icon: TrendingUp, desc: 'Smart money management strategies for independent workers and entrepreneurs.' },
+    { id: 4, title: 'Health & Safety at Work', completed: false, icon: Zap, desc: 'Essential protocols to ensure your safety and the safety of your clients.' },
+    { id: 5, title: 'Digital Literacy for Workers', completed: false, icon: Sparkles, desc: 'Using technology to manage your bookings, payments, and professional profile.' },
   ]);
   const [aiCertified, setAiCertified] = useState(false);
+  const [selectedModule, setSelectedModule] = useState<any>(null);
 
   const progress = ((modules.filter(m => m.completed).length + (aiCertified ? 1 : 0)) / (modules.length + 1)) * 100;
 
-  const toggleModule = (id: number) => {
-    setModules(modules.map(m => m.id === id ? { ...m, completed: !m.completed } : m));
+  const completeModule = (id: number) => {
+    setModules(modules.map(m => m.id === id ? { ...m, completed: true } : m));
   };
+
+  if (selectedModule) {
+    return (
+      <div className="max-w-6xl mx-auto px-4 py-12">
+        <ModuleContent 
+          module={selectedModule} 
+          onBack={() => setSelectedModule(null)}
+          onComplete={() => completeModule(selectedModule.id)}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-12">
@@ -1540,7 +1896,7 @@ const TrainingPage = () => {
               {modules.map((mod) => (
                 <Card key={mod.id} className={cn(
                   "p-6 flex items-center justify-between transition-all border-black group",
-                  mod.completed ? "bg-black/5" : "bg-yellow-100"
+                  mod.completed ? "bg-black/5" : "bg-yellow-50"
                 )}>
                   <div className="flex items-center space-x-4">
                     <div className={cn(
@@ -1566,7 +1922,7 @@ const TrainingPage = () => {
                   <Button 
                     variant={mod.completed ? "ghost" : "primary"} 
                     size="sm"
-                    onClick={() => toggleModule(mod.id)}
+                    onClick={() => setSelectedModule(mod)}
                     className={mod.completed ? "text-wera-green" : ""}
                   >
                     {mod.completed ? <CheckCircle className="w-6 h-6" /> : 'Start Module'}
@@ -1602,14 +1958,32 @@ const TrainingPage = () => {
                   <div className="bg-wera-green text-black p-4 rounded-xl text-xs font-black uppercase tracking-tighter">
                     🏆 WERA CERTIFIED PROFESSIONAL
                   </div>
-                  <div className="p-4 border-2 border-dashed border-white/20 rounded-xl bg-yellow-100/5">
-                    <Medal className="w-12 h-12 text-wera-green mx-auto mb-2" />
-                    <p className="text-[10px] font-medium text-white/60">
-                      Your digital certificate is ready. This badge is now visible on your public profile.
-                    </p>
+                  <div className="p-8 border-4 border-double border-wera-green/30 rounded-2xl bg-white text-black relative">
+                    <div className="absolute top-4 right-4 opacity-10">
+                      <Logo className="w-20 h-20" />
+                    </div>
+                    <div className="text-center space-y-4">
+                      <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-wera-green">Certificate of Completion</h4>
+                      <div className="space-y-1">
+                        <p className="text-[8px] uppercase font-bold opacity-40">This is to certify that</p>
+                        <p className="text-lg font-black tracking-tight">WERA WORKER #4412</p>
+                      </div>
+                      <p className="text-[8px] leading-relaxed max-w-[200px] mx-auto opacity-60">
+                        Has successfully completed the full WÈRA Academy Professional Development curriculum and is now a Certified Wera Professional.
+                      </p>
+                      <div className="pt-4 flex justify-between items-end">
+                        <div className="text-left">
+                          <div className="w-16 h-px bg-black/20 mb-1" />
+                          <p className="text-[6px] font-bold uppercase">Director of Academy</p>
+                        </div>
+                        <div className="w-10 h-10 border-2 border-wera-green rounded-full flex items-center justify-center">
+                          <Shield className="w-5 h-5 text-wera-green" />
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <Button className="w-full bg-yellow-100 text-black font-black py-4">
-                    <Download className="w-4 h-4 mr-2" /> Download Certificate
+                  <Button className="w-full bg-wera-green text-black font-black py-4 hover:bg-wera-green/90 transition-all shadow-lg">
+                    <Download className="w-4 h-4 mr-2" /> Download Official Certificate
                   </Button>
                 </motion.div>
               ) : (
@@ -1618,7 +1992,7 @@ const TrainingPage = () => {
                     {[1, 2, 3, 4].map(i => (
                       <div key={i} className={cn(
                         "aspect-square rounded-lg flex items-center justify-center border",
-                        modules[i-1]?.completed ? "bg-wera-green/20 border-wera-green text-wera-green" : "bg-yellow-100/5 border-white/10 text-white/20"
+                        modules[i-1]?.completed ? "bg-wera-green/20 border-wera-green text-wera-green" : "bg-yellow-50/5 border-white/10 text-white/20"
                       )}>
                         <Award className="w-5 h-5" />
                       </div>
@@ -1644,29 +2018,55 @@ const TrainingPage = () => {
             </div>
             <div className="space-y-4">
               {[
-                { name: 'Sarah M.', role: 'Hospitality', score: 98, img: 'worker2' },
-                { name: 'David O.', role: 'Construction', score: 96, img: 'worker3' },
-                { name: 'Grace W.', role: 'Domestic', score: 95, img: 'worker4' },
+                { name: 'Sarah M.', role: 'Hospitality', score: 98, img: 'worker2', badge: 'Elite' },
+                { name: 'David O.', role: 'Construction', score: 96, img: 'worker3', badge: 'Pro' },
+                { name: 'Grace W.', role: 'Domestic', score: 95, img: 'worker4', badge: 'Pro' },
               ].map((grad, i) => (
-                <div key={i} className="flex items-center justify-between p-3 bg-black/5 rounded-xl border border-black/5">
+                <div key={i} className="flex items-center justify-between p-3 rounded-xl hover:bg-black/5 transition-all border border-transparent hover:border-black/5 group">
                   <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 rounded-full bg-black/10 overflow-hidden border border-black/10">
+                    <div className="w-10 h-10 rounded-full bg-black/10 overflow-hidden border border-black/5 group-hover:scale-110 transition-transform">
                       <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${grad.img}`} alt={grad.name} />
                     </div>
                     <div>
-                      <div className="text-sm font-bold text-black">{grad.name}</div>
-                      <div className="text-[10px] text-black/60">{grad.role}</div>
+                      <p className="text-sm font-bold">{grad.name}</p>
+                      <p className="text-[10px] text-black/40 font-medium">{grad.role}</p>
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="text-xs font-black text-black">{grad.score}%</div>
-                    <div className="text-[8px] font-bold text-wera-green uppercase">Certified</div>
+                    <p className="text-xs font-black text-wera-green">{grad.score}%</p>
+                    <span className="text-[8px] font-black uppercase tracking-tighter bg-black text-white px-1.5 py-0.5 rounded">
+                      {grad.badge}
+                    </span>
                   </div>
                 </div>
               ))}
               <Button variant="ghost" className="w-full text-xs font-bold text-black/60 hover:text-black">
                 View All Graduates <ChevronRight className="w-3 h-3 ml-1" />
               </Button>
+            </div>
+          </Card>
+
+          {/* Learning Paths */}
+          <Card className="p-6 border-black bg-wera-cyan/5">
+            <h3 className="font-bold mb-4 flex items-center">
+              <Target className="w-4 h-4 mr-2 text-wera-cyan" /> Learning Paths
+            </h3>
+            <div className="space-y-3">
+              {[
+                { title: 'Corporate Ready', modules: 8, icon: Briefcase },
+                { title: 'Entrepreneurship', modules: 6, icon: TrendingUp },
+                { title: 'Technical Specialist', modules: 12, icon: Zap },
+              ].map((path, i) => (
+                <div key={i} className="flex items-center justify-between p-3 bg-white border border-black/5 rounded-xl hover:shadow-sm transition-all cursor-pointer">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 rounded-lg bg-wera-cyan/10 flex items-center justify-center text-wera-cyan">
+                      <path.icon className="w-4 h-4" />
+                    </div>
+                    <span className="text-xs font-bold">{path.title}</span>
+                  </div>
+                  <span className="text-[10px] font-bold text-black/40">{path.modules} Modules</span>
+                </div>
+              ))}
             </div>
           </Card>
 
@@ -1681,7 +2081,7 @@ const TrainingPage = () => {
             </p>
             <div className="flex -space-x-2">
               {[1, 2, 3, 4].map(i => (
-                <div key={i} className="w-8 h-8 rounded-full bg-yellow-100 border-2 border-white shadow-sm flex items-center justify-center overflow-hidden">
+                <div key={i} className="w-8 h-8 rounded-full bg-yellow-50 border-2 border-white shadow-sm flex items-center justify-center overflow-hidden">
                   <img src={`https://api.dicebear.com/7.x/initials/svg?seed=C${i}`} alt="Company" />
                 </div>
               ))}
@@ -1723,6 +2123,7 @@ export default function App() {
             <Route path="/jobs" element={<JobsPage />} />
             <Route path="/hire" element={<HireTalentPage />} />
             <Route path="/academy" element={<TrainingPage />} />
+            <Route path="/verify" element={<CertificateVerificationPage />} />
             <Route path="/companies" element={<CompanyOnboardingPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/profile" element={<WorkerProfilePage />} />

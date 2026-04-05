@@ -9,7 +9,7 @@
 
 @layer base {
   body {
-    @apply font-sans bg-yellow-200 text-wera-black;
+    @apply font-sans bg-yellow-50 text-wera-black;
   }
 }
 
@@ -26,11 +26,20 @@
   background: linear-gradient(135deg, #86efac 0%, #22c55e 100%);
 }
 
-@keyframes border-glow {
-  0%, 100% { border-color: #fef08a; } /* yellow-200ish */
-  50% { border-color: #22c55e; } /* light green */
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
 }
 
-.animate-border-glow {
-  animation: border-glow 4s linear infinite;
+.animate-shimmer {
+  animation: shimmer 3s infinite linear;
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 8s linear infinite;
 }
