@@ -1,11 +1,13 @@
 import React from 'react';
 
 export const Logo = ({ 
-  className = "w-10 h-10", 
+  className = "", 
+  iconSize = "w-10 h-10",
   showText = true, 
   isDark = false 
 }: { 
   className?: string, 
+  iconSize?: string,
   showText?: boolean, 
   isDark?: boolean
 }) => {
@@ -14,7 +16,7 @@ export const Logo = ({
 
   return (
     <div className={`flex items-center space-x-3 ${className}`}>
-      <div className="relative flex-shrink-0 w-10 h-10">
+      <div className={`relative flex-shrink-0 ${iconSize}`}>
         <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-sm">
           <defs>
             <linearGradient id="logo-gradient" x1="0%" y1="0%" x2="100%" y2="100%">

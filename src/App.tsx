@@ -60,8 +60,8 @@ const Navbar = ({ user }: { user: any }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
           <Link to="/" className="flex items-center group">
-            <Logo className="w-12 h-12" />
-            <div className="ml-3 hidden lg:flex flex-col">
+            <Logo iconSize="w-12 h-12" />
+            <div className="ml-6 hidden lg:flex flex-col border-l border-black/10 pl-4">
               <span className="text-[10px] font-black text-wera-green uppercase tracking-tighter leading-none">Platform Live</span>
               <span className="text-[8px] font-bold text-black/40 uppercase tracking-widest">weraplatform.dedyn.io</span>
             </div>
@@ -1960,7 +1960,7 @@ const TrainingPage = () => {
                   </div>
                   <div className="p-8 border-4 border-double border-wera-green/30 rounded-2xl bg-white text-black relative">
                     <div className="absolute top-4 right-4 opacity-10">
-                      <Logo className="w-20 h-20" />
+                      <Logo iconSize="w-20 h-20" />
                     </div>
                     <div className="text-center space-y-4">
                       <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-wera-green">Certificate of Completion</h4>
@@ -2135,7 +2135,7 @@ export default function App() {
             <div className="grid md:grid-cols-4 gap-12 mb-12">
               <div className="col-span-1 md:col-span-2">
                 <div className="flex items-center mb-6">
-                  <Logo className="w-12 h-12" isDark={true} />
+                  <Logo iconSize="w-12 h-12" isDark={true} />
                 </div>
                 <p className="text-gray-400 max-w-sm mb-6">
                   Unlocking potential across Kenya by connecting skilled Wera Workers with meaningful opportunities. 
