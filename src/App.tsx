@@ -61,9 +61,12 @@ const Navbar = ({ user }: { user: any }) => {
         <div className="flex justify-between h-16 items-center">
           <Link to="/" className="flex items-center group">
             <Logo iconSize="w-12 h-12" />
-            <div className="ml-6 hidden lg:flex flex-col border-l border-black/10 pl-4">
-              <span className="text-[10px] font-black text-wera-green uppercase tracking-tighter leading-none">Platform Live</span>
-              <span className="text-[8px] font-bold text-black/40 uppercase tracking-widest">weraplatform.dedyn.io</span>
+            <div className="ml-8 hidden lg:flex flex-col border-l-2 border-wera-green/30 pl-4">
+              <div className="flex items-center mb-0.5">
+                <div className="w-2 h-2 bg-wera-green rounded-full animate-pulse mr-2" />
+                <span className="text-[10px] font-black text-wera-green uppercase tracking-tighter">Platform Live</span>
+              </div>
+              <span className="text-[9px] font-bold text-black/40 uppercase tracking-widest leading-none">weraplatform.dedyn.io</span>
             </div>
           </Link>
 
@@ -1563,24 +1566,18 @@ const ModuleContent = ({ module, onComplete, onBack }: { module: any, onComplete
 
       {step === 'video' && (
         <div className="space-y-8">
-          <div className="aspect-video bg-black rounded-[2.5rem] overflow-hidden relative group cursor-pointer border-4 border-black shadow-2xl">
-            <img 
-              src={`https://picsum.photos/seed/${module.id}/1280/720`} 
-              alt={module.title} 
-              className="w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-700"
-            />
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-20 h-20 bg-wera-green rounded-full flex items-center justify-center text-black shadow-2xl group-hover:scale-110 transition-transform">
-                <Zap className="w-10 h-10 fill-black" />
-              </div>
-            </div>
-            <div className="absolute bottom-8 left-8 right-8">
-              <div className="flex items-center justify-between text-white">
-                <span className="text-sm font-bold uppercase tracking-widest">Module {module.id} • Video Lesson</span>
-                <span className="text-sm font-bold">12:45</span>
-              </div>
-              <div className="w-full bg-white/20 h-1.5 rounded-full mt-4 overflow-hidden">
-                <div className="bg-wera-green h-full w-1/3" />
+          <div className="aspect-video bg-black rounded-[2.5rem] overflow-hidden relative group border-4 border-black shadow-2xl">
+            <video 
+              className="w-full h-full object-cover"
+              controls
+              poster={`https://picsum.photos/seed/${module.id}/1280/720`}
+            >
+              <source src="https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+            <div className="absolute top-6 left-6 pointer-events-none">
+              <div className="bg-black/60 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
+                <span className="text-[10px] font-black text-wera-green uppercase tracking-widest">Module {module.id} • Training Content</span>
               </div>
             </div>
           </div>
