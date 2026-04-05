@@ -23,12 +23,12 @@
 }
 
 .green-gradient {
-  background: linear-gradient(135deg, #4ade80 0%, #166534 100%);
+  background: linear-gradient(135deg, #86efac 0%, #22c55e 100%);
 }
 
 @keyframes border-glow {
   0%, 100% { border-color: #fef08a; } /* yellow-200ish */
-  50% { border-color: #166534; } /* dark green */
+  50% { border-color: #22c55e; } /* light green */
 }
 
 .animate-border-glow {

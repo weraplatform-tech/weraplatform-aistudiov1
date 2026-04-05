@@ -135,7 +135,7 @@ const LandingPage = () => {
           <span className="flex items-center text-xs font-bold tracking-wide">
             <Shield className="w-4 h-4 mr-2 text-wera-green" /> 100% SECURE PAYMENTS VIA M-PESA ESCROW
           </span>
-          <div className="hidden sm:block w-px h-4 bg-white/20" />
+          <div className="hidden sm:block w-px h-4 bg-yellow-100/20" />
           <span className="text-[10px] opacity-70 uppercase tracking-widest">Money is only released when you approve the work</span>
         </div>
       </div>
@@ -295,7 +295,7 @@ const LandingPage = () => {
                 { label: 'Trust', icon: Lock, color: 'bg-black' },
                 { label: 'Growth', icon: TrendingUp, color: 'bg-wera-cyan' },
               ].map((val, i) => (
-                <div key={i} className="p-10 bg-white rounded-[2.5rem] border-2 border-black/10 flex flex-col items-center text-center group hover:bg-black hover:text-white transition-all duration-500 hover:scale-105 shadow-sm">
+                <div key={i} className="p-10 bg-yellow-100 rounded-[2.5rem] border-2 border-black/10 flex flex-col items-center text-center group hover:bg-black hover:text-white transition-all duration-500 hover:scale-105 shadow-sm">
                   <div className={cn("w-14 h-14 rounded-2xl flex items-center justify-center mb-4 text-white shadow-lg", val.color)}>
                     <val.icon className="w-7 h-7" />
                   </div>
@@ -329,7 +329,7 @@ const LandingPage = () => {
                   { title: 'The Mavericks', desc: 'Independent thinkers seeking flexibility and unconventional niche opportunities.', icon: Sparkles },
                   { title: 'The Traditionalists', desc: 'Reliable workers who value stability and trust-based community referrals.', icon: Shield },
                 ].map((item, i) => (
-                  <Card key={i} className="p-6 border-black/10 bg-white hover:border-wera-cyan transition-all group">
+                  <Card key={i} className="p-6 border-black/10 bg-yellow-100 hover:border-wera-cyan transition-all group">
                     <div className="flex items-start space-x-4">
                       <div className="w-10 h-10 rounded-xl bg-black/5 flex items-center justify-center text-black group-hover:bg-wera-cyan group-hover:text-white transition-colors">
                         <item.icon className="w-5 h-5" />
@@ -355,7 +355,7 @@ const LandingPage = () => {
                   { title: 'Established Corporates', desc: 'Enterprises focused on compliance, quality, and long-term workforce reliability.', icon: Shield },
                   { title: 'NGOs & Nonprofits', desc: 'Purpose-driven organizations seeking ethical hiring and fair labour practices.', icon: Heart },
                 ].map((item, i) => (
-                  <Card key={i} className="p-6 border-black/10 bg-white hover:border-wera-green transition-all group">
+                  <Card key={i} className="p-6 border-black/10 bg-yellow-100 hover:border-wera-green transition-all group">
                     <div className="flex items-start space-x-4">
                       <div className="w-10 h-10 rounded-xl bg-black/5 flex items-center justify-center text-black group-hover:bg-wera-green group-hover:text-white transition-colors">
                         <item.icon className="w-5 h-5" />
@@ -388,7 +388,7 @@ const LandingPage = () => {
                   { title: 'Rigorous Vetting', desc: 'Background checks, skill verification, and identity audits for all workers.', icon: Shield },
                   { title: 'Dispute Resolution', desc: 'Dedicated 24/7 support team to mediate and resolve any project issues.', icon: MessageSquare },
                 ].map((item, i) => (
-                  <div key={i} className="flex items-start space-x-4 p-4 rounded-2xl bg-white/5 border border-white/10">
+                  <div key={i} className="flex items-start space-x-4 p-4 rounded-2xl bg-yellow-100/5 border border-white/10">
                     <div className="w-10 h-10 rounded-xl bg-wera-cyan/20 flex items-center justify-center text-wera-cyan">
                       <item.icon className="w-5 h-5" />
                     </div>
@@ -402,7 +402,7 @@ const LandingPage = () => {
             </div>
             <div className="relative">
               <div className="absolute -top-20 -right-20 w-64 h-64 bg-wera-green/20 rounded-full blur-[100px]" />
-              <Card className="p-8 bg-white/5 backdrop-blur-xl border-white/10 relative z-10">
+              <Card className="p-8 bg-yellow-100/5 backdrop-blur-xl border-white/10 relative z-10">
                 <div className="text-center mb-8">
                   <div className="w-16 h-16 bg-wera-green rounded-full flex items-center justify-center mx-auto mb-4 text-black">
                     <Shield className="w-8 h-8" />
@@ -411,19 +411,19 @@ const LandingPage = () => {
                   <p className="text-white/60 text-sm">The gold standard for labour in Kenya</p>
                 </div>
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between p-3 rounded-lg bg-white/5 border border-white/10">
+                  <div className="flex items-center justify-between p-3 rounded-lg bg-yellow-100/5 border border-white/10">
                     <span className="text-xs font-bold">Identity Verified</span>
                     <CheckCircle className="w-4 h-4 text-wera-green" />
                   </div>
-                  <div className="flex items-center justify-between p-3 rounded-lg bg-white/5 border border-white/10">
+                  <div className="flex items-center justify-between p-3 rounded-lg bg-yellow-100/5 border border-white/10">
                     <span className="text-xs font-bold">Background Check Passed</span>
                     <CheckCircle className="w-4 h-4 text-wera-green" />
                   </div>
-                  <div className="flex items-center justify-between p-3 rounded-lg bg-white/5 border border-white/10">
+                  <div className="flex items-center justify-between p-3 rounded-lg bg-yellow-100/5 border border-white/10">
                     <span className="text-xs font-bold">Soft Skills Certified</span>
                     <CheckCircle className="w-4 h-4 text-wera-green" />
                   </div>
-                  <div className="flex items-center justify-between p-3 rounded-lg bg-white/5 border border-white/10">
+                  <div className="flex items-center justify-between p-3 rounded-lg bg-yellow-100/5 border border-white/10">
                     <span className="text-xs font-bold">Insurance Covered</span>
                     <CheckCircle className="w-4 h-4 text-wera-green" />
                   </div>
@@ -436,7 +436,7 @@ const LandingPage = () => {
       </section>
 
       {/* Success Stories Section */}
-      <section className="py-24 bg-white">
+      <section className="py-24 bg-yellow-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-black mb-4 text-black">Real Stories, Real <span className="wera-text-gradient">Impact</span></h2>
@@ -514,13 +514,13 @@ const LandingPage = () => {
                 ))}
               </ul>
               <Link to="/academy">
-                <Button className="bg-wera-green text-black hover:bg-white px-8 py-4 text-lg font-bold">
+                <Button className="bg-wera-green text-black hover:bg-yellow-100 px-8 py-4 text-lg font-bold">
                   Start Training Now
                 </Button>
               </Link>
             </div>
             <div className="relative">
-              <Card className="p-8 border-wera-green/30 bg-white/5 backdrop-blur-sm relative z-10">
+              <Card className="p-8 border-wera-green/30 bg-yellow-100/5 backdrop-blur-sm relative z-10">
                 <div className="flex items-center space-x-4 mb-8">
                   <div className="w-12 h-12 bg-wera-green rounded-full flex items-center justify-center text-black">
                     <Brain className="w-6 h-6" />
@@ -531,14 +531,14 @@ const LandingPage = () => {
                   </div>
                 </div>
                 <div className="space-y-6">
-                  <div className="p-4 bg-white/5 rounded-xl border border-white/10">
+                  <div className="p-4 bg-yellow-100/5 rounded-xl border border-white/10">
                     <p className="text-sm italic text-white/80">"How would you handle a situation where a client is unhappy with the progress of a job?"</p>
                   </div>
                   <div className="flex justify-between items-center text-xs font-bold uppercase tracking-widest">
                     <span className="text-white/40">Assessment Progress</span>
                     <span className="text-wera-green">85% Complete</span>
                   </div>
-                  <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden">
+                  <div className="w-full bg-yellow-100/10 h-2 rounded-full overflow-hidden">
                     <div className="bg-wera-green h-full w-[85%]" />
                   </div>
                 </div>
@@ -559,13 +559,13 @@ const LandingPage = () => {
               <p className="text-xl mb-10 opacity-90 max-w-2xl mx-auto">
                 Join thousands of Wera Workers and employers already using Wera to build a better future.
               </p>
-              <Button className="bg-wera-green text-black hover:bg-white px-10 py-4 text-lg font-bold">
+              <Button className="bg-wera-green text-black hover:bg-yellow-100 px-10 py-4 text-lg font-bold">
                 Get Started Now
               </Button>
             </div>
             {/* Decorative circles */}
             <div className="absolute -top-24 -left-24 w-64 h-64 bg-wera-green/10 rounded-full blur-3xl" />
-            <div className="absolute -bottom-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl" />
+            <div className="absolute -bottom-24 -right-24 w-64 h-64 bg-yellow-100/10 rounded-full blur-3xl" />
           </div>
         </div>
       </section>
@@ -698,7 +698,7 @@ const JobsPage = () => {
           <Card className="p-6 border-black">
             <h3 className="font-bold mb-4 flex items-center"><TrendingUp className="w-4 h-4 mr-2 text-black" /> Experience</h3>
             <select 
-              className="w-full p-2 text-sm rounded-lg border-black/20 focus:ring-black bg-white/50"
+              className="w-full p-2 text-sm rounded-lg border-black/20 focus:ring-black bg-yellow-50/50"
               onChange={(e) => setMinExperience(parseInt(e.target.value))}
             >
               <option value="0">Any Experience</option>
@@ -870,7 +870,7 @@ const LoginPage = () => {
 
         <div className="relative mb-8">
           <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-gray-200"></div></div>
-          <div className="relative flex justify-center text-xs uppercase"><span className="bg-white px-2 text-gray-500">Or continue with email</span></div>
+          <div className="relative flex justify-center text-xs uppercase"><span className="bg-yellow-100 px-2 text-gray-500">Or continue with email</span></div>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-6">
@@ -1058,7 +1058,7 @@ const WorkerProfilePage = () => {
                       
                       <div className="flex items-center space-x-3">
                         {job.status === 'on_way' ? (
-                          <Button variant="primary" size="sm" className="bg-wera-green text-black hover:bg-white border-black">
+                          <Button variant="primary" size="sm" className="bg-wera-green text-black hover:bg-yellow-100 border-black">
                             <BellRing className="w-4 h-4 mr-2" /> Mark as Arrived
                           </Button>
                         ) : (
@@ -1128,13 +1128,13 @@ const HireTalentPage = () => {
                 placeholder="e.g. Need a Plumber for kitchen renovation" 
                 value={formData.title}
                 onChange={(e) => setFormData({...formData, title: e.target.value})}
-                className="bg-white/50 border-black/20"
+                className="bg-yellow-50/50 border-black/20"
               />
             </div>
             <div className="space-y-4">
               <label className="block text-sm font-bold">Category</label>
               <select 
-                className="w-full p-2 border border-black/20 rounded-lg focus:ring-black bg-white/50"
+                className="w-full p-2 border border-black/20 rounded-lg focus:ring-black bg-yellow-50/50"
                 value={formData.category}
                 onChange={(e) => setFormData({...formData, category: e.target.value})}
               >
@@ -1151,7 +1151,7 @@ const HireTalentPage = () => {
                 type="datetime-local" 
                 value={formData.scheduled_at}
                 onChange={(e) => setFormData({...formData, scheduled_at: e.target.value})}
-                className="bg-white/50 border-black/20"
+                className="bg-yellow-50/50 border-black/20"
               />
             </div>
             <div className="space-y-4 p-4 bg-black/5 rounded-xl border border-black/10">
@@ -1187,7 +1187,7 @@ const HireTalentPage = () => {
                       placeholder="e.g. Mary Wanjiku" 
                       value={formData.recipient_name}
                       onChange={(e) => setFormData({...formData, recipient_name: e.target.value})}
-                      className="bg-white/50 border-black/20"
+                      className="bg-yellow-50/50 border-black/20"
                     />
                   </div>
                   <div className="space-y-2">
@@ -1196,7 +1196,7 @@ const HireTalentPage = () => {
                       placeholder="e.g. 0712 345 678" 
                       value={formData.recipient_phone}
                       onChange={(e) => setFormData({...formData, recipient_phone: e.target.value})}
-                      className="bg-white/50 border-black/20"
+                      className="bg-yellow-50/50 border-black/20"
                     />
                   </div>
                 </motion.div>
@@ -1218,18 +1218,18 @@ const HireTalentPage = () => {
             <div className="space-y-4">
               <label className="block text-sm font-bold">Describe the job</label>
               <textarea 
-                className="w-full p-4 border border-black/20 rounded-xl min-h-[150px] focus:ring-black bg-white/50"
+                className="w-full p-4 border border-black/20 rounded-xl min-h-[150px] focus:ring-black bg-yellow-50/50"
                 placeholder="Provide details about the work, requirements, and timeline..."
               />
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <label className="block text-sm font-bold">Budget (KES)</label>
-                <Input type="number" placeholder="2500" className="bg-white/50 border-black/20" />
+                <Input type="number" placeholder="2500" className="bg-yellow-50/50 border-black/20" />
               </div>
               <div className="space-y-2">
                 <label className="block text-sm font-bold">Location</label>
-                <Input placeholder="e.g. Westlands, Nairobi" className="bg-white/50 border-black/20" />
+                <Input placeholder="e.g. Westlands, Nairobi" className="bg-yellow-50/50 border-black/20" />
               </div>
             </div>
             <div className="flex gap-4 pt-4">
@@ -1303,11 +1303,11 @@ const CompanyOnboardingPage = () => {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <label className="text-sm font-bold">Company Name</label>
-                    <Input placeholder="e.g. Wera Solutions Ltd" className="bg-white/50 border-black/20" />
+                    <Input placeholder="e.g. Wera Solutions Ltd" className="bg-yellow-50/50 border-black/20" />
                   </div>
                   <div className="space-y-2">
                     <label className="text-sm font-bold">Industry</label>
-                    <select className="w-full p-2 border border-black/20 rounded-lg focus:ring-black bg-white/50">
+                    <select className="w-full p-2 border border-black/20 rounded-lg focus:ring-black bg-yellow-50/50">
                       <option>Logistics</option>
                       <option>Retail</option>
                       <option>Construction</option>
@@ -1318,7 +1318,7 @@ const CompanyOnboardingPage = () => {
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-bold">Business Registration Number</label>
-                  <Input placeholder="PVT-XXXXXX" className="bg-white/50 border-black/20" />
+                  <Input placeholder="PVT-XXXXXX" className="bg-yellow-50/50 border-black/20" />
                 </div>
                 <Button onClick={() => setStep(2)} className="w-full py-4 font-bold" variant="primary">Next Step</Button>
               </div>
@@ -1340,7 +1340,7 @@ const CompanyOnboardingPage = () => {
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-bold">Estimated Monthly Hires</label>
-                  <select className="w-full p-2 border border-black/20 rounded-lg focus:ring-black bg-white/50">
+                  <select className="w-full p-2 border border-black/20 rounded-lg focus:ring-black bg-yellow-50/50">
                     <option>1-5 workers</option>
                     <option>5-20 workers</option>
                     <option>20-50 workers</option>
@@ -1540,7 +1540,7 @@ const TrainingPage = () => {
               {modules.map((mod) => (
                 <Card key={mod.id} className={cn(
                   "p-6 flex items-center justify-between transition-all border-black group",
-                  mod.completed ? "bg-black/5" : "bg-white"
+                  mod.completed ? "bg-black/5" : "bg-yellow-100"
                 )}>
                   <div className="flex items-center space-x-4">
                     <div className={cn(
@@ -1602,13 +1602,13 @@ const TrainingPage = () => {
                   <div className="bg-wera-green text-black p-4 rounded-xl text-xs font-black uppercase tracking-tighter">
                     🏆 WERA CERTIFIED PROFESSIONAL
                   </div>
-                  <div className="p-4 border-2 border-dashed border-white/20 rounded-xl bg-white/5">
+                  <div className="p-4 border-2 border-dashed border-white/20 rounded-xl bg-yellow-100/5">
                     <Medal className="w-12 h-12 text-wera-green mx-auto mb-2" />
                     <p className="text-[10px] font-medium text-white/60">
                       Your digital certificate is ready. This badge is now visible on your public profile.
                     </p>
                   </div>
-                  <Button className="w-full bg-white text-black font-black py-4">
+                  <Button className="w-full bg-yellow-100 text-black font-black py-4">
                     <Download className="w-4 h-4 mr-2" /> Download Certificate
                   </Button>
                 </motion.div>
@@ -1618,7 +1618,7 @@ const TrainingPage = () => {
                     {[1, 2, 3, 4].map(i => (
                       <div key={i} className={cn(
                         "aspect-square rounded-lg flex items-center justify-center border",
-                        modules[i-1]?.completed ? "bg-wera-green/20 border-wera-green text-wera-green" : "bg-white/5 border-white/10 text-white/20"
+                        modules[i-1]?.completed ? "bg-wera-green/20 border-wera-green text-wera-green" : "bg-yellow-100/5 border-white/10 text-white/20"
                       )}>
                         <Award className="w-5 h-5" />
                       </div>
@@ -1681,7 +1681,7 @@ const TrainingPage = () => {
             </p>
             <div className="flex -space-x-2">
               {[1, 2, 3, 4].map(i => (
-                <div key={i} className="w-8 h-8 rounded-full bg-white border-2 border-white shadow-sm flex items-center justify-center overflow-hidden">
+                <div key={i} className="w-8 h-8 rounded-full bg-yellow-100 border-2 border-white shadow-sm flex items-center justify-center overflow-hidden">
                   <img src={`https://api.dicebear.com/7.x/initials/svg?seed=C${i}`} alt="Company" />
                 </div>
               ))}

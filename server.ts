@@ -12,18 +12,21 @@ async function startServer() {
 
   app.use(express.json());
 
-  // Redirect to HTTPS and www
+  // Redirect logic for custom domain
   app.use((req, res, next) => {
     const host = req.get("host");
     const protocol = req.get("x-forwarded-proto") || req.protocol;
 
-    // If not on https OR on the root domain without www, redirect to https://www
-    if (
-      (process.env.NODE_ENV === "production") && 
-      (protocol !== "https" || host === "weraplatform.dedyn.io")
-    ) {
+    // Only redirect if we are on the custom domain
+    if (process.env.NODE_ENV === "production" && host === "weraplatform.dedyn.io") {
       return res.redirect(301, `https://www.weraplatform.dedyn.io${req.url}`);
     }
+    
+    // Force HTTPS only on the custom domain
+    if (process.env.NODE_ENV === "production" && host?.includes("weraplatform.dedyn.io") && protocol !== "https") {
+      return res.redirect(301, `https://${host}${req.url}`);
+    }
+    
     next();
   });
 
