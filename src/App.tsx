@@ -13,6 +13,7 @@ import {
   MapPin, 
   Star,
   Shield,
+  ShieldCheck,
   Zap,
   TrendingUp,
   LogOut,
@@ -36,7 +37,28 @@ import {
   ArrowRight,
   Target,
   Eye,
-  Heart
+  Heart,
+  UserPlus,
+  Camera,
+  FileText,
+  Smartphone,
+  AlertTriangle,
+  ThumbsUp,
+  ThumbsDown,
+  Info,
+  Languages,
+  Car,
+  Shovel,
+  Coffee,
+  Laptop,
+  Truck,
+  Building2,
+  HardHat,
+  Wallet,
+  CreditCard,
+  History,
+  ArrowUpRight,
+  ArrowDownLeft
 } from 'lucide-react';
 import { Button, Card, Input, cn } from './components/ui';
 import { supabase, type Profile, type Job } from './lib/supabase';
@@ -45,6 +67,137 @@ import { aiService } from './lib/ai';
 import { Logo } from './components/Logo';
 
 // --- Components ---
+
+const SOSButton = ({ side }: { side: 'worker' | 'employer' }) => {
+  const [showProtocol, setShowProtocol] = useState(false);
+
+  return (
+    <>
+      <Button 
+        variant="outline" 
+        className="border-red-500 text-red-500 hover:bg-red-50 font-black animate-pulse"
+        onClick={() => setShowProtocol(true)}
+      >
+        <AlertTriangle className="w-4 h-4 mr-2" /> SOS
+      </Button>
+
+      <AnimatePresence>
+        {showProtocol && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+            <motion.div 
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-white rounded-[2rem] border-4 border-black p-8 max-w-md w-full shadow-2xl"
+            >
+              <div className="flex items-center space-x-4 mb-6 text-red-600">
+                <div className="w-12 h-12 bg-red-100 rounded-2xl flex items-center justify-center">
+                  <AlertTriangle className="w-8 h-8" />
+                </div>
+                <h3 className="text-2xl font-black uppercase tracking-tight">Emergency Protocol</h3>
+              </div>
+
+              <div className="space-y-4 mb-8">
+                <p className="text-sm font-bold text-black/60">You are about to trigger a WÈRA Emergency Response. Please follow these steps:</p>
+                <div className="space-y-3">
+                  {[
+                    'Ensure your immediate physical safety first.',
+                    'Our 24/7 safety team will be notified instantly.',
+                    'A platform-wide freeze will be placed on this job.',
+                    'Misuse of this button results in immediate permanent ban.'
+                  ].map((step, i) => (
+                    <div key={i} className="flex items-start space-x-3 text-sm">
+                      <div className="w-5 h-5 bg-black text-white rounded-full flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">{i+1}</div>
+                      <p className="font-medium">{step}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-3">
+                <Button variant="primary" className="bg-red-600 hover:bg-red-700 border-red-700 py-6 text-lg">
+                  Confirm Emergency
+                </Button>
+                <Button variant="ghost" onClick={() => setShowProtocol(false)} className="text-black font-bold">
+                  Cancel (False Alarm)
+                </Button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+    </>
+  );
+};
+
+const DualRatingSystem = ({ targetName, type }: { targetName: string, type: 'worker' | 'employer' }) => {
+  const [rating, setRating] = useState(0);
+  const [hover, setHover] = useState(0);
+  const [comment, setComment] = useState('');
+  const [isAnonymous, setIsAnonymous] = useState(true);
+
+  return (
+    <Card className="p-8 border-black shadow-xl bg-yellow-50/30">
+      <div className="flex items-center justify-between mb-8">
+        <div>
+          <h3 className="text-2xl font-black">Rate {type === 'worker' ? 'Worker' : 'Employer'}</h3>
+          <p className="text-sm text-black/60">Your feedback ensures a fair WÈRA ecosystem.</p>
+        </div>
+        <div className="px-3 py-1 bg-black text-white rounded-full text-[10px] font-black uppercase tracking-widest">
+          {isAnonymous ? 'Anonymous' : 'Public'}
+        </div>
+      </div>
+
+      <div className="space-y-8">
+        <div className="flex justify-center space-x-4">
+          {[1, 2, 3, 4, 5].map((star) => (
+            <button
+              key={star}
+              onMouseEnter={() => setHover(star)}
+              onMouseLeave={() => setHover(0)}
+              onClick={() => setRating(star)}
+              className="transition-transform hover:scale-125"
+            >
+              <Star 
+                className={cn(
+                  "w-12 h-12 transition-colors",
+                  (hover || rating) >= star ? "fill-wera-cyan text-wera-cyan" : "text-black/10"
+                )} 
+              />
+            </button>
+          ))}
+        </div>
+
+        <div className="space-y-4">
+          <label className="text-sm font-bold block">Detailed Feedback (Internal Only)</label>
+          <textarea 
+            className="w-full p-4 border-2 border-black rounded-2xl bg-white focus:ring-2 focus:ring-wera-cyan outline-none min-h-[120px]"
+            placeholder={`How was your experience with ${targetName}?`}
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+          />
+        </div>
+
+        {rating === 1 && (
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="p-4 bg-red-50 border-2 border-red-200 rounded-xl flex items-start space-x-3"
+          >
+            <AlertTriangle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
+            <p className="text-xs text-red-800 font-bold leading-tight">
+              FAIR PLAY ALERT: 1-star ratings trigger a platform review. {type === 'employer' ? 'Employers' : 'Workers'} with persistent low ratings are matched with each other as a penalty.
+            </p>
+          </motion.div>
+        )}
+
+        <Button variant="primary" className="w-full py-6 text-lg font-bold" disabled={rating === 0}>
+          Submit Feedback
+        </Button>
+      </div>
+    </Card>
+  );
+};
 
 const Navbar = ({ user }: { user: any }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -64,7 +217,7 @@ const Navbar = ({ user }: { user: any }) => {
             <div className="ml-8 hidden lg:flex flex-col border-l-2 border-wera-green/30 pl-4">
               <div className="flex items-center mb-0.5">
                 <div className="w-2 h-2 bg-wera-green rounded-full animate-pulse mr-2" />
-                <span className="text-[10px] font-black text-wera-green uppercase tracking-tighter">Platform Live</span>
+                <span className="text-[10px] font-black text-wera-green tracking-tighter">Twende Wera, tuko live!</span>
               </div>
               <span className="text-[9px] font-bold text-black/40 uppercase tracking-widest leading-none">weraplatform.dedyn.io</span>
             </div>
@@ -74,9 +227,10 @@ const Navbar = ({ user }: { user: any }) => {
           <div className="hidden md:flex items-center space-x-8">
             <Link to="/jobs" className="text-sm font-medium hover:underline transition-all text-black">Find Wera Work</Link>
             <Link to="/hire" className="text-sm font-medium hover:underline transition-all text-black">Hire Wera Workers</Link>
+            <Link to="/wallet" className="text-sm font-medium hover:underline transition-all text-black">Wallet</Link>
             <Link to="/academy" className="text-sm font-medium hover:underline transition-all text-black">Academy</Link>
             <Link to="/verify" className="text-sm font-medium hover:underline transition-all text-black">Verify</Link>
-            <a href="#about" className="text-sm font-medium hover:underline transition-all text-black">About Us</a>
+            <Link to="/about" className="text-sm font-medium hover:underline transition-all text-black">About Us</Link>
             <Link to="/companies" className="text-sm font-bold text-black hover:opacity-80 transition-opacity">For Companies</Link>
             
             {user ? (
@@ -116,8 +270,12 @@ const Navbar = ({ user }: { user: any }) => {
           >
             <div className="px-4 pt-2 pb-6 space-y-2">
               <Link to="/jobs" className="block px-3 py-2 rounded-md text-base font-medium hover:bg-black/10 text-black">Find Work</Link>
+              <Link to="/wallet" className="block px-3 py-2 rounded-md text-base font-medium hover:bg-black/10 text-black">Wallet</Link>
               <Link to="/hire" className="block px-3 py-2 rounded-md text-base font-medium hover:bg-black/10 text-black">Hire Talent</Link>
               <Link to="/academy" className="block px-3 py-2 rounded-md text-base font-medium hover:bg-black/10 text-black">Academy</Link>
+              <Link to="/verify" className="block px-3 py-2 rounded-md text-base font-medium hover:bg-black/10 text-black">Verify</Link>
+              <Link to="/about" className="block px-3 py-2 rounded-md text-base font-medium hover:bg-black/10 text-black">About Us</Link>
+              <Link to="/companies" className="block px-3 py-2 rounded-md text-base font-bold hover:bg-black/10 text-black">For Companies</Link>
               {!user && (
                 <div className="pt-4 flex flex-col space-y-2">
                   <Link to="/login"><Button variant="outline" className="w-full border-black text-black">Login</Button></Link>
@@ -134,7 +292,441 @@ const Navbar = ({ user }: { user: any }) => {
 
 // --- Pages ---
 
+const WorkerOnboardingPage = () => {
+  const [step, setStep] = useState(1);
+  const [formData, setFormData] = useState({
+    fullName: '',
+    phone: '',
+    location: '',
+    category: 'Construction',
+    skills: [] as string[],
+    idNumber: '',
+    experience: '0-2'
+  });
+
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [isVerified, setIsVerified] = useState(false);
+
+  const categories = [
+    'Construction & Trades',
+    'Domestic & Home Care',
+    'Creative & Digital',
+    'IT & Technical',
+    'Logistics & Delivery',
+    'Hospitality & Events',
+    'Agriculture & Landscaping',
+    'Security & Transport'
+  ];
+
+  const handleNext = () => setStep(step + 1);
+  const handleBack = () => setStep(step - 1);
+
+  return (
+    <div className="max-w-3xl mx-auto px-4 py-16">
+      <div className="text-center mb-12">
+        <h1 className="text-4xl font-black mb-4">Join the <span className="wera-text-gradient">Wera Workforce</span></h1>
+        <p className="text-gray-600 text-lg">Your journey to professional growth and verified opportunities starts here.</p>
+      </div>
+
+      <div className="mb-8">
+        <div className="flex justify-between items-center max-w-xs mx-auto">
+          {[1, 2, 3].map((s) => (
+            <div key={s} className="flex items-center">
+              <div className={cn(
+                "w-10 h-10 rounded-full flex items-center justify-center font-bold border-2 transition-all",
+                step >= s ? "bg-black text-white border-black" : "bg-white text-black/20 border-black/10"
+              )}>
+                {step > s ? <CheckCircle className="w-6 h-6" /> : s}
+              </div>
+              {s < 3 && <div className={cn("w-12 h-1 mx-2 rounded-full", step > s ? "bg-black" : "bg-black/10")} />}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <Card className="p-8 border-black shadow-xl">
+        {step === 1 && (
+          <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-6">
+            <h2 className="text-2xl font-bold text-black flex items-center">
+              <User className="w-6 h-6 mr-2" /> Personal Details
+            </h2>
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <label className="text-sm font-bold">Full Name (As per ID)</label>
+                <Input 
+                  placeholder="e.g. John Kamau" 
+                  value={formData.fullName}
+                  onChange={(e) => setFormData({...formData, fullName: e.target.value})}
+                  className="bg-yellow-50/50 border-black/20" 
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-bold">Phone Number</label>
+                <div className="relative">
+                  <Smartphone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-black/40" />
+                  <Input 
+                    placeholder="07XX XXX XXX" 
+                    className="pl-10 bg-yellow-50/50 border-black/20" 
+                    value={formData.phone}
+                    onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-bold">Primary Location</label>
+              <div className="relative">
+                <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-black/40" />
+                <Input 
+                  placeholder="e.g. Westlands, Nairobi" 
+                  className="pl-10 bg-yellow-50/50 border-black/20" 
+                  value={formData.location}
+                  onChange={(e) => setFormData({...formData, location: e.target.value})}
+                />
+              </div>
+            </div>
+            <Button onClick={handleNext} className="w-full py-6 text-lg font-bold" variant="primary">
+              Next: Skills & Category
+            </Button>
+          </motion.div>
+        )}
+
+        {step === 2 && (
+          <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-6">
+            <h2 className="text-2xl font-bold text-black flex items-center">
+              <Briefcase className="w-6 h-6 mr-2" /> Skills & Experience
+            </h2>
+            <div className="space-y-4">
+              <label className="text-sm font-bold">What is your primary trade?</label>
+              <div className="grid grid-cols-2 gap-3">
+                {categories.map((cat) => (
+                  <button
+                    key={cat}
+                    onClick={() => setFormData({...formData, category: cat})}
+                    className={cn(
+                      "p-4 text-left rounded-xl border-2 transition-all text-sm font-bold",
+                      formData.category === cat ? "border-black bg-black text-white" : "border-black/5 bg-yellow-50/50 hover:border-black/20"
+                    )}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-bold">Years of Experience</label>
+              <select 
+                className="w-full p-3 border border-black/20 rounded-xl focus:ring-black bg-yellow-50/50 font-bold"
+                value={formData.experience}
+                onChange={(e) => setFormData({...formData, experience: e.target.value})}
+              >
+                <option value="0-2">0-2 Years (Junior)</option>
+                <option value="2-5">2-5 Years (Intermediate)</option>
+                <option value="5-10">5-10 Years (Senior)</option>
+                <option value="10+">10+ Years (Expert)</option>
+              </select>
+            </div>
+
+            <div className="space-y-4">
+              <label className="text-sm font-bold">Specialized Skills (Optional)</label>
+              <div className="grid grid-cols-2 gap-3">
+                {[
+                  { id: 'french', label: 'French Fluency', icon: Languages },
+                  { id: 'driving', label: 'Advanced Driving', icon: Car },
+                  { id: 'security', label: 'Security Trained', icon: ShieldCheck },
+                  { id: 'multilingual', label: 'Multilingual (Other)', icon: Sparkles }
+                ].map((skill) => (
+                  <button
+                    key={skill.id}
+                    onClick={() => {
+                      const newSkills = formData.skills.includes(skill.id)
+                        ? formData.skills.filter(s => s !== skill.id)
+                        : [...formData.skills, skill.id];
+                      setFormData({...formData, skills: newSkills});
+                    }}
+                    className={cn(
+                      "p-4 text-left rounded-xl border-2 transition-all text-sm font-bold flex items-center space-x-3",
+                      formData.skills.includes(skill.id) ? "border-wera-cyan bg-wera-cyan/10 text-wera-cyan" : "border-black/5 bg-yellow-50/50 hover:border-black/20"
+                    )}
+                  >
+                    <skill.icon className="w-4 h-4" />
+                    <span>{skill.label}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex gap-4 pt-4">
+              <Button variant="outline" onClick={handleBack} className="flex-1 py-6 border-black text-black">Back</Button>
+              <Button onClick={handleNext} className="flex-1 py-6 text-lg font-bold" variant="primary">Next: Verification</Button>
+            </div>
+          </motion.div>
+        )}
+
+        {step === 3 && (
+          <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-8">
+            <div className="text-center space-y-4">
+              <div className="w-20 h-20 bg-wera-green/10 text-wera-green rounded-full flex items-center justify-center mx-auto">
+                <ShieldCheck className="w-10 h-10" />
+              </div>
+              <h2 className="text-2xl font-bold">Identity Verification</h2>
+              <p className="text-black/60">We use official government services to verify your identity instantly.</p>
+            </div>
+
+            <div className="space-y-6">
+              <div className="space-y-2">
+                <label className="text-sm font-bold">National ID Number</label>
+                <div className="flex gap-2">
+                  <Input 
+                    placeholder="XXXXXXXX" 
+                    className="bg-yellow-50/50 border-black/20" 
+                    value={formData.idNumber}
+                    onChange={(e) => setFormData({...formData, idNumber: e.target.value})}
+                    disabled={isVerified}
+                  />
+                  {!isVerified && (
+                    <Button 
+                      onClick={async () => {
+                        if (!formData.idNumber) return;
+                        setIsVerifying(true);
+                        // Simulate government API call
+                        await new Promise(r => setTimeout(r, 2000));
+                        setIsVerifying(false);
+                        setIsVerified(true);
+                      }} 
+                      disabled={isVerifying || !formData.idNumber}
+                      variant="secondary"
+                      className="shrink-0"
+                    >
+                      {isVerifying ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Verify ID'}
+                    </Button>
+                  )}
+                </div>
+              </div>
+              
+              {isVerified ? (
+                <motion.div 
+                  initial={{ opacity: 0, y: 10 }} 
+                  animate={{ opacity: 1, y: 0 }}
+                  className="p-6 bg-wera-green/10 border-2 border-wera-green rounded-2xl flex items-center space-x-4"
+                >
+                  <div className="w-12 h-12 bg-wera-green text-white rounded-full flex items-center justify-center shrink-0">
+                    <CheckCircle className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-wera-green">Government Verified</h4>
+                    <p className="text-xs text-wera-green/80">Identity confirmed via IPRS/eCitizen database.</p>
+                  </div>
+                </motion.div>
+              ) : (
+                <div className="grid grid-cols-2 gap-4 opacity-50 pointer-events-none">
+                  <div className="p-6 border-2 border-dashed border-black/10 rounded-2xl text-center space-y-2">
+                    <Camera className="w-6 h-6 mx-auto text-black/40" />
+                    <span className="text-[10px] font-bold uppercase block">Front of ID</span>
+                  </div>
+                  <div className="p-6 border-2 border-dashed border-black/10 rounded-2xl text-center space-y-2">
+                    <UserPlus className="w-6 h-6 mx-auto text-black/40" />
+                    <span className="text-[10px] font-bold uppercase block">Selfie with ID</span>
+                  </div>
+                </div>
+              )}
+
+              <div className="bg-yellow-50 p-4 rounded-xl border border-yellow-200 flex items-start space-x-3">
+                <Lock className="w-4 h-4 text-yellow-600 mt-0.5" />
+                <p className="text-[10px] text-yellow-800 font-medium">
+                  Official verification ensures you get the "Government Verified" badge on your profile, increasing client trust by 85%.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex gap-4 pt-4">
+              <Button variant="outline" onClick={handleBack} className="flex-1 py-6 border-black text-black">Back</Button>
+              <Button onClick={handleNext} disabled={!isVerified} className="flex-1 py-6 text-lg font-bold" variant="primary">
+                Complete Onboarding
+              </Button>
+            </div>
+          </motion.div>
+        )}
+
+        {step === 4 && (
+          <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="text-center py-8 space-y-8">
+            <div className="w-24 h-24 bg-wera-green text-white rounded-full flex items-center justify-center mx-auto shadow-2xl animate-bounce">
+              <Trophy className="w-12 h-12" />
+            </div>
+            <div className="space-y-2">
+              <h2 className="text-3xl font-black">Karibu WÈRA!</h2>
+              <p className="text-black/60">Your profile is being reviewed. In the meantime, let's boost your visibility.</p>
+            </div>
+
+            <div className="bg-black/5 p-8 rounded-[2.5rem] border border-black/10 space-y-6">
+              <div className="flex items-center space-x-4 text-left">
+                <div className="w-12 h-12 rounded-xl bg-wera-cyan/20 flex items-center justify-center text-wera-cyan shrink-0">
+                  <Brain className="w-6 h-6" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-black">AI Soft Skills Badge</h4>
+                  <p className="text-xs text-black/60">Workers with this badge are 3x more likely to be hired.</p>
+                </div>
+              </div>
+              <Link to="/academy">
+                <Button variant="primary" className="w-full py-4 font-bold mt-4">
+                  Take AI Assessment Now
+                </Button>
+              </Link>
+            </div>
+
+            <div className="pt-4">
+              <Link to="/profile" className="text-sm font-bold text-black hover:underline flex items-center justify-center">
+                Go to My Profile <ArrowRight className="w-4 h-4 ml-2" />
+              </Link>
+            </div>
+          </motion.div>
+        )}
+      </Card>
+    </div>
+  );
+};
+
+const AboutPage = () => {
+  return (
+    <div className="flex flex-col">
+      {/* Hero Section */}
+      <section className="py-24 bg-wera-black text-white relative overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="max-w-3xl">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <h1 className="text-5xl lg:text-7xl font-black mb-8 leading-tight">
+                Empowering Kenya's <span className="wera-text-gradient">Informal Sector</span>
+              </h1>
+              <p className="text-xl text-gray-400 leading-relaxed mb-10">
+                WÈRA is more than just a platform; it's a movement to formalize, protect, and empower the millions of skilled workers who drive Kenya's economy every day.
+              </p>
+            </motion.div>
+          </div>
+        </div>
+        {/* Background Decorative Elements */}
+        <div className="absolute top-0 right-0 w-1/2 h-full opacity-20 pointer-events-none">
+          <div className="absolute top-20 right-10 w-96 h-96 bg-wera-cyan rounded-full blur-[120px] animate-pulse" />
+          <div className="absolute bottom-20 right-40 w-80 h-80 bg-wera-green rounded-full blur-[100px] animate-pulse delay-700" />
+        </div>
+      </section>
+
+      {/* Mission & Vision */}
+      <section className="py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid md:grid-cols-2 gap-16 items-center">
+            <div className="space-y-8">
+              <div className="inline-flex items-center px-4 py-1.5 text-xs font-black uppercase tracking-widest bg-wera-cyan/10 text-wera-cyan rounded-full">
+                Our Mission
+              </div>
+              <h2 className="text-4xl font-black text-black">Bridging the Gap Between Talent and Opportunity</h2>
+              <p className="text-lg text-black/60 leading-relaxed">
+                We believe that every worker deserves a fair wage, a safe environment, and the opportunity to grow. WÈRA provides the digital infrastructure to make this a reality for Kenya's informal workforce.
+              </p>
+              <div className="space-y-4">
+                {[
+                  { title: 'Vetting & Trust', desc: 'Every worker is background checked and skill-verified.', icon: Shield },
+                  { title: 'Fair Labor', desc: 'We advocate for fair pricing and timely payments via M-PESA escrow.', icon: Award },
+                  { title: 'Skill Development', desc: 'Continuous learning through the WÈRA Academy.', icon: Brain },
+                ].map((item, i) => (
+                  <div key={i} className="flex items-start space-x-4 p-4 rounded-2xl border border-black/5 hover:bg-black/5 transition-colors">
+                    <div className="w-10 h-10 rounded-xl bg-black/5 flex items-center justify-center text-black shrink-0">
+                      <item.icon className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-black">{item.title}</h4>
+                      <p className="text-sm text-black/60">{item.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="relative">
+              <div className="aspect-[4/5] rounded-[3rem] overflow-hidden border-8 border-black shadow-2xl">
+                <img 
+                  src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&q=80&w=1200" 
+                  alt="Wera Workers Collaborating" 
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              {/* Floating Stats */}
+              <div className="absolute -bottom-10 -left-10 bg-white p-8 rounded-3xl border-4 border-black shadow-2xl max-w-[200px]">
+                <div className="text-4xl font-black text-wera-cyan mb-1">10k+</div>
+                <div className="text-xs font-bold uppercase tracking-widest text-black/40">Verified Workers</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Values Section */}
+      <section className="py-24 bg-black/5 border-y border-black/10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-4xl font-black mb-16">Our Core <span className="text-wera-cyan">Values</span></h2>
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              { title: 'Integrity', desc: 'We build trust through transparency and accountability in every transaction.', icon: ShieldCheck },
+              { title: 'Innovation', desc: 'Using technology to solve real-world problems for the Kenyan workforce.', icon: Zap },
+              { title: 'Community', desc: 'We succeed when our workers and clients succeed together.', icon: Users },
+            ].map((value, i) => (
+              <Card key={i} className="p-10 border-black hover:scale-105 transition-transform duration-300">
+                <div className="w-16 h-16 bg-black/10 text-black rounded-2xl flex items-center justify-center mx-auto mb-8">
+                  <value.icon className="w-8 h-8" />
+                </div>
+                <h3 className="text-2xl font-bold mb-4">{value.title}</h3>
+                <p className="text-black/60 leading-relaxed">{value.desc}</p>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Contact CTA */}
+      <section className="py-24 bg-white">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="bg-wera-cyan/10 p-16 rounded-[3rem] border-4 border-black relative overflow-hidden">
+            <div className="relative z-10">
+              <h2 className="text-4xl font-black mb-6">Want to partner with us?</h2>
+              <p className="text-lg text-black/60 mb-10 max-w-2xl mx-auto">
+                We are always looking for organizations, NGOs, and government bodies to help expand our impact across Kenya.
+              </p>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <Button variant="primary" className="px-10 py-4 text-lg">Contact Our Team</Button>
+                <Button variant="outline" className="px-10 py-4 text-lg border-black text-black">Email Us</Button>
+              </div>
+            </div>
+            {/* Decorative circles */}
+            <div className="absolute -top-20 -right-20 w-64 h-64 bg-wera-cyan/20 rounded-full blur-3xl" />
+            <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-wera-green/20 rounded-full blur-3xl" />
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+};
+
 const LandingPage = () => {
+  const [showAIChat, setShowAIChat] = useState(false);
+  const [chatMessage, setChatMessage] = useState('');
+  const [chatHistory, setChatHistory] = useState<{role: string, content: string}[]>([]);
+  const [isTyping, setIsTyping] = useState(false);
+
+  const handleSendChat = async () => {
+    if (!chatMessage.trim()) return;
+    const userMsg = { role: 'user', content: chatMessage };
+    setChatHistory(prev => [...prev, userMsg]);
+    setChatMessage('');
+    setIsTyping(true);
+    
+    const response = await aiService.chatWithOpenRouter(chatMessage);
+    setChatHistory(prev => [...prev, { role: 'assistant', content: response }]);
+    setIsTyping(false);
+  };
+
   return (
     <div className="flex flex-col">
       {/* Trust & Escrow Banner */}
@@ -147,7 +739,7 @@ const LandingPage = () => {
           <span className="text-[10px] opacity-70 uppercase tracking-widest">Money is only released when you approve the work</span>
           <div className="hidden lg:flex items-center ml-8 px-3 py-1 bg-wera-green/20 rounded-full border border-wera-green/30">
             <div className="w-2 h-2 bg-wera-green rounded-full animate-pulse mr-2" />
-            <span className="text-[10px] font-black text-wera-green uppercase tracking-tighter">Live: weraplatform.dedyn.io</span>
+            <span className="text-[10px] font-black text-wera-green tracking-tighter">Twende Wera, tuko live!</span>
           </div>
         </div>
         {/* Animated background glow */}
@@ -179,9 +771,9 @@ const LandingPage = () => {
                     I want to Hire
                   </Button>
                 </Link>
-                <Link to="/jobs">
+                <Link to="/signup">
                   <Button variant="primary" className="w-full sm:w-auto px-8 py-4 text-lg">
-                    I am a Wera Worker
+                    Join as a Worker
                   </Button>
                 </Link>
                 <Link to="/academy">
@@ -205,6 +797,214 @@ const LandingPage = () => {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full -z-0 opacity-10">
           <div className="absolute top-20 left-10 w-72 h-72 bg-wera-cyan rounded-full blur-3xl animate-pulse" />
           <div className="absolute bottom-20 right-10 w-96 h-96 bg-wera-green rounded-full blur-3xl animate-pulse delay-1000" />
+        </div>
+      </section>
+
+      {/* Featured Course Section */}
+      <section className="py-24 bg-white border-y border-black/5">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-12">
+            <div className="flex-1 space-y-6">
+              <div className="flex items-center space-x-2 text-wera-cyan">
+                <Brain className="w-5 h-5" />
+                <span className="text-xs font-black uppercase tracking-widest">Wera Academy Featured</span>
+              </div>
+              <h2 className="text-4xl font-black text-black leading-tight">
+                Master Professional <span className="wera-text-gradient">Customer Service</span>
+              </h2>
+              <p className="text-lg text-black/60 leading-relaxed">
+                Our most popular module. Learn the secrets of high-end hospitality and corporate service standards. 
+                Certified workers in this module see a **40% increase** in repeat bookings.
+              </p>
+              <div className="flex flex-wrap gap-4 pt-4">
+                <div className="flex items-center space-x-2 bg-yellow-50 px-4 py-2 rounded-xl border border-black/5">
+                  <Clock className="w-4 h-4 text-black/40" />
+                  <span className="text-xs font-bold">45 Minutes</span>
+                </div>
+                <div className="flex items-center space-x-2 bg-yellow-50 px-4 py-2 rounded-xl border border-black/5">
+                  <Award className="w-4 h-4 text-wera-green" />
+                  <span className="text-xs font-bold">Verified Badge</span>
+                </div>
+              </div>
+              <Link to="/academy" className="inline-block pt-6">
+                <Button variant="primary" className="px-8 py-4">Start Learning Now</Button>
+              </Link>
+            </div>
+            <div className="flex-1 relative">
+              <div className="aspect-video bg-black rounded-[2rem] overflow-hidden border-4 border-black shadow-2xl relative group">
+                <img 
+                  src="https://images.unsplash.com/photo-1556740734-7f9583451bf2?auto=format&fit=crop&q=80&w=1200" 
+                  alt="Customer Service Training" 
+                  className="w-full h-full object-cover opacity-70 group-hover:scale-105 transition-transform duration-700"
+                />
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="w-16 h-16 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white border border-white/30 group-hover:scale-110 transition-transform">
+                    <Zap className="w-8 h-8 fill-white" />
+                  </div>
+                </div>
+              </div>
+              {/* Decorative elements */}
+              <div className="absolute -top-6 -right-6 w-24 h-24 bg-wera-green rounded-full blur-3xl opacity-20" />
+              <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-wera-cyan rounded-full blur-3xl opacity-20" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Fair Play & Safety Section */}
+      <section className="py-24 bg-wera-black text-white relative overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <div className="space-y-8">
+              <div className="inline-flex items-center px-4 py-1.5 text-xs font-black uppercase tracking-widest bg-wera-green/20 text-wera-green rounded-full border border-wera-green/30">
+                Fair Play Policy
+              </div>
+              <h2 className="text-4xl lg:text-6xl font-black leading-tight">
+                We Protect <span className="text-wera-cyan">Both Sides</span> of the Work.
+              </h2>
+              <p className="text-xl text-gray-400 leading-relaxed">
+                WÈRA is built on mutual respect. Our dual-rating system ensures that bad behavior has consequences, whether you're hiring or working.
+              </p>
+              
+              <div className="grid sm:grid-cols-2 gap-6">
+                {[
+                  { 
+                    title: 'Anonymous Boss Rating', 
+                    desc: 'Workers rate employers privately. 1-star bosses are flagged for review.',
+                    icon: ThumbsUp 
+                  },
+                  { 
+                    title: 'Dual Accountability', 
+                    desc: 'Low-rated employers are matched with low-rated workers. Fair is fair.',
+                    icon: Users 
+                  },
+                  { 
+                    title: '24/7 SOS Button', 
+                    desc: 'Instant emergency response for both parties if things go wrong.',
+                    icon: AlertTriangle 
+                  },
+                  { 
+                    title: 'Strict Penalties', 
+                    desc: 'Misuse of the platform or SOS button leads to immediate bans.',
+                    icon: ShieldCheck 
+                  }
+                ].map((feature, i) => (
+                  <div key={i} className="p-6 bg-white/5 rounded-3xl border border-white/10 hover:bg-white/10 transition-colors">
+                    <feature.icon className="w-8 h-8 text-wera-cyan mb-4" />
+                    <h4 className="font-bold mb-2">{feature.title}</h4>
+                    <p className="text-sm text-gray-400">{feature.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="relative">
+              <div className="bg-white/5 p-8 rounded-[3rem] border border-white/10 backdrop-blur-md">
+                <DualRatingSystem targetName="Client #829" type="employer" />
+                <div className="mt-6 flex justify-center">
+                  <SOSButton side="worker" />
+                </div>
+              </div>
+              {/* Decorative background glow */}
+              <div className="absolute -top-20 -right-20 w-64 h-64 bg-wera-cyan/20 rounded-full blur-[100px]" />
+              <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-wera-green/20 rounded-full blur-[100px]" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Target Industries Section */}
+      <section className="py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center px-4 py-1.5 mb-6 text-xs font-black uppercase tracking-widest bg-black text-white rounded-full">
+              Our Ecosystem
+            </div>
+            <h2 className="text-4xl lg:text-6xl font-black text-black mb-6">
+              Industries We <span className="wera-text-gradient">Transform</span>
+            </h2>
+            <p className="text-xl text-black/60 max-w-3xl mx-auto">
+              From construction sites to corporate offices, WÈRA provides a verified workforce for every sector of Kenya's economy.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {[
+              { name: 'Construction', icon: HardHat, color: 'bg-orange-500' },
+              { name: 'Domestic Care', icon: Heart, color: 'bg-pink-500' },
+              { name: 'IT & Digital', icon: Laptop, color: 'bg-blue-500' },
+              { name: 'Logistics', icon: Truck, color: 'bg-wera-green' },
+              { name: 'Hospitality', icon: Coffee, color: 'bg-yellow-600' },
+              { name: 'Agriculture', icon: Shovel, color: 'bg-green-700' },
+              { name: 'Corporate', icon: Building2, color: 'bg-wera-cyan' },
+              { name: 'Transport', icon: Car, color: 'bg-black' },
+            ].map((industry, i) => (
+              <motion.div 
+                key={i}
+                whileHover={{ y: -10 }}
+                className="p-8 rounded-[2.5rem] border-2 border-black/5 bg-yellow-50/30 flex flex-col items-center text-center group hover:border-black transition-all"
+              >
+                <div className={cn("w-16 h-16 rounded-2xl flex items-center justify-center mb-6 text-white shadow-lg", industry.color)}>
+                  <industry.icon className="w-8 h-8" />
+                </div>
+                <h4 className="font-black uppercase tracking-tighter text-lg">{industry.name}</h4>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* UN & Expat Concierge Section */}
+      <section className="py-24 bg-wera-cyan/5 border-y border-wera-cyan/10 relative overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="flex flex-col lg:flex-row items-center gap-16">
+            <div className="flex-1 space-y-8">
+              <div className="inline-flex items-center px-4 py-1.5 text-xs font-black uppercase tracking-widest bg-wera-cyan text-white rounded-full shadow-lg">
+                UN & Expat Concierge
+              </div>
+              <h2 className="text-4xl lg:text-6xl font-black text-black leading-tight">
+                Relocating to <span className="wera-text-gradient">Kenya?</span>
+              </h2>
+              <p className="text-xl text-black/60 leading-relaxed">
+                We specialize in providing high-skill, vetted workers for the international community. From multilingual staff to advanced security drivers.
+              </p>
+              
+              <div className="space-y-4">
+                {[
+                  { title: 'Multilingual Support', desc: 'Gardeners, housekeepers, and nannies fluent in French, German, and Arabic.', icon: Languages },
+                  { title: 'Advanced Security Drivers', desc: 'Defensive driving certified with deep knowledge of Nairobi and its environs.', icon: Car },
+                  { title: 'International Standards', desc: 'Workers trained in global hospitality and professional service protocols.', icon: ShieldCheck }
+                ].map((item, i) => (
+                  <div key={i} className="flex items-start space-x-4 p-6 bg-white rounded-3xl border-2 border-black/5 shadow-sm hover:shadow-md transition-shadow">
+                    <div className="w-12 h-12 bg-wera-cyan/10 text-wera-cyan rounded-2xl flex items-center justify-center shrink-0">
+                      <item.icon className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <h4 className="font-black text-black mb-1">{item.title}</h4>
+                      <p className="text-sm text-black/60">{item.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <Button variant="primary" className="px-10 py-6 text-xl font-black shadow-2xl">
+                Book Your Concierge Staff
+              </Button>
+            </div>
+
+            <div className="flex-1 relative">
+              <div className="aspect-square rounded-[4rem] overflow-hidden border-8 border-black shadow-2xl relative z-10">
+                <img 
+                  src="https://images.unsplash.com/photo-1541976590-713941681591?auto=format&fit=crop&q=80&w=1200" 
+                  alt="Professional Service in Kenya" 
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              {/* Decorative elements */}
+              <div className="absolute -top-10 -right-10 w-40 h-40 bg-wera-cyan rounded-full blur-3xl opacity-30 animate-pulse" />
+              <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-wera-green rounded-full blur-3xl opacity-30 animate-pulse delay-1000" />
+            </div>
+          </div>
         </div>
       </section>
 
@@ -583,6 +1383,76 @@ const LandingPage = () => {
           </div>
         </div>
       </section>
+
+      {/* OpenRouter AI Assistant Floating Bubble */}
+      <div className="fixed bottom-8 right-8 z-50">
+        <AnimatePresence>
+          {showAIChat && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              className="absolute bottom-24 right-0 w-80 bg-white border-4 border-black rounded-[2rem] shadow-2xl overflow-hidden flex flex-col"
+            >
+              <div className="bg-black p-4 text-white flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Brain className="w-5 h-5 text-wera-cyan" />
+                  <span className="font-black uppercase tracking-tight text-sm">WÈRA AI Assistant</span>
+                </div>
+                <button onClick={() => setShowAIChat(false)}><X className="w-4 h-4" /></button>
+              </div>
+              <div className="h-80 overflow-y-auto p-4 space-y-4 bg-yellow-50/30">
+                {chatHistory.length === 0 && (
+                  <div className="text-center py-8">
+                    <Sparkles className="w-8 h-8 text-black/20 mx-auto mb-2" />
+                    <p className="text-xs font-bold text-black/40">Ask me anything about WÈRA!</p>
+                  </div>
+                )}
+                {chatHistory.map((msg, i) => (
+                  <div key={i} className={cn(
+                    "max-w-[80%] p-3 rounded-2xl text-xs font-medium",
+                    msg.role === 'user' 
+                      ? "ml-auto bg-wera-cyan text-black rounded-tr-none" 
+                      : "mr-auto bg-black text-white rounded-tl-none"
+                  )}>
+                    {msg.content}
+                  </div>
+                ))}
+                {isTyping && (
+                  <div className="mr-auto bg-black/10 p-3 rounded-2xl rounded-tl-none flex space-x-1">
+                    <div className="w-1 h-1 bg-black/40 rounded-full animate-bounce" />
+                    <div className="w-1 h-1 bg-black/40 rounded-full animate-bounce [animation-delay:0.2s]" />
+                    <div className="w-1 h-1 bg-black/40 rounded-full animate-bounce [animation-delay:0.4s]" />
+                  </div>
+                )}
+              </div>
+              <div className="p-4 border-t-2 border-black/5 flex space-x-2">
+                <input 
+                  type="text" 
+                  placeholder="Type a message..."
+                  className="flex-1 bg-black/5 border-none rounded-full px-4 py-2 text-xs focus:ring-2 focus:ring-wera-cyan outline-none"
+                  value={chatMessage}
+                  onChange={(e) => setChatMessage(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleSendChat()}
+                />
+                <Button 
+                  variant="primary" 
+                  className="p-2 rounded-full w-8 h-8 flex items-center justify-center"
+                  onClick={handleSendChat}
+                >
+                  <Send className="w-4 h-4" />
+                </Button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+        <button 
+          onClick={() => setShowAIChat(!showAIChat)}
+          className="w-16 h-16 bg-black text-white rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition-transform border-4 border-white"
+        >
+          {showAIChat ? <X className="w-8 h-8" /> : <Brain className="w-8 h-8 text-wera-cyan" />}
+        </button>
+      </div>
     </div>
   );
 };
@@ -649,7 +1519,7 @@ const JobsPage = () => {
           <p className="text-gray-600">Find vetted opportunities in your immediate proximity.</p>
         </div>
         <div className="flex w-full md:w-auto gap-2">
-          <Button variant="outline" className="border-wera-cyan text-wera-cyan hover:bg-wera-cyan/5">
+          <Button variant="secondary">
             <Zap className="w-4 h-4 mr-2" /> AI Job Matcher
           </Button>
           <Input placeholder="Search skills (e.g. Plumber)..." className="max-w-xs" />
@@ -926,6 +1796,166 @@ const LoginPage = () => {
   );
 };
 
+const WalletPage = () => {
+  const [balance, setBalance] = useState(12500);
+  const [amount, setAmount] = useState('');
+  const [phone, setPhone] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [transactions] = useState([
+    { id: 1, type: 'deposit', amount: 5000, date: '2026-04-01', status: 'completed', method: 'M-Pesa' },
+    { id: 2, type: 'withdrawal', amount: 2000, date: '2026-04-03', status: 'completed', method: 'Bank Transfer' },
+    { id: 3, type: 'payment', amount: 1500, date: '2026-04-04', status: 'completed', method: 'Job #829' },
+  ]);
+
+  const handleDeposit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!amount || !phone) return;
+    setLoading(true);
+    try {
+      const response = await fetch('/api/payments/stkpush', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount, phone, orderId: `W-${Date.now()}` }),
+      });
+      const data = await response.json();
+      if (data.success) {
+        // In a real app, you'd poll for status
+        setTimeout(() => {
+          setBalance(prev => prev + parseInt(amount));
+          setLoading(false);
+          setAmount('');
+          setPhone('');
+        }, 3000);
+      }
+    } catch (error) {
+      console.error('Payment error:', error);
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="max-w-4xl mx-auto px-4 py-12">
+      <div className="mb-12">
+        <h1 className="text-4xl font-black mb-2">WÈRA <span className="wera-text-gradient">Wallet</span></h1>
+        <p className="text-black/60">Manage your earnings and load funds securely via M-Pesa.</p>
+      </div>
+
+      <div className="grid md:grid-cols-3 gap-8">
+        <div className="md:col-span-2 space-y-8">
+          {/* Balance Card */}
+          <Card className="p-8 bg-black text-white border-black relative overflow-hidden">
+            <div className="relative z-10">
+              <p className="text-xs font-bold uppercase tracking-widest opacity-50 mb-2">Available Balance</p>
+              <h2 className="text-5xl font-black mb-8">KES {balance.toLocaleString()}</h2>
+              <div className="flex space-x-4">
+                <Button variant="primary" className="bg-wera-green text-black border-wera-green hover:bg-white flex-1">
+                  <ArrowUpRight className="w-4 h-4 mr-2" /> Withdraw
+                </Button>
+                <Button variant="outline" className="border-white/20 text-white hover:bg-white/10 flex-1">
+                  <History className="w-4 h-4 mr-2" /> History
+                </Button>
+              </div>
+            </div>
+            <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-wera-green/20 rounded-full blur-[80px]" />
+          </Card>
+
+          {/* Transaction History */}
+          <Card className="p-6 border-black">
+            <h3 className="font-bold mb-6 flex items-center">
+              <History className="w-5 h-5 mr-2" /> Recent Transactions
+            </h3>
+            <div className="space-y-4">
+              {transactions.map((tx) => (
+                <div key={tx.id} className="flex items-center justify-between p-4 rounded-xl border border-black/5 hover:bg-black/5 transition-colors">
+                  <div className="flex items-center space-x-4">
+                    <div className={cn(
+                      "w-10 h-10 rounded-full flex items-center justify-center",
+                      tx.type === 'deposit' ? "bg-green-100 text-green-600" : "bg-red-100 text-red-600"
+                    )}>
+                      {tx.type === 'deposit' ? <ArrowDownLeft className="w-5 h-5" /> : <ArrowUpRight className="w-5 h-5" />}
+                    </div>
+                    <div>
+                      <p className="font-bold text-sm capitalize">{tx.type} via {tx.method}</p>
+                      <p className="text-[10px] text-black/40 font-medium">{tx.date}</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className={cn(
+                      "font-black text-sm",
+                      tx.type === 'deposit' ? "text-green-600" : "text-red-600"
+                    )}>
+                      {tx.type === 'deposit' ? '+' : '-'} KES {tx.amount.toLocaleString()}
+                    </p>
+                    <span className="text-[8px] font-black uppercase tracking-tighter bg-black/5 text-black/40 px-1.5 py-0.5 rounded">
+                      {tx.status}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Card>
+        </div>
+
+        <div className="md:col-span-1 space-y-8">
+          {/* Deposit Form */}
+          <Card className="p-6 border-black bg-yellow-50/50">
+            <h3 className="font-bold mb-6 flex items-center">
+              <CreditCard className="w-5 h-5 mr-2" /> Load Funds
+            </h3>
+            <form onSubmit={handleDeposit} className="space-y-4">
+              <div className="space-y-2">
+                <label className="text-xs font-bold uppercase tracking-widest opacity-50">Amount (KES)</label>
+                <Input 
+                  type="number" 
+                  placeholder="e.g. 1000" 
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  className="border-black/20 bg-white"
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-xs font-bold uppercase tracking-widest opacity-50">M-Pesa Phone Number</label>
+                <Input 
+                  placeholder="e.g. 0712345678" 
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  className="border-black/20 bg-white"
+                />
+              </div>
+              <Button 
+                type="submit" 
+                variant="primary" 
+                className="w-full py-6 font-black"
+                disabled={loading || !amount || !phone}
+              >
+                {loading ? (
+                  <><Loader2 className="w-4 h-4 animate-spin mr-2" /> Processing...</>
+                ) : (
+                  'Deposit with M-Pesa'
+                )}
+              </Button>
+              <p className="text-[10px] text-center text-black/40 leading-relaxed">
+                An STK Push will be sent to your phone. Enter your M-Pesa PIN to complete the transaction.
+              </p>
+            </form>
+          </Card>
+
+          {/* Security Note */}
+          <Card className="p-6 border-wera-green/30 bg-wera-green/5">
+            <div className="flex items-center space-x-3 mb-4 text-wera-green">
+              <ShieldCheck className="w-5 h-5" />
+              <h4 className="font-bold text-sm">Escrow Protection</h4>
+            </div>
+            <p className="text-xs text-black/60 leading-relaxed">
+              All payments are held in WÈRA Escrow until the job is marked as complete by both parties. Your funds are safe and secure.
+            </p>
+          </Card>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const WorkerProfilePage = () => {
   const [aiSuggestions, setAiSuggestions] = useState<string>('');
   const [loadingAi, setLoadingAi] = useState(false);
@@ -970,6 +2000,11 @@ const WorkerProfilePage = () => {
             </div>
 
             <Button variant="outline" className="w-full mb-2">Edit Profile</Button>
+            <Link to="/wallet">
+              <Button variant="outline" className="w-full mb-2 border-wera-green text-wera-green hover:bg-wera-green/5">
+                <Wallet className="w-4 h-4 mr-2" /> My Wallet
+              </Button>
+            </Link>
             <Button variant="ghost" className="w-full text-red-500 hover:text-red-600 hover:bg-red-50">Logout</Button>
           </Card>
         </div>
@@ -1185,7 +2220,7 @@ const HireTalentPage = () => {
                     type="checkbox" 
                     className="w-4 h-4 rounded border-black/20 text-black focus:ring-black"
                   />
-                  <span className="text-sm font-bold text-wera-cyan">Bulk Hiring?</span>
+                  <span className="text-sm font-bold text-black">Bulk Hiring?</span>
                 </label>
               </div>
               
@@ -1530,7 +2565,7 @@ const ModuleContent = ({ module, onComplete, onBack }: { module: any, onComplete
   const [quizAnswers, setQuizAnswers] = useState<number[]>([]);
   const [quizResult, setQuizResult] = useState<{ score: number, passed: boolean } | null>(null);
 
-  const quizQuestions = [
+  const quizQuestions = module.quiz || [
     {
       q: `In ${module.title}, what is the most important first step?`,
       options: ['Assess the situation', 'Start working immediately', 'Call for help', 'Wait for instructions'],
@@ -1541,6 +2576,13 @@ const ModuleContent = ({ module, onComplete, onBack }: { module: any, onComplete
       options: ['Work as fast as possible', 'Follow the standard operating procedures', 'Only do what the client sees', 'Ignore minor details'],
       correct: 1
     }
+  ];
+
+  const curriculum = module.lessons || [
+    { title: 'Introduction to the Topic', duration: '2:30' },
+    { title: 'Key Principles & Frameworks', duration: '5:45' },
+    { title: 'Real-world Case Studies', duration: '4:15' },
+    { title: 'Summary & Key Takeaways', duration: '1:15' },
   ];
 
   const handleQuizSubmit = () => {
@@ -1604,12 +2646,7 @@ const ModuleContent = ({ module, onComplete, onBack }: { module: any, onComplete
               <section>
                 <h3 className="text-xl font-bold mb-6">Course Curriculum</h3>
                 <div className="space-y-3">
-                  {[
-                    { title: 'Introduction to the Topic', duration: '2:30' },
-                    { title: 'Key Principles & Frameworks', duration: '5:45' },
-                    { title: 'Real-world Case Studies', duration: '4:15' },
-                    { title: 'Summary & Key Takeaways', duration: '1:15' },
-                  ].map((lesson, i) => (
+                  {curriculum.map((lesson: any, i: number) => (
                     <div key={i} className="flex items-center justify-between p-4 rounded-xl border border-black/5 hover:bg-black/5 transition-colors cursor-pointer">
                       <div className="flex items-center space-x-4">
                         <div className="w-8 h-8 rounded-lg bg-black/5 flex items-center justify-center text-xs font-bold">
@@ -1824,11 +2861,61 @@ const CertificateVerificationPage = () => {
 
 const TrainingPage = () => {
   const [modules, setModules] = useState([
-    { id: 1, title: 'Professionalism & Ethics', completed: true, icon: Shield, desc: 'Master the core values of integrity and professional conduct in the workplace.' },
-    { id: 2, title: 'Customer Service Excellence', completed: false, icon: MessageSquare, desc: 'Learn how to exceed client expectations and build lasting professional relationships.' },
-    { id: 3, title: 'Financial Literacy & Savings', completed: false, icon: TrendingUp, desc: 'Smart money management strategies for independent workers and entrepreneurs.' },
-    { id: 4, title: 'Health & Safety at Work', completed: false, icon: Zap, desc: 'Essential protocols to ensure your safety and the safety of your clients.' },
-    { id: 5, title: 'Digital Literacy for Workers', completed: false, icon: Sparkles, desc: 'Using technology to manage your bookings, payments, and professional profile.' },
+    { 
+      id: 1, 
+      title: 'Professionalism & Ethics', 
+      completed: true, 
+      icon: Shield, 
+      desc: 'Master the core values of integrity and professional conduct in the workplace.',
+      lessons: [
+        { title: 'The WÈRA Code of Conduct', duration: '3:15' },
+        { title: 'Integrity in Service Delivery', duration: '4:30' },
+        { title: 'Handling Client Property', duration: '5:00' },
+        { title: 'Conflict Resolution', duration: '3:45' }
+      ],
+      quiz: [
+        { q: 'What is the primary value of a Wera Worker?', options: ['Speed', 'Integrity', 'Low Cost', 'Anonymity'], correct: 1 },
+        { q: 'How should you handle a mistake on the job?', options: ['Hide it', 'Blame the client', 'Report it immediately and offer a fix', 'Ignore it'], correct: 2 }
+      ]
+    },
+    { 
+      id: 2, 
+      title: 'French for Service Professionals', 
+      completed: false, 
+      icon: Languages, 
+      desc: 'Master basic French communication for gardening, housekeeping, and hospitality roles.',
+      lessons: [
+        { title: 'Greetings & Introductions', duration: '4:00' },
+        { title: 'Service Vocabulary (Garden & Home)', duration: '6:30' },
+        { title: 'Understanding Instructions', duration: '5:15' },
+        { title: 'Polite Phrases & Etiquette', duration: '3:30' }
+      ],
+      quiz: [
+        { q: 'How do you say "Good morning" in French?', options: ['Bonjour', 'Merci', 'S\'il vous plaît', 'Au revoir'], correct: 0 },
+        { q: 'What is the French word for "Garden"?', options: ['Maison', 'Cuisine', 'Jardin', 'Salon'], correct: 2 }
+      ]
+    },
+    { 
+      id: 3, 
+      title: 'Advanced Defensive Driving', 
+      completed: false, 
+      icon: Car, 
+      desc: 'High-level driving skills including security awareness and emergency maneuvers.',
+      lessons: [
+        { title: 'Security Awareness & Route Planning', duration: '7:00' },
+        { title: 'Emergency Evasive Maneuvers', duration: '8:45' },
+        { title: 'Vehicle Maintenance & Safety Checks', duration: '5:30' },
+        { title: 'Professional Chauffeur Etiquette', duration: '4:15' }
+      ],
+      quiz: [
+        { q: 'What is the "3-second rule" in driving?', options: ['Time to change lanes', 'Safe following distance', 'Time to react to a call', 'Time to park'], correct: 1 },
+        { q: 'Why is route variation important for security?', options: ['To see new places', 'To save fuel', 'To avoid being a predictable target', 'To find better roads'], correct: 2 }
+      ]
+    },
+    { id: 4, title: 'Customer Service Excellence', completed: false, icon: MessageSquare, desc: 'Learn how to exceed client expectations and build lasting professional relationships.' },
+    { id: 5, title: 'Financial Literacy & Savings', completed: false, icon: TrendingUp, desc: 'Smart money management strategies for independent workers and entrepreneurs.' },
+    { id: 6, title: 'Health & Safety at Work', completed: false, icon: Zap, desc: 'Essential protocols to ensure your safety and the safety of your clients.' },
+    { id: 7, title: 'Digital Literacy for Workers', completed: false, icon: Sparkles, desc: 'Using technology to manage your bookings, payments, and professional profile.' },
   ]);
   const [aiCertified, setAiCertified] = useState(false);
   const [selectedModule, setSelectedModule] = useState<any>(null);
@@ -2119,11 +3206,14 @@ export default function App() {
             <Route path="/" element={<LandingPage />} />
             <Route path="/jobs" element={<JobsPage />} />
             <Route path="/hire" element={<HireTalentPage />} />
+            <Route path="/signup" element={<WorkerOnboardingPage />} />
+            <Route path="/about" element={<AboutPage />} />
             <Route path="/academy" element={<TrainingPage />} />
             <Route path="/verify" element={<CertificateVerificationPage />} />
             <Route path="/companies" element={<CompanyOnboardingPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/profile" element={<WorkerProfilePage />} />
+            <Route path="/wallet" element={<WalletPage />} />
             {/* Add more routes as needed */}
           </Routes>
         </main>
@@ -2155,7 +3245,7 @@ export default function App() {
                 <h4 className="font-bold mb-6">Company</h4>
                 <ul className="space-y-4 text-gray-400 text-sm">
                   <li><Link to="/companies" className="hover:text-white transition-colors">Wera for Business</Link></li>
-                  <li><a href="#" className="hover:text-white transition-colors">About Us</a></li>
+                  <li><Link to="/about" className="hover:text-white transition-colors">About Us</Link></li>
                   <li><a href="#" className="hover:text-white transition-colors">Contact</a></li>
                   <li><a href="#" className="hover:text-white transition-colors">Privacy Policy</a></li>
                 </ul>

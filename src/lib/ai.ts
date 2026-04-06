@@ -73,5 +73,23 @@ export const aiService = {
       console.error('AI Evaluation Error:', error);
       return { score: 50, feedback: "Unable to evaluate at this time. Please try again." };
     }
+  },
+
+  async chatWithOpenRouter(message: string) {
+    try {
+      const response = await fetch('/api/ai/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: "openai/gpt-3.5-turbo", // Default model
+          messages: [{ role: "user", content: message }]
+        })
+      });
+      const data = await response.json();
+      return data.choices[0].message.content;
+    } catch (error) {
+      console.error('OpenRouter Error:', error);
+      return 'Unable to connect to OpenRouter at this time.';
+    }
   }
 };
