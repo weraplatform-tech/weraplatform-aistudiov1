@@ -306,17 +306,55 @@ const WorkerOnboardingPage = () => {
 
   const [isVerifying, setIsVerifying] = useState(false);
   const [isVerified, setIsVerified] = useState(false);
+  const [testPassed, setTestPassed] = useState(false);
+  const [certificateUploaded, setCertificateUploaded] = useState(false);
+  const [referencesUploaded, setReferencesUploaded] = useState(false);
+  const [ministryCertUploaded, setMinistryCertUploaded] = useState(false);
 
-  const categories = [
-    'Construction & Trades',
-    'Domestic & Home Care',
-    'Creative & Digital',
-    'IT & Technical',
-    'Logistics & Delivery',
-    'Hospitality & Events',
-    'Agriculture & Landscaping',
-    'Security & Transport'
-  ];
+  const roleRequirements: { [role: string]: string[] } = {
+    'Software Engineers': ['test', 'certificate'],
+    'Data Scientists and Analysts': ['test', 'certificate'],
+    'Cybersecurity Specialists': ['test', 'certificate'],
+    'Mobile App Developers': ['test', 'certificate'],
+    'UI/UX Designers': ['test', 'certificate'],
+    'Network Engineers': ['test', 'certificate'],
+    'DevOps Engineers': ['test', 'certificate'],
+    'AI and Machine Learning Specialists': ['test', 'certificate'],
+    'Cloud Architects': ['test', 'certificate'],
+    'IT Project Managers': ['test', 'certificate'],
+    'Architects': ['test', 'certificate'],
+    'Healthcare Workers': ['test', 'certificate'],
+    'Tutors': ['test', 'certificate'],
+    'Tour Guides': ['test', 'certificate'],
+    'Sleep Trainers': ['test', 'certificate'],
+    'Graphic Designers': ['test', 'certificate'],
+    'Nannies': ['test', 'references'],
+    'Cleaners': ['test', 'references'],
+    'Gardeners/Landscapers': ['test', 'references'],
+    'Delivery Drivers/Riders': ['test', 'references'],
+    'Pet Sitters/Dog Walkers': ['test', 'references'],
+    'Home Cooks/Caterers': ['test', 'references'],
+    'Seamstresses/Dressmakers': ['test', 'references'],
+    'Domestic Worker Agency': ['ministry_cert']
+  };
+
+  const currentRequirements = formData.role ? (roleRequirements[formData.role] || ['test']) : [];
+  const allRequirementsMet = 
+    (!currentRequirements.includes('test') || testPassed) &&
+    (!currentRequirements.includes('certificate') || certificateUploaded) &&
+    (!currentRequirements.includes('references') || referencesUploaded) &&
+    (!currentRequirements.includes('ministry_cert') || ministryCertUploaded);
+  const categoryMap: { [key: string]: string[] } = {
+    'Skilled Trades': ['Mechanics', 'Tire Repairs', 'Cobblers', 'Tailors'],
+    'Construction': ['Masons', 'Carpenters', 'Electricians', 'Plumbers', 'Painters', 'Interior Decorators'],
+    'Domestic Services': ['Nannies', 'Cleaners', 'Gardeners/Landscapers', 'Delivery Drivers/Riders', 'Pet Sitters/Dog Walkers', 'Home Cooks/Caterers', 'Seamstresses/Dressmakers', 'Domestic Worker Agency'],
+    'Personal Services': ['Personal Shoppers', 'Fitness Instructors', 'Translators and Interpreters', 'Makeup Artists', 'Hair Stylists/Barbers', 'Event Planners'],
+    'Professional Services': ['Architects', 'Healthcare Workers', 'Tutors', 'Tour Guides', 'Sleep Trainers'],
+    'Creative Services': ['Graphic Designers', 'Musicians/Entertainers/DJs', 'Photographers/Videographers'],
+    'Hospitality Services': ['Waiters', 'Mixologist', 'Street Vendors', 'Handymen/Handywomen', 'House Keeping personnel'],
+    'IT and Technology': ['Software Engineers', 'Data Scientists and Analysts', 'Cybersecurity Specialists', 'Mobile App Developers', 'UI/UX Designers', 'Network Engineers', 'DevOps Engineers', 'AI and Machine Learning Specialists', 'Cloud Architects', 'IT Project Managers']
+  };
+  const categories = Object.keys(categoryMap);
 
   const handleNext = () => setStep(step + 1);
   const handleBack = () => setStep(step - 1);
@@ -397,21 +435,46 @@ const WorkerOnboardingPage = () => {
               <Briefcase className="w-6 h-6 mr-2" /> Skills & Experience
             </h2>
             <div className="space-y-4">
-              <label className="text-sm font-bold">What is your primary trade?</label>
+              <label className="text-sm font-bold">
+                {formData.category ? `Select ${formData.category} Role` : 'What is your primary trade?'}
+              </label>
               <div className="grid grid-cols-2 gap-3">
-                {categories.map((cat) => (
-                  <button
-                    key={cat}
-                    onClick={() => setFormData({...formData, category: cat})}
-                    className={cn(
-                      "p-4 text-left rounded-xl border-2 transition-all text-sm font-bold",
-                      formData.category === cat ? "border-black bg-black text-white" : "border-black/5 bg-yellow-50/50 hover:border-black/20"
-                    )}
-                  >
-                    {cat}
-                  </button>
-                ))}
+                {!formData.category ? (
+                  categories.map((cat) => (
+                    <button
+                      key={cat}
+                      onClick={() => setFormData({...formData, category: cat})}
+                      className={cn(
+                        "p-4 text-left rounded-xl border-2 transition-all text-sm font-bold",
+                        formData.category === cat ? "border-black bg-black text-white" : "border-black/5 bg-yellow-50/50 hover:border-black/20"
+                      )}
+                    >
+                      {cat}
+                    </button>
+                  ))
+                ) : (
+                  categoryMap[formData.category].map((role) => (
+                    <button
+                      key={role}
+                      onClick={() => setFormData({...formData, role})}
+                      className={cn(
+                        "p-4 text-left rounded-xl border-2 transition-all text-sm font-bold",
+                        formData.role === role ? "border-wera-cyan bg-wera-cyan/10 text-wera-cyan" : "border-black/5 bg-yellow-50/50 hover:border-black/20"
+                      )}
+                    >
+                      {role}
+                    </button>
+                  ))
+                )}
               </div>
+              {formData.category && (
+                <button 
+                  onClick={() => setFormData({...formData, category: '', role: ''})}
+                  className="text-xs font-bold text-black/40 hover:text-black"
+                >
+                  ← Back to Categories
+                </button>
+              )}
             </div>
             <div className="space-y-2">
               <label className="text-sm font-bold">Years of Experience</label>
@@ -489,7 +552,6 @@ const WorkerOnboardingPage = () => {
                       onClick={async () => {
                         if (!formData.idNumber) return;
                         setIsVerifying(true);
-                        // Simulate government API call
                         await new Promise(r => setTimeout(r, 2000));
                         setIsVerifying(false);
                         setIsVerified(true);
@@ -531,6 +593,64 @@ const WorkerOnboardingPage = () => {
                 </div>
               )}
 
+              {currentRequirements.length > 0 && (
+                <div className="space-y-6 p-6 bg-wera-cyan/5 border-2 border-wera-cyan rounded-2xl">
+                  <h3 className="text-lg font-bold flex items-center">
+                    <Award className="w-5 h-5 mr-2 text-wera-cyan" /> Role Requirements
+                  </h3>
+                  <div className="space-y-4">
+                    {currentRequirements.includes('test') && (
+                      <div className="flex items-center justify-between p-4 bg-white rounded-xl border border-black/10">
+                        <span className="font-bold text-sm">Minimum Competency Test</span>
+                        <Button 
+                          variant={testPassed ? "secondary" : "outline"}
+                          onClick={() => setTestPassed(true)}
+                          className={testPassed ? "bg-wera-green text-white" : ""}
+                        >
+                          {testPassed ? 'Passed' : 'Take Test'}
+                        </Button>
+                      </div>
+                    )}
+                    {currentRequirements.includes('certificate') && (
+                      <div className="flex items-center justify-between p-4 bg-white rounded-xl border border-black/10">
+                        <span className="font-bold text-sm">Upload Certificate</span>
+                        <Button 
+                          variant={certificateUploaded ? "secondary" : "outline"}
+                          onClick={() => setCertificateUploaded(true)}
+                          className={certificateUploaded ? "bg-wera-green text-white" : ""}
+                        >
+                          {certificateUploaded ? 'Uploaded' : 'Upload'}
+                        </Button>
+                      </div>
+                    )}
+                    {currentRequirements.includes('references') && (
+                      <div className="flex items-center justify-between p-4 bg-white rounded-xl border border-black/10">
+                        <span className="font-bold text-sm">Upload References</span>
+                        <Button 
+                          variant={referencesUploaded ? "secondary" : "outline"}
+                          onClick={() => setReferencesUploaded(true)}
+                          className={referencesUploaded ? "bg-wera-green text-white" : ""}
+                        >
+                          {referencesUploaded ? 'Uploaded' : 'Upload'}
+                        </Button>
+                      </div>
+                    )}
+                    {currentRequirements.includes('ministry_cert') && (
+                      <div className="flex items-center justify-between p-4 bg-white rounded-xl border border-black/10">
+                        <span className="font-bold text-sm">Ministry of Labour Cert</span>
+                        <Button 
+                          variant={ministryCertUploaded ? "secondary" : "outline"}
+                          onClick={() => setMinistryCertUploaded(true)}
+                          className={ministryCertUploaded ? "bg-wera-green text-white" : ""}
+                        >
+                          {ministryCertUploaded ? 'Uploaded' : 'Upload'}
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
               <div className="bg-yellow-50 p-4 rounded-xl border border-yellow-200 flex items-start space-x-3">
                 <Lock className="w-4 h-4 text-yellow-600 mt-0.5" />
                 <p className="text-[10px] text-yellow-800 font-medium">
@@ -541,7 +661,12 @@ const WorkerOnboardingPage = () => {
 
             <div className="flex gap-4 pt-4">
               <Button variant="outline" onClick={handleBack} className="flex-1 py-6 border-black text-black">Back</Button>
-              <Button onClick={handleNext} disabled={!isVerified} className="flex-1 py-6 text-lg font-bold" variant="primary">
+              <Button 
+                onClick={handleNext} 
+                disabled={!isVerified || !allRequirementsMet} 
+                className="flex-1 py-6 text-lg font-bold" 
+                variant="primary"
+              >
                 Complete Onboarding
               </Button>
             </div>
@@ -1944,11 +2069,19 @@ const WalletPage = () => {
           <Card className="p-6 border-wera-green/30 bg-wera-green/5">
             <div className="flex items-center space-x-3 mb-4 text-wera-green">
               <ShieldCheck className="w-5 h-5" />
-              <h4 className="font-bold text-sm">Escrow Protection</h4>
+              <h4 className="font-bold text-sm">Escrow & Commission</h4>
             </div>
-            <p className="text-xs text-black/60 leading-relaxed">
-              All payments are held in WÈRA Escrow until the job is marked as complete by both parties. Your funds are safe and secure.
+            <p className="text-xs text-black/60 leading-relaxed mb-4">
+              All payments are held in WÈRA Escrow until the job is marked as complete.
             </p>
+            <p className="text-xs text-black/60 leading-relaxed mb-4">
+              A 10% platform commission applies to all transactions (5% from worker, 5% from client).
+            </p>
+            <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
+              <p className="text-xs text-red-700 font-bold">
+                ⚠️ Off-platform payments are strictly prohibited. Disputes arising from off-platform arrangements will result in the immediate suspension of both parties.
+              </p>
+            </div>
           </Card>
         </div>
       </div>
