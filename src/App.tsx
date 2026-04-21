@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link, useNavigate, useParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   Briefcase, 
@@ -137,7 +137,7 @@ const DualRatingSystem = ({ targetName, type }: { targetName: string, type: 'wor
   const [isAnonymous, setIsAnonymous] = useState(true);
 
   return (
-    <Card className="p-8 border-black shadow-xl bg-yellow-50/30">
+    <Card className="p-8 border-black shadow-xl bg-slate-100/30">
       <div className="flex items-center justify-between mb-8">
         <div>
           <h3 className="text-2xl font-black">Rate {type === 'worker' ? 'Worker' : 'Employer'}</h3>
@@ -209,7 +209,7 @@ const Navbar = ({ user }: { user: any }) => {
   };
 
   return (
-    <nav className="sticky top-0 z-50 bg-yellow-50/80 backdrop-blur-md border-b border-yellow-300/20">
+    <nav className="sticky top-0 z-50 bg-slate-100/80 backdrop-blur-md border-b border-slate-300/20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
           <Link to="/" className="flex items-center group">
@@ -266,7 +266,7 @@ const Navbar = ({ user }: { user: any }) => {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-yellow-50 border-b border-black/10 overflow-hidden"
+            className="md:hidden bg-slate-100 border-b border-black/10 overflow-hidden"
           >
             <div className="px-4 pt-2 pb-6 space-y-2">
               <Link to="/jobs" className="block px-3 py-2 rounded-md text-base font-medium hover:bg-black/10 text-black">Find Work</Link>
@@ -395,7 +395,7 @@ const WorkerOnboardingPage = () => {
                   placeholder="e.g. John Kamau" 
                   value={formData.fullName}
                   onChange={(e) => setFormData({...formData, fullName: e.target.value})}
-                  className="bg-yellow-50/50 border-black/20" 
+                  className="bg-slate-100/50 border-black/20" 
                 />
               </div>
               <div className="space-y-2">
@@ -404,7 +404,7 @@ const WorkerOnboardingPage = () => {
                   <Smartphone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-black/40" />
                   <Input 
                     placeholder="07XX XXX XXX" 
-                    className="pl-10 bg-yellow-50/50 border-black/20" 
+                    className="pl-10 bg-slate-100/50 border-black/20" 
                     value={formData.phone}
                     onChange={(e) => setFormData({...formData, phone: e.target.value})}
                   />
@@ -651,9 +651,9 @@ const WorkerOnboardingPage = () => {
                 </div>
               )}
 
-              <div className="bg-yellow-50 p-4 rounded-xl border border-yellow-200 flex items-start space-x-3">
-                <Lock className="w-4 h-4 text-yellow-600 mt-0.5" />
-                <p className="text-[10px] text-yellow-800 font-medium">
+              <div className="bg-yellow-50 p-4 rounded-xl border border-slate-200 flex items-start space-x-3">
+                <Lock className="w-4 h-4 text-slate-600 mt-0.5" />
+                <p className="text-[10px] text-slate-800 font-medium">
                   Official verification ensures you get the "Government Verified" badge on your profile, increasing client trust by 85%.
                 </p>
               </div>
@@ -860,7 +860,7 @@ const LandingPage = () => {
           <span className="flex items-center text-xs font-bold tracking-wide">
             <Shield className="w-4 h-4 mr-2 text-wera-green" /> 100% SECURE PAYMENTS VIA M-PESA ESCROW
           </span>
-          <div className="hidden sm:block w-px h-4 bg-yellow-50/20" />
+          <div className="hidden sm:block w-px h-4 bg-slate-100/20" />
           <span className="text-[10px] opacity-70 uppercase tracking-widest">Money is only released when you approve the work</span>
           <div className="hidden lg:flex items-center ml-8 px-3 py-1 bg-wera-green/20 rounded-full border border-wera-green/30">
             <div className="w-2 h-2 bg-wera-green rounded-full animate-pulse mr-2" />
@@ -963,14 +963,14 @@ const LandingPage = () => {
                   className="w-full h-full object-cover opacity-70 group-hover:scale-105 transition-transform duration-700"
                 />
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-16 h-16 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white border border-white/30 group-hover:scale-110 transition-transform">
-                    <Zap className="w-8 h-8 fill-white" />
+                  <div className="w-16 h-16 bg-slate-800/90 backdrop-blur-md rounded-full flex items-center justify-center text-white border-2 border-white/20 shadow-lg group-hover:scale-110 shadow-black/50 transition-transform">
+                    <Zap className="w-8 h-8 fill-white font-bold" />
                   </div>
                 </div>
               </div>
               {/* Decorative elements */}
-              <div className="absolute -top-6 -right-6 w-24 h-24 bg-wera-green rounded-full blur-3xl opacity-20" />
-              <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-wera-cyan rounded-full blur-3xl opacity-20" />
+              <div className="absolute -top-6 -right-6 w-24 h-24 bg-blue-700 rounded-full blur-3xl opacity-20" />
+              <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-slate-400 rounded-full blur-3xl opacity-20" />
             </div>
           </div>
         </div>
@@ -1477,7 +1477,7 @@ const LandingPage = () => {
                     <span className="text-white/40">Assessment Progress</span>
                     <span className="text-wera-green">85% Complete</span>
                   </div>
-                  <div className="w-full bg-yellow-50/10 h-2 rounded-full overflow-hidden">
+                  <div className="w-full bg-slate-100/10 h-2 rounded-full overflow-hidden">
                     <div className="bg-wera-green h-full w-[85%]" />
                   </div>
                 </div>
@@ -1586,6 +1586,9 @@ const JobsPage = () => {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [filteredJobs, setFilteredJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState('');
+  const [locationFilter, setLocationFilter] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('');
   const [distance, setDistance] = useState(20);
   const [minRating, setMinRating] = useState(0);
   const [minExperience, setMinExperience] = useState(0);
@@ -1621,6 +1624,19 @@ const JobsPage = () => {
   useEffect(() => {
     let result = jobs.map(j => j as any);
     
+    if (search) {
+      result = result.filter(j => 
+        j.title.toLowerCase().includes(search.toLowerCase()) || 
+        j.description.toLowerCase().includes(search.toLowerCase())
+      );
+    }
+    if (locationFilter) {
+      result = result.filter(j => j.location.toLowerCase().includes(locationFilter.toLowerCase()));
+    }
+    if (categoryFilter) {
+      result = result.filter(j => j.category.toLowerCase() === categoryFilter.toLowerCase());
+    }
+
     if (distance > 0) {
       result = result.filter(j => j.location === 'Remote' || j.distance <= distance);
     }
@@ -1634,7 +1650,7 @@ const JobsPage = () => {
     }
 
     setFilteredJobs(result);
-  }, [distance, minRating, minExperience, jobs]);
+  }, [search, locationFilter, categoryFilter, distance, minRating, minExperience, jobs]);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -1643,12 +1659,16 @@ const JobsPage = () => {
           <h1 className="text-3xl font-bold mb-2">WÈRA <span className="wera-text-gradient">Marketplace</span></h1>
           <p className="text-gray-600">Find vetted opportunities in your immediate proximity.</p>
         </div>
-        <div className="flex w-full md:w-auto gap-2">
-          <Button variant="secondary">
-            <Zap className="w-4 h-4 mr-2" /> AI Job Matcher
-          </Button>
-          <Input placeholder="Search skills (e.g. Plumber)..." className="max-w-xs" />
-          <Button variant="secondary"><Search className="w-4 h-4 mr-2" /> Search</Button>
+        <div className="flex flex-col md:flex-row gap-4 w-full md:w-auto">
+          <Input placeholder="Search keywords..." value={search} onChange={(e) => setSearch(e.target.value)} className="w-full md:w-64" />
+          <Input placeholder="Location..." value={locationFilter} onChange={(e) => setLocationFilter(e.target.value)} className="w-full md:w-48" />
+          <select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)} className="p-2 border border-slate-300 rounded-lg bg-white w-full md:w-48 text-sm">
+            <option value="">All Categories</option>
+            <option value="Construction">Construction</option>
+            <option value="Domestic">Domestic</option>
+            <option value="Creative">Creative</option>
+            <option value="Skilled Trades">Skilled Trades</option>
+          </select>
         </div>
       </div>
 
@@ -1789,9 +1809,11 @@ const JobsPage = () => {
                       </Button>
                     </Link>
                   ) : (
-                    <Button variant="outline" size="sm" className="group-hover:bg-wera-cyan group-hover:text-white transition-all">
-                      View Details <ChevronRight className="w-4 h-4 ml-1" />
-                    </Button>
+                    <Link to="/profile/1">
+                      <Button variant="outline" size="sm" className="group-hover:bg-blue-700 group-hover:text-white transition-all">
+                        View Details <ChevronRight className="w-4 h-4 ml-1" />
+                      </Button>
+                    </Link>
                   )}
                 </div>
               </Card>
@@ -1926,92 +1948,98 @@ const WalletPage = () => {
   const [amount, setAmount] = useState('');
   const [phone, setPhone] = useState('');
   const [loading, setLoading] = useState(false);
+  const [selectedMethod, setSelectedMethod] = useState('M-Pesa');
+  const [targetCurrency, setTargetCurrency] = useState('USD');
   const [transactions] = useState([
     { id: 1, type: 'deposit', amount: 5000, date: '2026-04-01', status: 'completed', method: 'M-Pesa' },
     { id: 2, type: 'withdrawal', amount: 2000, date: '2026-04-03', status: 'completed', method: 'Bank Transfer' },
     { id: 3, type: 'payment', amount: 1500, date: '2026-04-04', status: 'completed', method: 'Job #829' },
   ]);
 
+  const exchangeRates: { [key: string]: number } = { USD: 0.0076, EUR: 0.0070, GBP: 0.0060 };
+  const convertedBalance = balance * (exchangeRates[targetCurrency] || 1);
+
   const handleDeposit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!amount || !phone) return;
+    if (!amount || (selectedMethod === 'M-Pesa' && !phone)) return;
     setLoading(true);
-    try {
-      const response = await fetch('/api/payments/stkpush', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ amount, phone, orderId: `W-${Date.now()}` }),
-      });
-      const data = await response.json();
-      if (data.success) {
-        // In a real app, you'd poll for status
-        setTimeout(() => {
-          setBalance(prev => prev + parseInt(amount));
-          setLoading(false);
-          setAmount('');
-          setPhone('');
-        }, 3000);
-      }
-    } catch (error) {
-      console.error('Payment error:', error);
-      setLoading(false);
-    }
+    // Simulate API call based on selectedMethod
+    await new Promise(r => setTimeout(r, 2000));
+    setBalance(prev => prev + parseInt(amount));
+    setLoading(false);
+    setAmount('');
+    setPhone('');
   };
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-12">
-      <div className="mb-12">
-        <h1 className="text-4xl font-black mb-2">WÈRA <span className="wera-text-gradient">Wallet</span></h1>
-        <p className="text-black/60">Manage your earnings and load funds securely via M-Pesa.</p>
+      <div className="mb-12 text-center md:text-left">
+        <h1 className="text-4xl font-black mb-2 text-slate-900">WÈRA <span className="text-blue-700">Wallet</span></h1>
+        <p className="text-slate-600">Securely manage your professional balance and transactions.</p>
       </div>
 
       <div className="grid md:grid-cols-3 gap-8">
         <div className="md:col-span-2 space-y-8">
           {/* Balance Card */}
-          <Card className="p-8 bg-black text-white border-black relative overflow-hidden">
-            <div className="relative z-10">
-              <p className="text-xs font-bold uppercase tracking-widest opacity-50 mb-2">Available Balance</p>
-              <h2 className="text-5xl font-black mb-8">KES {balance.toLocaleString()}</h2>
-              <div className="flex space-x-4">
-                <Button variant="primary" className="bg-wera-green text-black border-wera-green hover:bg-white flex-1">
-                  <ArrowUpRight className="w-4 h-4 mr-2" /> Withdraw
-                </Button>
-                <Button variant="outline" className="border-white/20 text-white hover:bg-white/10 flex-1">
-                  <History className="w-4 h-4 mr-2" /> History
-                </Button>
+          <Card className="p-8 bg-slate-800 text-white border-slate-700 relative overflow-hidden shadow-2xl">
+            <div className="relative z-10 flex justify-between items-start">
+              <div>
+                <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Available Balance</p>
+                <h2 className="text-3xl sm:text-4xl font-black mb-1 text-slate-100">KES {balance.toLocaleString()}</h2>
+                <p className="text-sm text-slate-300">= {convertedBalance.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} {targetCurrency}</p>
               </div>
+              <select 
+                className="bg-slate-700 text-white text-xs p-1 rounded border-none"
+                value={targetCurrency}
+                onChange={(e) => setTargetCurrency(e.target.value)}
+              >
+                <option value="USD">USD</option>
+                <option value="EUR">EUR</option>
+                <option value="GBP">GBP</option>
+              </select>
             </div>
-            <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-wera-green/20 rounded-full blur-[80px]" />
+            <div className="mt-8 flex space-x-4">
+              <Button variant="outline" className="bg-slate-700 text-white border-slate-600 hover:bg-slate-600 flex-1">
+                <ArrowUpRight className="w-4 h-4 mr-2" /> Withdraw
+              </Button>
+              <Button variant="outline" className="border-slate-600 text-slate-300 hover:bg-slate-700 flex-1">
+                <History className="w-4 h-4 mr-2" /> History
+              </Button>
+            </div>
+            <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-slate-600 rounded-full blur-[80px]" />
+            <div className="absolute top-0 right-0 p-4 opacity-20">
+              <div className="w-24 h-24 border-4 border-slate-400 rounded-full" />
+            </div>
           </Card>
 
           {/* Transaction History */}
-          <Card className="p-6 border-black">
-            <h3 className="font-bold mb-6 flex items-center">
-              <History className="w-5 h-5 mr-2" /> Recent Transactions
+          <Card className="p-6 border-slate-200 shadow-sm bg-white">
+            <h3 className="font-bold text-slate-900 mb-6 flex items-center">
+              <History className="w-5 h-5 mr-2 text-blue-700" /> Recent Transactions
             </h3>
             <div className="space-y-4">
               {transactions.map((tx) => (
-                <div key={tx.id} className="flex items-center justify-between p-4 rounded-xl border border-black/5 hover:bg-black/5 transition-colors">
+                <div key={tx.id} className="flex items-center justify-between p-4 rounded-xl border border-slate-100 hover:bg-slate-50 transition-colors">
                   <div className="flex items-center space-x-4">
                     <div className={cn(
                       "w-10 h-10 rounded-full flex items-center justify-center",
-                      tx.type === 'deposit' ? "bg-green-100 text-green-600" : "bg-red-100 text-red-600"
+                      tx.type === 'deposit' ? "bg-blue-100 text-blue-700" : "bg-slate-100 text-slate-600"
                     )}>
                       {tx.type === 'deposit' ? <ArrowDownLeft className="w-5 h-5" /> : <ArrowUpRight className="w-5 h-5" />}
                     </div>
                     <div>
-                      <p className="font-bold text-sm capitalize">{tx.type} via {tx.method}</p>
-                      <p className="text-[10px] text-black/40 font-medium">{tx.date}</p>
+                      <p className="font-bold text-sm text-slate-800 capitalize">{tx.type} via {tx.method}</p>
+                      <p className="text-[10px] text-slate-400 font-medium">{tx.date}</p>
                     </div>
                   </div>
                   <div className="text-right">
                     <p className={cn(
                       "font-black text-sm",
-                      tx.type === 'deposit' ? "text-green-600" : "text-red-600"
+                      tx.type === 'deposit' ? "text-blue-700" : "text-slate-800"
                     )}>
                       {tx.type === 'deposit' ? '+' : '-'} KES {tx.amount.toLocaleString()}
                     </p>
-                    <span className="text-[8px] font-black uppercase tracking-tighter bg-black/5 text-black/40 px-1.5 py-0.5 rounded">
+                    <span className="text-[8px] font-black uppercase tracking-tighter bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded">
                       {tx.status}
                     </span>
                   </div>
@@ -2023,63 +2051,78 @@ const WalletPage = () => {
 
         <div className="md:col-span-1 space-y-8">
           {/* Deposit Form */}
-          <Card className="p-6 border-black bg-yellow-50/50">
-            <h3 className="font-bold mb-6 flex items-center">
-              <CreditCard className="w-5 h-5 mr-2" /> Load Funds
+          <Card className="p-6 border-slate-200 shadow-sm bg-slate-50">
+            <h3 className="font-bold text-slate-900 mb-6 flex items-center">
+              <CreditCard className="w-5 h-5 mr-2 text-blue-700" /> Load Funds
             </h3>
             <form onSubmit={handleDeposit} className="space-y-4">
               <div className="space-y-2">
-                <label className="text-xs font-bold uppercase tracking-widest opacity-50">Amount (KES)</label>
+                <label className="text-xs font-bold uppercase tracking-widest text-slate-500">Payment Method</label>
+                <select 
+                  className="w-full p-2 border border-slate-200 rounded-lg bg-white"
+                  value={selectedMethod}
+                  onChange={(e) => setSelectedMethod(e.target.value)}
+                >
+                  <option value="M-Pesa">M-Pesa</option>
+                  <option value="Airtel Money">Airtel Money</option>
+                  <option value="Telkom T-Kash">Telkom T-Kash</option>
+                  <option value="Bank Transfer">Bank Transfer</option>
+                  <option value="PayPal">PayPal</option>
+                </select>
+              </div>
+              <div className="space-y-2">
+                <label className="text-xs font-bold uppercase tracking-widest text-slate-500">Amount (KES)</label>
                 <Input 
                   type="number" 
                   placeholder="e.g. 1000" 
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
-                  className="border-black/20 bg-white"
+                  className="border-slate-200 bg-white"
                 />
               </div>
-              <div className="space-y-2">
-                <label className="text-xs font-bold uppercase tracking-widest opacity-50">M-Pesa Phone Number</label>
-                <Input 
-                  placeholder="e.g. 0712345678" 
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  className="border-black/20 bg-white"
-                />
-              </div>
+              {['M-Pesa', 'Airtel Money', 'Telkom T-Kash'].includes(selectedMethod) && (
+                <div className="space-y-2">
+                  <label className="text-xs font-bold uppercase tracking-widest text-slate-500">{selectedMethod} Number</label>
+                  <Input 
+                    placeholder="e.g. 07XXXXXXXX" 
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    className="border-slate-200 bg-white"
+                  />
+                </div>
+              )}
               <Button 
                 type="submit" 
-                variant="primary" 
-                className="w-full py-6 font-black"
-                disabled={loading || !amount || !phone}
+                className="w-full py-6 font-black bg-blue-700 text-white hover:bg-blue-800"
+                disabled={loading || !amount || (['M-Pesa', 'Airtel Money', 'Telkom T-Kash'].includes(selectedMethod) && !phone)}
               >
                 {loading ? (
                   <><Loader2 className="w-4 h-4 animate-spin mr-2" /> Processing...</>
                 ) : (
-                  'Deposit with M-Pesa'
+                  `Deposit via ${selectedMethod}`
                 )}
               </Button>
-              <p className="text-[10px] text-center text-black/40 leading-relaxed">
-                An STK Push will be sent to your phone. Enter your M-Pesa PIN to complete the transaction.
+              <p className="text-[10px] text-center text-slate-400 leading-relaxed">
+                An STK Push will be sent to your phone. Enter your M-Pesa PIN/Details to complete the transaction.
               </p>
             </form>
           </Card>
 
           {/* Security Note */}
-          <Card className="p-6 border-wera-green/30 bg-wera-green/5">
-            <div className="flex items-center space-x-3 mb-4 text-wera-green">
+          <Card className="p-6 border-slate-300 bg-white shadow-sm">
+            <div className="flex items-center space-x-3 mb-4 text-blue-800">
               <ShieldCheck className="w-5 h-5" />
               <h4 className="font-bold text-sm">Escrow & Commission</h4>
             </div>
-            <p className="text-xs text-black/60 leading-relaxed mb-4">
+            <p className="text-xs text-slate-600 leading-relaxed mb-4">
               All payments are held in WÈRA Escrow until the job is marked as complete.
             </p>
-            <p className="text-xs text-black/60 leading-relaxed mb-4">
+            <p className="text-xs text-slate-600 leading-relaxed mb-4">
               A 10% platform commission applies to all transactions (5% from worker, 5% from client).
             </p>
-            <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
-              <p className="text-xs text-red-700 font-bold">
-                ⚠️ Off-platform payments are strictly prohibited. Disputes arising from off-platform arrangements will result in the immediate suspension of both parties.
+            <div className="p-3 bg-red-50 border border-red-100 rounded-lg">
+              <p className="text-[10px] text-red-700 font-bold">
+                ⚠️ Off-platform payments are strictly prohibited.
               </p>
             </div>
           </Card>
@@ -2090,185 +2133,104 @@ const WalletPage = () => {
 };
 
 const WorkerProfilePage = () => {
-  const [aiSuggestions, setAiSuggestions] = useState<string>('');
-  const [loadingAi, setLoadingAi] = useState(false);
-
-  const handleGetSuggestions = async () => {
-    setLoadingAi(true);
-    // Mock data for demo
-    const skills = ['Plumbing', 'Electrical', 'Masonry'];
-    const jobs = [
-      'Fix leaking tap in Westlands',
-      'Full house rewiring in Kilimani',
-      'Build a garden wall in Langata'
-    ];
-    const suggestions = await aiService.getJobSuggestions(skills, jobs);
-    setAiSuggestions(suggestions);
-    setLoadingAi(false);
+  const { workerId } = useParams<{ workerId: string }>();
+  // Mock Worker Data
+  const worker = {
+    name: workerId === '1' ? 'John Kamau' : 'Jane Doe',
+    title: 'Professional Plumber',
+    rating: 4.8,
+    reviews: 124,
+    skills: ['Plumbing', 'Pipe Installation', 'Water Heating Systems', 'Leak Repairs'],
+    certifications: ['Certified Plumber Level 3', 'Safety & PPE Compliance', 'Advanced HVAC Training'],
+    completedJobs: [
+      { id: 1, title: 'Fix leaking tap in Westlands', date: '2026-04-15' },
+      { id: 2, title: 'Full house rewiring in Kilimani', date: '2026-04-10' },
+      { id: 3, title: 'Build a garden wall in Langata', date: '2026-04-05' },
+    ]
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div className="grid md:grid-cols-4 gap-8">
+    <div className="max-w-5xl mx-auto px-4 py-12">
+      <div className="grid md:grid-cols-3 gap-8">
         {/* Profile Sidebar */}
-        <div className="md:col-span-1">
-          <Card className="p-6 text-center border-black">
-            <div className="w-24 h-24 rounded-full bg-black/10 mx-auto mb-4 overflow-hidden border-4 border-black/20">
-              <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=worker1" alt="Profile" />
+        <div className="md:col-span-1 space-y-8">
+          <Card className="p-6 text-center border-slate-200 bg-white">
+            <div className="w-24 h-24 rounded-full bg-slate-100 mx-auto mb-4 overflow-hidden border-2 border-slate-200">
+              <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=worker1" alt="Profile" className="w-full h-full object-cover" />
             </div>
-            <h2 className="text-xl font-bold text-black">John Kamau</h2>
-            <p className="text-sm text-black/60 mb-4">Professional Plumber</p>
-            <div className="flex justify-center space-x-1 mb-6">
-              {[1, 2, 3, 4, 5].map((s) => <Star key={s} className="w-4 h-4 fill-black text-black" />)}
+            <h2 className="text-xl font-bold text-slate-900">{worker.name}</h2>
+            <p className="text-sm text-slate-600 mb-4">{worker.title}</p>
+            <div className="flex justify-center items-center space-x-1 mb-6">
+              {[1, 2, 3, 4, 5].map((s) => <Star key={s} className="w-4 h-4 fill-blue-700 text-blue-700" />)}
+              <span className="text-xs font-semibold text-slate-500 ml-2">({worker.rating} • {worker.reviews} reviews)</span>
             </div>
-            
-            {/* Vetting Status */}
             <div className="space-y-2 mb-6">
-              <div className="flex items-center justify-center text-[10px] font-bold text-black bg-black/10 py-1.5 rounded-full">
-                <Shield className="w-3 h-3 mr-1.5" /> POLICE CLEARED (GOOD CONDUCT)
-              </div>
-              <div className="flex items-center justify-center text-[10px] font-bold text-black bg-black/10 py-1.5 rounded-full">
-                <Zap className="w-3 h-3 mr-1.5" /> SOFT SKILLS CERTIFIED
+              <div className="flex items-center justify-center text-[10px] font-bold text-slate-700 bg-slate-100 py-1.5 rounded-full px-3">
+                <Shield className="w-3 h-3 mr-1.5 text-blue-700" /> POLICE CLEARED
               </div>
             </div>
-
-            <Button variant="outline" className="w-full mb-2">Edit Profile</Button>
-            <Link to="/wallet">
-              <Button variant="outline" className="w-full mb-2 border-wera-green text-wera-green hover:bg-wera-green/5">
-                <Wallet className="w-4 h-4 mr-2" /> My Wallet
-              </Button>
-            </Link>
-            <Button variant="ghost" className="w-full text-red-500 hover:text-red-600 hover:bg-red-50">Logout</Button>
+            <Button variant="primary" className="w-full">Hire Worker</Button>
           </Card>
         </div>
 
         {/* Main Content */}
-        <div className="md:col-span-3 space-y-8">
-          <Card className="p-8 border-black">
-            <div className="flex justify-between items-center mb-6">
-              <h3 className="text-2xl font-bold text-black">AI Job Matcher</h3>
-              <Button 
-                variant="primary" 
-                onClick={handleGetSuggestions}
-                disabled={loadingAi}
-              >
-                {loadingAi ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Zap className="w-4 h-4 mr-2" />}
-                Find Best Matches
-              </Button>
+        <div className="md:col-span-2 space-y-8">
+          {/* Skills */}
+          <Card className="p-6 border-slate-200 bg-white">
+            <h3 className="font-bold text-slate-900 mb-4">Skills</h3>
+            <div className="flex flex-wrap gap-2">
+              {worker.skills.map(skill => (
+                <span key={skill} className="px-3 py-1 bg-slate-100 text-slate-700 text-xs font-semibold rounded-full border border-slate-200">
+                  {skill}
+                </span>
+              ))}
             </div>
-            {aiSuggestions ? (
-              <div className="prose prose-sm max-w-none bg-black/10 p-6 rounded-xl border border-black/20">
-                <div className="flex items-center space-x-2 mb-4 text-black">
-                  <TrendingUp className="w-5 h-5" />
-                  <span className="font-bold uppercase tracking-wider text-xs">AI Recommendations</span>
-                </div>
-                <div className="whitespace-pre-wrap text-black/80 leading-relaxed">
-                  {aiSuggestions}
-                </div>
-              </div>
-            ) : (
-              <div className="text-center py-12 border-2 border-dashed border-black/20 rounded-xl">
-                <Briefcase className="w-12 h-12 text-black/30 mx-auto mb-4" />
-                <p className="text-black/60">Click the button above to let AI find the best jobs for your skills.</p>
-              </div>
-            )}
           </Card>
 
-          <div className="grid md:grid-cols-2 gap-8">
-            <Card className="p-6 border-black">
-              <h3 className="font-bold mb-4 text-black">My Skills</h3>
-              <div className="flex flex-wrap gap-2">
-                {['Plumbing', 'Pipe Fitting', 'Emergency Repairs', 'Leak Detection'].map((skill) => (
-                  <span key={skill} className="px-3 py-1 bg-black/10 text-black text-xs font-bold rounded-full">
-                    {skill}
-                  </span>
-                ))}
-                <button className="px-3 py-1 border border-dashed border-black/30 text-black/40 text-xs font-bold rounded-full hover:border-black hover:text-black transition-colors">
-                  + Add Skill
-                </button>
-              </div>
-            </Card>
-            <Card className="p-6 border-black">
-              <h3 className="font-bold mb-4 text-black">Earnings Overview</h3>
-              <div className="space-y-4">
-                <div className="flex justify-between items-end">
-                  <span className="text-sm text-black/60">This Month</span>
-                  <span className="text-2xl font-bold text-black">KES 42,500</span>
-                </div>
-                <div className="w-full bg-black/10 h-2 rounded-full overflow-hidden">
-                  <div className="bg-black h-full w-[70%]" />
-                </div>
-                <p className="text-[10px] text-black/60">70% of your monthly goal reached.</p>
-              </div>
-            </Card>
-          </div>
-
-          {/* Scheduler & Proximity Alert */}
-          <div className="grid md:grid-cols-1 gap-8">
-            <Card className="p-8 border-black">
-              <div className="flex items-center justify-between mb-8">
-                <div className="flex items-center space-x-3">
-                  <div className="p-2 bg-black rounded-lg text-wera-green">
-                    <Calendar className="w-6 h-6" />
+          {/* Completed Jobs */}
+          <Card className="p-6 border-slate-200 bg-white">
+            <h3 className="font-bold text-slate-900 mb-4">Completed Jobs History</h3>
+            <div className="space-y-4">
+              {worker.completedJobs.map(job => (
+                <div key={job.id} className="flex justify-between items-center p-3 border-b border-slate-100 pb-4">
+                  <div>
+                    <p className="text-sm font-semibold text-slate-800">{job.title}</p>
+                    <p className="text-xs text-slate-500">Completed on {new Date(job.date).toLocaleDateString()}</p>
                   </div>
-                  <h3 className="text-xl font-bold text-black">Job Scheduler</h3>
+                  <span className="text-xs font-bold text-blue-700 bg-blue-50 px-2 py-1 rounded">5/5 Rating</span>
                 </div>
-                <div className="flex space-x-2">
-                  <span className="px-3 py-1 bg-black/10 text-black text-[10px] font-bold rounded-full uppercase">Upcoming</span>
-                </div>
-              </div>
+              ))}
+            </div>
+          </Card>
 
-              <div className="space-y-4">
-                {[
-                  { id: 1, title: 'Kitchen Sink Repair', time: 'Today, 2:00 PM', location: 'Westlands', status: 'on_way' },
-                  { id: 2, title: 'Bathroom Installation', time: 'Tomorrow, 9:00 AM', location: 'Kilimani', status: 'none' },
-                ].map((job) => (
-                  <div key={job.id} className="p-4 border border-black/10 rounded-xl hover:bg-black/5 transition-colors">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-4">
-                        <div className="w-10 h-10 bg-black/10 rounded-full flex items-center justify-center text-black">
-                          <Clock className="w-5 h-5" />
-                        </div>
-                        <div>
-                          <h4 className="font-bold text-black">{job.title}</h4>
-                          <div className="flex items-center space-x-3 text-xs text-black/60">
-                            <span className="flex items-center"><Calendar className="w-3 h-3 mr-1" /> {job.time}</span>
-                            <span className="flex items-center"><MapPin className="w-3 h-3 mr-1" /> {job.location}</span>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <div className="flex items-center space-x-3">
-                        {job.status === 'on_way' ? (
-                          <Button variant="primary" size="sm" className="bg-wera-green text-black hover:bg-yellow-50 border-black">
-                            <BellRing className="w-4 h-4 mr-2" /> Mark as Arrived
-                          </Button>
-                        ) : (
-                          <Button variant="outline" size="sm" className="border-black text-black">
-                            Start Journey
-                          </Button>
-                        )}
-                      </div>
-                    </div>
-                    
-                    {job.status === 'on_way' && (
-                      <div className="mt-4 p-3 bg-wera-green/10 border border-wera-green/20 rounded-lg flex items-center justify-between">
-                        <div className="flex items-center text-xs font-bold text-black">
-                          <Zap className="w-4 h-4 mr-2 animate-pulse" /> PROXIMITY ALERT: Client has been notified you are nearby.
-                        </div>
-                        <span className="text-[10px] text-black/60">2.5km away</span>
-                      </div>
-                    )}
+          {/* Certifications */}
+          <Card className="p-6 border-slate-200 bg-white">
+            <h3 className="font-bold text-slate-900 mb-4">Verifiable Certifications</h3>
+            <ul className="space-y-3">
+              {worker.certifications.map(cert => (
+                <li key={cert} className="flex justify-between items-center text-sm p-3 bg-slate-50 rounded-lg">
+                  <div className='flex items-center'>
+                    <CheckCircle className="w-4 h-4 text-blue-700 mr-2" /> 
+                    <span className='font-medium text-slate-700'>{cert}</span>
                   </div>
-                ))}
-              </div>
-            </Card>
-          </div>
+                  <span className="text-xs text-slate-400">Issued: 2026-01-10</span>
+                </li>
+              ))}
+            </ul>
+          </Card>
         </div>
       </div>
     </div>
   );
 };
+
+const workerCategories = [
+  { name: 'Construction', icon: '🏗️', description: 'Masonry, steel work, and site prep.' },
+  { name: 'Plumbing', icon: '🚰', description: 'Installation and maintenance of systems.' },
+  { name: 'Electrical', icon: '⚡', description: 'Wiring, lighting, and power solutions.' },
+  { name: 'Cleaning', icon: '🧹', description: 'Residential and commercial sanitation.' },
+  { name: 'Landscaping', icon: '🌳', description: 'Garden design and maintenance.' },
+];
 
 const HireTalentPage = () => {
   const [step, setStep] = useState(1);
@@ -2281,7 +2243,9 @@ const HireTalentPage = () => {
     scheduled_at: '',
     is_for_others: false,
     recipient_name: '',
-    recipient_phone: ''
+    recipient_phone: '',
+    is_direct_hire: false,
+    urgency: 'Flexible',
   });
 
   const handlePostJob = (e: React.FormEvent) => {
@@ -2294,6 +2258,22 @@ const HireTalentPage = () => {
       <div className="mb-12 text-center">
         <h1 className="text-3xl font-bold mb-2">Hire <span className="wera-text-gradient">Wera Workers</span></h1>
         <p className="text-gray-600">Connect with Kenya's most skilled and vetted talent.</p>
+      </div>
+
+      <div className="mb-12">
+        <h2 className="text-xl font-bold mb-6">Browse by Category</h2>
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+          {workerCategories.map(c => (
+             <Card key={c.name} className="p-4 flex items-center gap-3 bg-white">
+                <div className="text-2xl">{c.icon}</div>
+                <div>
+                  <p className="font-bold text-sm">{c.name}</p>
+                  <p className="text-[10px] opacity-60">{c.description}</p>
+                </div>
+             </Card>
+          ))}
+        </div>
+        <Button variant="ghost" className="mt-4 text-xs font-bold underline">View All Categories</Button>
       </div>
 
       <Card className="p-8 border-black">
@@ -2399,21 +2379,48 @@ const HireTalentPage = () => {
             </div>
             <div className="space-y-4">
               <label className="block text-sm font-bold">Describe the job</label>
+              <div className="flex gap-2 mb-2 p-1 border border-black/10 rounded-lg bg-black/5">
+                <Button variant="ghost" size="sm" type="button" onClick={() => setFormData({...formData, description: formData.description + '**Bold**'})} className="px-2 py-1 h-8 text-xs font-bold">B</Button>
+                <Button variant="ghost" size="sm" type="button" onClick={() => setFormData({...formData, description: formData.description + '*Italic*'})} className="px-2 py-1 h-8 text-xs font-bold italic">I</Button>
+                <Button variant="ghost" size="sm" type="button" onClick={() => setFormData({...formData, description: formData.description + '\n- List item'})} className="px-2 py-1 h-8 text-xs font-bold">List</Button>
+              </div>
               <textarea 
                 className="w-full p-4 border border-black/20 rounded-xl min-h-[150px] focus:ring-black bg-yellow-50/50"
                 placeholder="Provide details about the work, requirements, and timeline..."
+                value={formData.description}
+                onChange={(e) => setFormData({...formData, description: e.target.value})}
               />
             </div>
+            <label className="flex items-center gap-2 font-bold my-4">
+              <input type="checkbox" checked={formData.is_direct_hire} onChange={(e) => setFormData({...formData, is_direct_hire: e.target.checked})} />
+              Direct Hire (Bypass Marketplace)
+            </label>
             <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <label className="block text-sm font-bold">Urgency</label>
+                <select value={formData.urgency} onChange={(e) => setFormData({...formData, urgency: e.target.value})} className="w-full p-2 border border-black/20 rounded-lg focus:ring-black bg-yellow-50/50">
+                  <option>Immediate</option>
+                  <option>Within 3 days</option>
+                  <option>Flexible</option>
+                </select>
+              </div>
               <div className="space-y-2">
                 <label className="block text-sm font-bold">Budget (KES)</label>
                 <Input type="number" placeholder="2500" className="bg-yellow-50/50 border-black/20" />
               </div>
-              <div className="space-y-2">
+            </div>
+            
+            <div className="space-y-2">
                 <label className="block text-sm font-bold">Location</label>
                 <Input placeholder="e.g. Westlands, Nairobi" className="bg-yellow-50/50 border-black/20" />
-              </div>
             </div>
+            
+            {formData.is_direct_hire && (
+              <div className="p-4 border border-blue-200 bg-blue-50 rounded-xl space-y-2">
+                 <label className="text-sm font-bold text-blue-800">Select Worker ID</label>
+                 <Input placeholder="Enter Worker ID (e.g. 1)" className="bg-white" />
+              </div>
+            )}
             <div className="flex gap-4 pt-4">
               <Button variant="primary" onClick={() => setStep(1)} className="flex-1 font-bold">Back</Button>
               <Button type="submit" variant="primary" className="flex-1 font-bold">Post Opportunity</Button>
@@ -3346,6 +3353,7 @@ export default function App() {
             <Route path="/companies" element={<CompanyOnboardingPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/profile" element={<WorkerProfilePage />} />
+            <Route path="/profile/:workerId" element={<WorkerProfilePage />} />
             <Route path="/wallet" element={<WalletPage />} />
             {/* Add more routes as needed */}
           </Routes>
