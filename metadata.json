@@ -1,5 +1,5 @@
 {
-  "name": "WÈRA Platform",
-  "description": "Kenya's Premier Labour Platform connecting skilled and semi-skilled workers with formal job opportunities.",
+  "name": "Wera Platform",
+  "description": "An e-commerce labour marketplace platform for the Kenyan market, connecting skilled workers with meaningful opportunities.",
   "requestFramePermissions": ["geolocation"]
 }

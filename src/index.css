@@ -1,38 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Habibi&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  /* Palette: Blue, Grey, Pristine White, Silver */
-  --color-wera-blue: #0047AB; /* Cobalt Blue */
-  --color-wera-grey: #6E7B8B; /* Steel Grey */
-  --color-wera-silver: #C0C0C0; /* Silver Highlights */
-  --color-wera-white: #FFFFFF; /* Pristine White */
-  --color-wera-dark: #1E293B; /* Slate-800 for contrast */
+  --font-sans: "Habibi", ui-sans-serif, system-ui, sans-serif;
+  /* Premium Palette: Midnight Navy, Electric Cyan, Slate Grey, Crisp White */
+  --color-wera-navy: #0A192F;
+  --color-wera-cyan: #00F0FF;
+  --color-wera-slate: #64748B;
+  --color-wera-white: #FFFFFF;
 }
 
 @layer base {
   body {
-    @apply font-sans bg-[var(--color-wera-white)] text-[var(--color-wera-dark)];
+    @apply font-sans bg-[var(--color-wera-white)] text-[var(--color-wera-navy)];
   }
 }
 
-/* Map utility classes to new palette */
-.text-wera-cyan { @apply text-[var(--color-wera-blue)]; }
-.bg-wera-cyan { @apply bg-[var(--color-wera-blue)]; }
-.bg-wera-cyan\/10 { @apply bg-[var(--color-wera-blue)]/[0.1]; }
-.bg-wera-cyan\/20 { @apply bg-[var(--color-wera-blue)]/[0.2]; }
-.border-wera-cyan { @apply border-[var(--color-wera-blue)]; }
-.fill-wera-cyan { @apply fill-[var(--color-wera-blue)]; }
-.ring-wera-cyan { @apply ring-[var(--color-wera-blue)]; }
+/* Map utility classes to new high-contrast professional palette */
+.text-wera-cyan { @apply text-[var(--color-wera-cyan)]; }
+.bg-wera-cyan { @apply bg-[var(--color-wera-cyan)]; }
+.bg-wera-navy { @apply bg-[var(--color-wera-navy)] text-[var(--color-wera-white)]; }
+.bg-wera-slate { @apply bg-[var(--color-wera-slate)]; }
 
-.text-wera-green { @apply text-[var(--color-wera-silver)]; }
-.bg-wera-green { @apply bg-[var(--color-wera-silver)]; }
+/* Glassmorphism Gradient */
+.wera-glass-gradient {
+  background: linear-gradient(135deg, rgba(0, 240, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+  backdrop-filter: blur(10px);
+  @apply border border-white/10;
+}
 
-.bg-wera-black { @apply bg-[var(--color-wera-dark)] text-[var(--color-wera-white)]; }
-.text-white { @apply text-[var(--color-wera-white)]; }
-
-.wera-gradient {
-  background: linear-gradient(135deg, var(--color-wera-cyan) 0%, var(--color-wera-green) 100%);
+.wera-chevron-motif {
+  @apply text-[var(--color-wera-cyan)];
 }
 
 .wera-text-gradient {

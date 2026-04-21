@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: wera-platform
+    env: node
+    plan: free # Zero-Burn testing
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: SUPABASE_URL
+        fromConfigVar: SUPABASE_URL
+      - key: SUPABASE_ANON_KEY
+        fromConfigVar: SUPABASE_ANON_KEY
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: OPENROUTER_API_KEY
+        fromConfigVar: OPENROUTER_API_KEY
+      - key: NEW_RELIC_LICENSE_KEY
+        sync: false
+      - key: NEW_RELIC_APP_NAME
+        value: wera-platform-production

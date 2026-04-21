@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from './services/supabaseClient';
-import { UserRole, UserSession } from './types';
+import { UserRole, UserSession, Currency } from './types';
 import { validateCandidate, ValidationResult } from './services/validationService';
 import { BrowserRouter as Router, Routes, Route, Link, useNavigate, useParams, Navigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
@@ -23,6 +23,7 @@ import {
   TrendingUp,
   LogOut,
   ChevronRight,
+  ChevronDown,
   CheckCircle,
   Brain,
   Sparkles,
@@ -204,7 +205,17 @@ const DualRatingSystem = ({ targetName, type }: { targetName: string, type: 'wor
   );
 };
 
-const Navbar = ({ user }: { user: any }) => {
+const Navbar = ({ 
+  user, 
+  primaryCurrency, 
+  setPrimaryCurrency, 
+  currencies 
+}: { 
+  user: any, 
+  primaryCurrency: Currency, 
+  setPrimaryCurrency: (c: Currency) => void, 
+  currencies: Currency[] 
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -214,43 +225,55 @@ const Navbar = ({ user }: { user: any }) => {
   };
 
   return (
-    <nav className="sticky top-0 z-50 bg-slate-100/80 backdrop-blur-md border-b border-slate-300/20">
+    <nav className="sticky top-0 z-50 bg-wera-navy backdrop-blur-md border-b border-wera-cyan/20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16 items-center">
+        <div className="flex justify-between h-20 items-center">
           <Link to="/" className="flex items-center group">
-            <Logo iconSize="w-12 h-12" />
-            <div className="ml-8 hidden lg:flex flex-col border-l-2 border-wera-green/30 pl-4">
+            <Logo iconSize="w-14 h-14" isDark={true} />
+            <div className="ml-6 hidden lg:flex flex-col border-l border-wera-cyan/30 pl-4">
               <div className="flex items-center mb-0.5">
-                <div className="w-2 h-2 bg-wera-green rounded-full animate-pulse mr-2" />
-                <span className="text-[10px] font-black text-wera-green tracking-tighter">Twende Wera, tuko live!</span>
+                <div className="w-1.5 h-1.5 bg-wera-cyan rounded-full animate-pulse mr-2" />
+                <span className="text-[10px] font-bold text-wera-cyan tracking-widest uppercase">Live Marketplace</span>
               </div>
-              <span className="text-[9px] font-bold text-black/40 uppercase tracking-widest leading-none">weraplatform.dedyn.io</span>
+              <span className="text-[9px] font-medium text-wera-white/40 uppercase tracking-widest leading-none">weraplatform.dedyn.io</span>
             </div>
           </Link>
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-8">
-            <Link to="/jobs" className="text-sm font-medium hover:underline transition-all text-black">Find Wera Work</Link>
-            <Link to="/hire" className="text-sm font-medium hover:underline transition-all text-black">Hire Wera Workers</Link>
-            <Link to="/wallet" className="text-sm font-medium hover:underline transition-all text-black">Wallet</Link>
-            <Link to="/academy" className="text-sm font-medium hover:underline transition-all text-black">Academy</Link>
-            <Link to="/verify" className="text-sm font-medium hover:underline transition-all text-black">Verify</Link>
-            <Link to="/about" className="text-sm font-medium hover:underline transition-all text-black">About Us</Link>
-            <Link to="/companies" className="text-sm font-bold text-black hover:opacity-80 transition-opacity">For Companies</Link>
+            <Link to="/jobs" className="text-sm font-semibold hover:text-wera-cyan transition-colors text-wera-white/90">Find Work</Link>
+            <Link to="/hire" className="text-sm font-semibold hover:text-wera-cyan transition-colors text-wera-white/90">Hire Talent</Link>
+            <Link to="/academy" className="text-sm font-semibold hover:text-wera-cyan transition-colors text-wera-white/90">Academy</Link>
             
+            {/* Currency Selector */}
+            <div className="relative group/currency">
+              <select 
+                value={primaryCurrency.code}
+                onChange={(e) => {
+                  const selected = currencies.find(c => c.code === e.target.value);
+                  if (selected) setPrimaryCurrency(selected);
+                }}
+                className="bg-transparent text-wera-white/80 text-xs font-bold uppercase tracking-wider border border-wera-cyan/30 px-2 py-1 rounded cursor-pointer hover:border-wera-cyan transition-colors appearance-none pr-6"
+                style={{ backgroundImage: 'radial-gradient(circle at center, var(--color-wera-cyan) 0%, transparent 100%)', backgroundSize: '0 0', backgroundRepeat: 'no-repeat' }}
+              >
+                {currencies.map(c => (
+                  <option key={c.code} value={c.code} className="bg-wera-navy text-wera-white uppercase">{c.symbol} {c.code}</option>
+                ))}
+              </select>
+              <ChevronDown className="w-3 h-3 absolute right-2 top-1/2 -translate-y-1/2 text-wera-cyan pointer-events-none" />
+            </div>
+
             {user ? (
               <div className="flex items-center space-x-4">
-                <Button variant="ghost" size="icon" className="text-black"><Bell className="w-5 h-5" /></Button>
-                <Button variant="ghost" size="icon" className="text-black"><MessageSquare className="w-5 h-5" /></Button>
-                <div className="h-8 w-8 rounded-full bg-black/10 overflow-hidden border border-black/10">
-                  <img src={user.user_metadata.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.email}`} alt="Avatar" />
+                <div className="h-9 w-9 rounded-full bg-wera-cyan/10 overflow-hidden border border-wera-cyan/30 group cursor-pointer">
+                  <img src={user.user_metadata?.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.email}`} alt="Avatar" className="w-full h-full object-cover group-hover:scale-110 transition-transform" />
                 </div>
-                <Button variant="outline" onClick={handleLogout} className="text-xs border-black text-black">Logout</Button>
+                <Button variant="outline" onClick={handleLogout} className="text-xs border-wera-white/20 text-wera-white bg-transparent hover:bg-wera-white/10 px-4 py-2">Logout</Button>
               </div>
             ) : (
               <div className="flex items-center space-x-4">
-                <Link to="/login"><Button variant="ghost" className="text-black">Login</Button></Link>
-                <Link to="/signup"><Button variant="primary">Join Wera</Button></Link>
+                <Link to="/login"><Button variant="ghost" className="text-wera-white/90 font-bold tracking-wider uppercase text-xs">Login</Button></Link>
+                <Link to="/signup"><Button className="bg-wera-cyan text-wera-navy font-black tracking-widest text-xs px-6 py-2 hover:opacity-90 shadow-lg shadow-wera-cyan/20 transition-all uppercase">Join Now</Button></Link>
               </div>
             )}
           </div>
@@ -377,39 +400,39 @@ const WorkerOnboardingPage = () => {
             <div key={s} className="flex items-center">
               <div className={cn(
                 "w-10 h-10 rounded-full flex items-center justify-center font-bold border-2 transition-all",
-                step >= s ? "bg-black text-white border-black" : "bg-white text-black/20 border-black/10"
+                step >= s ? "bg-wera-navy text-wera-white border-wera-navy" : "bg-wera-white text-wera-navy/20 border-wera-navy/10"
               )}>
                 {step > s ? <CheckCircle className="w-6 h-6" /> : s}
               </div>
-              {s < 3 && <div className={cn("w-12 h-1 mx-2 rounded-full", step > s ? "bg-black" : "bg-black/10")} />}
+              {s < 3 && <div className={cn("w-12 h-1 mx-2 rounded-full", step > s ? "bg-wera-navy" : "bg-wera-navy/10")} />}
             </div>
           ))}
         </div>
       </div>
 
-      <Card className="p-8 border-black shadow-xl">
+      <Card className="p-8 border-wera-navy/10 shadow-2xl bg-wera-white">
         {step === 1 && (
           <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-6">
-            <h2 className="text-2xl font-bold text-black flex items-center">
-              <User className="w-6 h-6 mr-2" /> Personal Details
+            <h2 className="text-2xl font-black text-wera-navy flex items-center tracking-tight">
+              <User className="w-6 h-6 mr-3 text-wera-cyan" /> Personal Details
             </h2>
             <div className="grid md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <label className="text-sm font-bold">Full Name (As per ID)</label>
+                <label className="text-xs font-bold uppercase tracking-widest text-wera-navy/60">Full Name (As per ID)</label>
                 <Input 
                   placeholder="e.g. John Kamau" 
                   value={formData.fullName}
                   onChange={(e) => setFormData({...formData, fullName: e.target.value})}
-                  className="bg-slate-100/50 border-black/20" 
+                  className="bg-wera-navy/5 border-wera-navy/10 focus:border-wera-cyan py-6" 
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-bold">Phone Number</label>
+                <label className="text-xs font-bold uppercase tracking-widest text-wera-navy/60">Phone Number</label>
                 <div className="relative">
-                  <Smartphone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-black/40" />
+                  <Smartphone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-wera-navy/40" />
                   <Input 
                     placeholder="07XX XXX XXX" 
-                    className="pl-10 bg-slate-100/50 border-black/20" 
+                    className="pl-10 bg-wera-navy/5 border-wera-navy/10 focus:border-wera-cyan py-6" 
                     value={formData.phone}
                     onChange={(e) => setFormData({...formData, phone: e.target.value})}
                   />
@@ -417,18 +440,18 @@ const WorkerOnboardingPage = () => {
               </div>
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-bold">Primary Location</label>
+              <label className="text-xs font-bold uppercase tracking-widest text-wera-navy/60">Primary Location</label>
               <div className="relative">
-                <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-black/40" />
+                <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-wera-navy/40" />
                 <Input 
                   placeholder="e.g. Westlands, Nairobi" 
-                  className="pl-10 bg-yellow-50/50 border-black/20" 
+                  className="pl-10 bg-wera-navy/5 border-wera-navy/10 focus:border-wera-cyan py-6" 
                   value={formData.location}
                   onChange={(e) => setFormData({...formData, location: e.target.value})}
                 />
               </div>
             </div>
-            <Button onClick={handleNext} className="w-full py-6 text-lg font-bold" variant="primary">
+            <Button onClick={handleNext} className="w-full py-7 text-lg font-black bg-wera-navy text-wera-white hover:bg-wera-navy/90 rounded-xl" variant="primary">
               Next: Skills & Category
             </Button>
           </motion.div>
@@ -1475,20 +1498,20 @@ const LandingPage = () => {
                   </div>
                 </div>
                 <div className="space-y-6">
-                  <div className="p-4 bg-yellow-50/5 rounded-xl border border-white/10">
-                    <p className="text-sm italic text-white/80">"How would you handle a situation where a client is unhappy with the progress of a job?"</p>
+                  <div className="p-4 bg-wera-navy/5 rounded-xl border border-wera-cyan/10">
+                    <p className="text-sm italic text-wera-navy/80">"How would you handle a situation where a client is unhappy with the progress of a job?"</p>
                   </div>
                   <div className="flex justify-between items-center text-xs font-bold uppercase tracking-widest">
-                    <span className="text-white/40">Assessment Progress</span>
-                    <span className="text-wera-green">85% Complete</span>
+                    <span className="text-wera-navy/40">Assessment Progress</span>
+                    <span className="text-wera-cyan">85% Complete</span>
                   </div>
-                  <div className="w-full bg-slate-100/10 h-2 rounded-full overflow-hidden">
-                    <div className="bg-wera-green h-full w-[85%]" />
+                  <div className="w-full bg-wera-navy/10 h-2 rounded-full overflow-hidden">
+                    <div className="bg-wera-cyan h-full w-[85%]" />
                   </div>
                 </div>
               </Card>
               {/* Decorative glow */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-wera-green/20 rounded-full blur-[120px] -z-0" />
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-wera-cyan/10 rounded-full blur-[120px] -z-0" />
             </div>
           </div>
         </div>
@@ -1497,19 +1520,19 @@ const LandingPage = () => {
       {/* CTA Section */}
       <section className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-black rounded-3xl p-12 text-center text-white relative overflow-hidden">
+          <div className="bg-wera-navy rounded-3xl p-12 text-center text-wera-white relative overflow-hidden shadow-2xl">
             <div className="relative z-10">
-              <h2 className="text-4xl font-bold mb-6">Ready to Unlock Your Potential?</h2>
-              <p className="text-xl mb-10 opacity-90 max-w-2xl mx-auto">
-                Join thousands of Wera Workers and employers already using Wera to build a better future.
+              <h2 className="text-4xl font-black mb-6 tracking-tight">Ready to Unlock Your Potential?</h2>
+              <p className="text-xl mb-10 text-wera-white/80 max-w-2xl mx-auto font-medium">
+                Join thousands of Wera Marketplace users already building a better future in the Kenyan economy.
               </p>
-              <Button className="bg-wera-green text-black hover:bg-yellow-50 px-10 py-4 text-lg font-bold">
+              <Button className="bg-wera-cyan text-wera-navy hover:opacity-90 px-10 py-6 text-lg font-black uppercase tracking-widest shadow-xl shadow-wera-cyan/20">
                 Get Started Now
               </Button>
             </div>
-            {/* Decorative circles */}
-            <div className="absolute -top-24 -left-24 w-64 h-64 bg-wera-green/10 rounded-full blur-3xl" />
-            <div className="absolute -bottom-24 -right-24 w-64 h-64 bg-yellow-50/10 rounded-full blur-3xl" />
+            {/* Decorative glass elements */}
+            <div className="absolute -top-24 -left-24 w-64 h-64 bg-wera-cyan/10 rounded-full blur-3xl animate-pulse" />
+            <div className="absolute -bottom-24 -right-24 w-64 h-64 bg-wera-cyan/5 rounded-full blur-3xl animate-pulse delay-1000" />
           </div>
         </div>
       </section>
@@ -1522,28 +1545,28 @@ const LandingPage = () => {
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="absolute bottom-24 right-0 w-80 bg-white border-4 border-black rounded-[2rem] shadow-2xl overflow-hidden flex flex-col"
+              className="absolute bottom-24 right-0 w-80 bg-wera-white border border-wera-navy/10 rounded-[2rem] shadow-2xl overflow-hidden flex flex-col"
             >
-              <div className="bg-black p-4 text-white flex items-center justify-between">
-                <div className="flex items-center space-x-2">
+              <div className="bg-wera-navy p-5 text-wera-white flex items-center justify-between border-b border-wera-cyan/20">
+                <div className="flex items-center space-x-3">
                   <Brain className="w-5 h-5 text-wera-cyan" />
-                  <span className="font-black uppercase tracking-tight text-sm">WÈRA AI Assistant</span>
+                  <span className="font-bold uppercase tracking-widest text-[10px]">Wera Marketplace AI</span>
                 </div>
-                <button onClick={() => setShowAIChat(false)}><X className="w-4 h-4" /></button>
+                <button onClick={() => setShowAIChat(false)} className="hover:text-wera-cyan transition-colors"><X className="w-4 h-4" /></button>
               </div>
-              <div className="h-80 overflow-y-auto p-4 space-y-4 bg-yellow-50/30">
+              <div className="h-80 overflow-y-auto p-4 space-y-4 bg-wera-white">
                 {chatHistory.length === 0 && (
                   <div className="text-center py-8">
-                    <Sparkles className="w-8 h-8 text-black/20 mx-auto mb-2" />
-                    <p className="text-xs font-bold text-black/40">Ask me anything about WÈRA!</p>
+                    <Sparkles className="w-8 h-8 text-wera-navy/10 mx-auto mb-2" />
+                    <p className="text-[10px] font-bold text-wera-navy/30 uppercase tracking-widest">Consult your AI business partner</p>
                   </div>
                 )}
                 {chatHistory.map((msg, i) => (
                   <div key={i} className={cn(
-                    "max-w-[80%] p-3 rounded-2xl text-xs font-medium",
+                    "max-w-[85%] p-3 rounded-2xl text-xs font-semibold leading-relaxed tracking-tight",
                     msg.role === 'user' 
-                      ? "ml-auto bg-wera-cyan text-black rounded-tr-none" 
-                      : "mr-auto bg-black text-white rounded-tl-none"
+                      ? "ml-auto bg-wera-cyan/10 text-wera-navy border border-wera-cyan/20 rounded-tr-none" 
+                      : "mr-auto bg-wera-navy text-wera-white rounded-tl-none shadow-md"
                   )}>
                     {msg.content}
                   </div>
@@ -3473,6 +3496,14 @@ const TrainingPage = () => {
 
 export default function App() {
   const [userSession, setUserSession] = useState<UserSession | null>(null);
+  const [primaryCurrency, setPrimaryCurrency] = useState<Currency>({ code: 'KES', name: 'Kenyan Shilling', symbol: 'KSh' });
+
+  const currencies: Currency[] = [
+    { code: 'KES', name: 'Kenyan Shilling', symbol: 'KSh' },
+    { code: 'USD', name: 'US Dollar', symbol: '$' },
+    { code: 'EUR', name: 'Euro', symbol: '€' },
+    { code: 'GBP', name: 'British Pound', symbol: '£' },
+  ];
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -3509,8 +3540,13 @@ export default function App() {
 
   return (
     <Router>
-      <div className="min-h-screen flex flex-col">
-        <Navbar user={userSession} />
+      <div className="min-h-screen flex flex-col bg-wera-white font-sans transition-colors duration-300">
+        <Navbar 
+          user={userSession} 
+          primaryCurrency={primaryCurrency} 
+          setPrimaryCurrency={setPrimaryCurrency} 
+          currencies={currencies} 
+        />
         <main className="flex-grow">
           <Routes>
             <Route path="/" element={<LandingPage />} />
@@ -3536,28 +3572,27 @@ export default function App() {
             } />
           </Routes>
         </main>
-        <footer className="bg-wera-black text-white py-12">
+        <footer className="bg-wera-navy text-wera-white py-16 border-t border-wera-cyan/10">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid md:grid-cols-4 gap-12 mb-12">
               <div className="col-span-1 md:col-span-2">
                 <div className="flex items-center mb-6">
-                  <Logo iconSize="w-12 h-12" isDark={true} />
+                  <Logo iconSize="w-14 h-14" isDark={true} />
                 </div>
-                <p className="text-gray-400 max-w-sm mb-6">
-                  Unlocking potential across Kenya by connecting skilled Wera Workers with meaningful opportunities. 
-                  Building a trusted ecosystem for the future of work.
+                <p className="text-wera-white/60 max-w-sm mb-6 leading-relaxed">
+                  The Kenyan e-commerce labour marketplace engineered for precision, institutional auditability, and executive excellence.
                 </p>
                 <div className="flex space-x-4">
-                  {/* Social icons would go here */}
+                  {/* Digital Trust Seals would go here */}
                 </div>
               </div>
               <div>
-                <h4 className="font-bold mb-6">Platform</h4>
-                <ul className="space-y-4 text-gray-400 text-sm">
-                  <li><Link to="/jobs" className="hover:text-white transition-colors">Find Wera Work</Link></li>
-                  <li><Link to="/hire" className="hover:text-white transition-colors">Hire Wera Workers</Link></li>
-                  <li><Link to="/categories" className="hover:text-white transition-colors">Categories</Link></li>
-                  <li><Link to="/pricing" className="hover:text-white transition-colors">Pricing</Link></li>
+                <h4 className="font-bold mb-6 text-wera-cyan uppercase tracking-widest text-[10px]">Marketplace</h4>
+                <ul className="space-y-4 text-wera-white/40 text-xs font-bold uppercase tracking-wider">
+                  <li><Link to="/jobs" className="hover:text-wera-cyan transition-colors">Find Wera Work</Link></li>
+                  <li><Link to="/hire" className="hover:text-wera-cyan transition-colors">Hire Wera Workers</Link></li>
+                  <li><Link to="/categories" className="hover:text-wera-cyan transition-colors">Categories</Link></li>
+                  <li><Link to="/pricing" className="hover:text-wera-cyan transition-colors">Economics</Link></li>
                 </ul>
               </div>
               <div>
