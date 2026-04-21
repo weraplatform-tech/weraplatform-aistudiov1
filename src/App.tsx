@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link, useNavigate, useParams } from 'react-router-dom';
+import { supabase } from './services/supabaseClient';
+import { UserRole, UserSession } from './types';
+import { validateCandidate, ValidationResult } from './services/validationService';
+import { BrowserRouter as Router, Routes, Route, Link, useNavigate, useParams, Navigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 import { 
   Briefcase, 
   User, 
@@ -61,7 +66,7 @@ import {
   ArrowDownLeft
 } from 'lucide-react';
 import { Button, Card, Input, cn } from './components/ui';
-import { supabase, type Profile, type Job } from './lib/supabase';
+import { type Profile, type Job } from './lib/supabase';
 import { aiService } from './lib/ai';
 
 import { Logo } from './components/Logo';
@@ -1593,6 +1598,52 @@ const JobsPage = () => {
   const [minRating, setMinRating] = useState(0);
   const [minExperience, setMinExperience] = useState(0);
   const [userLocation, setUserLocation] = useState<{lat: number, lng: number} | null>(null);
+  const [sortBy, setSortBy] = useState('Date Posted');
+  const [companySizeFilter, setCompanySizeFilter] = useState('');
+  const [applications, setApplications] = useState<{[key: string]: 'Pending' | 'Accepted' | 'Rejected'}>({});
+  const [applyingJobId, setApplyingJobId] = useState<string | null>(null);
+  const [applicationSummary, setApplicationSummary] = useState('');
+  const [validationResults, setValidationResults] = useState<{[key: string]: ValidationResult}>({});
+  const [validatingJobIds, setValidatingJobIds] = useState<Set<string>>(new Set());
+
+  const handleValidate = async (jobId: string) => {
+    setValidatingJobIds(prev => new Set(prev).add(jobId));
+    try {
+      const result = await validateCandidate(jobId);
+      setValidationResults(prev => ({ ...prev, [jobId]: result }));
+    } catch (e) {
+      console.error("Validation failed", e);
+    } finally {
+      setValidatingJobIds(prev => {
+        const next = new Set(prev);
+        next.delete(jobId);
+        return next;
+      });
+    }
+  };
+
+  // Enhanced handleApply for Quick Apply vs standard
+  const handleApply = (jobId: string, quick: boolean = false) => {
+    if (quick) {
+      setApplications(prev => ({ ...prev, [jobId]: 'Pending' }));
+    } else {
+      setApplyingJobId(jobId);
+    }
+  };
+
+  const confirmApplication = () => {
+    if (applyingJobId) {
+      setApplications(prev => ({ ...prev, [applyingJobId]: 'Pending' }));
+      setApplyingJobId(null);
+      setApplicationSummary('');
+    }
+  };
+
+  const getAiCandidateSuggestion = (jobId: string) => {
+    // Mock AI suggestion logic
+    const mockCandidates = ['Jane Doe (Rating: 4.8)', 'John Smith (Rating: 4.7)', 'Alice Johnson (Rating: 4.9)'];
+    return mockCandidates[Math.floor(Math.random() * mockCandidates.length)];
+  };
 
   useEffect(() => {
     // Get user location for proximity matching
@@ -1604,17 +1655,28 @@ const JobsPage = () => {
     }
 
     const fetchJobs = async () => {
-      // Mocking enhanced data for demo
-      const mockJobs: (Job & { rating: number, experience: number, distance: number })[] = [
-        { id: '1', title: 'Professional Plumber Needed', description: 'Fix leaking tap in Westlands. Must have own tools.', category: 'Construction', budget: 2500, status: 'open', location: 'Nairobi, Westlands', client_id: 'c1', created_at: new Date().toISOString(), rating: 4.8, experience: 5, distance: 2.5, requires_ai_certification: false, scheduled_at: null, is_for_others: false, recipient_name: null, recipient_phone: null, arrival_status: 'none' },
-        { id: '2', title: 'Experienced Nanny for Toddler', description: 'Full time nanny needed for 2 year old. CPR certified preferred.', category: 'Domestic', budget: 15000, status: 'open', location: 'Mombasa, Nyali', client_id: 'c2', created_at: new Date().toISOString(), rating: 4.5, experience: 3, distance: 12.0, requires_ai_certification: false, scheduled_at: null, is_for_others: false, recipient_name: null, recipient_phone: null, arrival_status: 'none' },
-        { id: '3', title: 'Graphic Designer for Logo', description: 'Create a modern logo for a new startup. Quick turnaround.', category: 'Creative', budget: 5000, status: 'open', location: 'Remote', client_id: 'c3', created_at: new Date().toISOString(), rating: 4.9, experience: 7, distance: 0, requires_ai_certification: false, scheduled_at: null, is_for_others: false, recipient_name: null, recipient_phone: null, arrival_status: 'none' },
-        { id: '4', title: 'Electrical Wiring Expert', description: 'House rewiring project in Kilimani.', category: 'Skilled Trades', budget: 35000, status: 'open', location: 'Nairobi, Kilimani', client_id: 'c4', created_at: new Date().toISOString(), rating: 4.2, experience: 10, distance: 4.8, requires_ai_certification: true, scheduled_at: null, is_for_others: false, recipient_name: null, recipient_phone: null, arrival_status: 'none' },
-        { id: '5', title: 'House Cleaning Service', description: 'Weekly cleaning for a 3-bedroom apartment.', category: 'Domestic', budget: 1200, status: 'open', location: 'Nairobi, South B', client_id: 'c5', created_at: new Date().toISOString(), rating: 3.8, experience: 2, distance: 8.2, requires_ai_certification: false, scheduled_at: null, is_for_others: false, recipient_name: null, recipient_phone: null, arrival_status: 'none' },
-        { id: '6', title: 'Corporate Event Coordinator', description: 'Manage a large corporate launch event. High professionalism required.', category: 'Creative', budget: 50000, status: 'open', location: 'Nairobi, CBD', client_id: 'c6', created_at: new Date().toISOString(), rating: 5.0, experience: 8, distance: 1.2, requires_ai_certification: true, scheduled_at: null, is_for_others: false, recipient_name: null, recipient_phone: null, arrival_status: 'none' },
-      ];
-      setJobs(mockJobs as any);
-      setFilteredJobs(mockJobs as any);
+      setLoading(true);
+      if (supabase) {
+        const { data, error } = await supabase.from('jobs').select('*');
+        if (data) {
+          setJobs(data as any);
+          setFilteredJobs(data as any);
+        } else {
+          console.error('Error fetching jobs:', error);
+        }
+      } else {
+        // Mocking enhanced data for demo if Supabase not configured
+        const mockJobs: (Job & { rating: number, experience: number, distance: number })[] = [
+          { id: '1', title: 'Professional Plumber Needed', description: 'Fix leaking tap in Westlands. Must have own tools.', category: 'Construction', budget: 2500, status: 'open', location: 'Nairobi, Westlands', client_id: 'c1', created_at: new Date().toISOString(), rating: 4.8, experience: 5, distance: 2.5, requires_ai_certification: false, scheduled_at: null, is_for_others: false, recipient_name: null, recipient_phone: null, arrival_status: 'none' },
+          { id: '2', title: 'Experienced Nanny for Toddler', description: 'Full time nanny needed for 2 year old. CPR certified preferred.', category: 'Domestic', budget: 15000, status: 'open', location: 'Mombasa, Nyali', client_id: 'c2', created_at: new Date().toISOString(), rating: 4.5, experience: 3, distance: 12.0, requires_ai_certification: false, scheduled_at: null, is_for_others: false, recipient_name: null, recipient_phone: null, arrival_status: 'none' },
+          { id: '3', title: 'Graphic Designer for Logo', description: 'Create a modern logo for a new startup. Quick turnaround.', category: 'Creative', budget: 5000, status: 'open', location: 'Remote', client_id: 'c3', created_at: new Date().toISOString(), rating: 4.9, experience: 7, distance: 0, requires_ai_certification: false, scheduled_at: null, is_for_others: false, recipient_name: null, recipient_phone: null, arrival_status: 'none' },
+          { id: '4', title: 'Electrical Wiring Expert', description: 'House rewiring project in Kilimani.', category: 'Skilled Trades', budget: 35000, status: 'open', location: 'Nairobi, Kilimani', client_id: 'c4', created_at: new Date().toISOString(), rating: 4.2, experience: 10, distance: 4.8, requires_ai_certification: true, scheduled_at: null, is_for_others: false, recipient_name: null, recipient_phone: null, arrival_status: 'none' },
+          { id: '5', title: 'House Cleaning Service', description: 'Weekly cleaning for a 3-bedroom apartment.', category: 'Domestic', budget: 1200, status: 'open', location: 'Nairobi, South B', client_id: 'c5', created_at: new Date().toISOString(), rating: 3.8, experience: 2, distance: 8.2, requires_ai_certification: false, scheduled_at: null, is_for_others: false, recipient_name: null, recipient_phone: null, arrival_status: 'none' },
+          { id: '6', title: 'Corporate Event Coordinator', description: 'Manage a large corporate launch event. High professionalism required.', category: 'Creative', budget: 50000, status: 'open', location: 'Nairobi, CBD', client_id: 'c6', created_at: new Date().toISOString(), rating: 5.0, experience: 8, distance: 1.2, requires_ai_certification: true, scheduled_at: null, is_for_others: false, recipient_name: null, recipient_phone: null, arrival_status: 'none' },
+        ];
+        setJobs(mockJobs as any);
+        setFilteredJobs(mockJobs as any);
+      }
       setLoading(false);
     };
     fetchJobs();
@@ -1645,12 +1707,21 @@ const JobsPage = () => {
       result = result.filter(j => j.rating >= minRating);
     }
 
-    if (minExperience > 0) {
-      result = result.filter(j => j.experience >= minExperience);
+    if (companySizeFilter) {
+      result = result.filter(j => (j as any).companySize === companySizeFilter);
+    }
+    
+    // Sort logic
+    if (sortBy === 'Date Posted') {
+      result.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+    } else if (sortBy === 'Budget (High to Low)') {
+      result.sort((a, b) => b.budget - a.budget);
+    } else if (sortBy === 'Proximity') {
+      result.sort((a, b) => a.distance - b.distance);
     }
 
     setFilteredJobs(result);
-  }, [search, locationFilter, categoryFilter, distance, minRating, minExperience, jobs]);
+  }, [search, locationFilter, categoryFilter, distance, minRating, minExperience, sortBy, companySizeFilter, jobs]);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -1660,9 +1731,19 @@ const JobsPage = () => {
           <p className="text-gray-600">Find vetted opportunities in your immediate proximity.</p>
         </div>
         <div className="flex flex-col md:flex-row gap-4 w-full md:w-auto">
-          <Input placeholder="Search keywords..." value={search} onChange={(e) => setSearch(e.target.value)} className="w-full md:w-64" />
-          <Input placeholder="Location..." value={locationFilter} onChange={(e) => setLocationFilter(e.target.value)} className="w-full md:w-48" />
-          <select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)} className="p-2 border border-slate-300 rounded-lg bg-white w-full md:w-48 text-sm">
+          <Input placeholder="Search keywords..." value={search} onChange={(e) => setSearch(e.target.value)} className="w-full md:w-48" />
+          <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="p-2 border border-slate-300 rounded-lg bg-white w-full md:w-32 text-sm">
+            <option>Date Posted</option>
+            <option>Budget (High to Low)</option>
+            <option>Proximity</option>
+          </select>
+          <select value={companySizeFilter} onChange={(e) => setCompanySizeFilter(e.target.value)} className="p-2 border border-slate-300 rounded-lg bg-white w-full md:w-40 text-sm">
+            <option value="">All Sizes</option>
+            <option value="Startup">Startup</option>
+            <option value="SME">SME</option>
+            <option value="Corporate">Corporate</option>
+          </select>
+          <select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)} className="p-2 border border-slate-300 rounded-lg bg-white w-full md:w-40 text-sm">
             <option value="">All Categories</option>
             <option value="Construction">Construction</option>
             <option value="Domestic">Domestic</option>
@@ -1802,19 +1883,43 @@ const JobsPage = () => {
                     <span className="flex items-center font-medium"><MapPin className="w-3.5 h-3.5 mr-1.5 text-wera-cyan" /> {job.location} ({job.distance}km)</span>
                     <span className="flex items-center font-medium"><Briefcase className="w-3.5 h-3.5 mr-1.5 text-wera-cyan" /> {job.experience}y Exp.</span>
                   </div>
-                  {job.requires_ai_certification ? (
-                    <Link to="/academy">
-                      <Button variant="outline" size="sm" className="border-wera-cyan text-wera-cyan hover:bg-wera-cyan hover:text-white transition-all">
-                        Get AI Certified <ChevronRight className="w-4 h-4 ml-1" />
+                  <div className="flex flex-col gap-2">
+                    <div className="flex items-center gap-2">
+                      <Link to="/profile/1">
+                        <Button variant="outline" size="sm" className="group-hover:bg-blue-700 group-hover:text-white transition-all">
+                          View Details <ChevronRight className="w-4 h-4 ml-1" />
+                        </Button>
+                      </Link>
+                      {applications[job.id] ? (
+                        <span className="px-3 py-1 bg-blue-100 text-blue-700 font-bold text-xs rounded-full">{applications[job.id]}</span>
+                      ) : (
+                        <div className="flex gap-2">
+                          {!job.requires_ai_certification && (
+                            <Button onClick={() => handleApply(job.id)} variant="primary" size="sm">Apply</Button>
+                          )}
+                          <Button onClick={() => handleApply(job.id, true)} variant="outline" size="sm" className="border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white">Quick Apply</Button>
+                        </div>
+                      )}
+                    </div>
+                    {/* AI Suggestion */}
+                    <div className="mt-2 p-2 bg-blue-50 rounded-lg text-xs text-blue-800">
+                      <strong>AI Suggestion:</strong> Recommended candidate: {getAiCandidateSuggestion(job.id)}
+                      <Button 
+                        variant="link" 
+                        size="sm" 
+                        className={`ml-2 h-auto p-0 underline ${validatingJobIds.has(job.id) ? 'text-gray-400' : 'text-blue-600'}`}
+                        onClick={() => handleValidate(job.id)}
+                        disabled={validatingJobIds.has(job.id)}
+                      >
+                        {validatingJobIds.has(job.id) ? 'Validating...' : 'Validate Candidate'}
                       </Button>
-                    </Link>
-                  ) : (
-                    <Link to="/profile/1">
-                      <Button variant="outline" size="sm" className="group-hover:bg-blue-700 group-hover:text-white transition-all">
-                        View Details <ChevronRight className="w-4 h-4 ml-1" />
-                      </Button>
-                    </Link>
-                  )}
+                      {validationResults[job.id] && (
+                        <div className={`mt-1 text-[10px] ${validationResults[job.id].isValid ? 'text-green-600' : 'text-red-600'}`}>
+                          {validationResults[job.id].isValid ? '✓ Validated' : '✗ Validation Failed'} (Score: {validationResults[job.id].score})
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </div>
               </Card>
             ))
@@ -1827,6 +1932,26 @@ const JobsPage = () => {
           )}
         </div>
       </div>
+
+      {applyingJobId && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <Card className="p-6 max-w-lg w-full bg-white">
+            <h3 className="font-bold text-lg mb-4">Apply for Job</h3>
+            <p className="text-sm text-slate-600 mb-4">Submit your application with your profile summary or custom cover letter.</p>
+            <textarea 
+              className="w-full p-3 border border-slate-300 rounded-lg mb-4 text-sm"
+              placeholder="Enter your profile summary or message to the employer..."
+              rows={5}
+              value={applicationSummary}
+              onChange={(e) => setApplicationSummary(e.target.value)}
+            />
+            <div className="flex justify-end gap-2">
+              <Button variant="ghost" onClick={() => setApplyingJobId(null)}>Cancel</Button>
+              <Button variant="primary" onClick={confirmApplication}>Confirm Application</Button>
+            </div>
+          </Card>
+        </div>
+      )}
     </div>
   );
 };
@@ -1949,15 +2074,44 @@ const WalletPage = () => {
   const [phone, setPhone] = useState('');
   const [loading, setLoading] = useState(false);
   const [selectedMethod, setSelectedMethod] = useState('M-Pesa');
-  const [targetCurrency, setTargetCurrency] = useState('USD');
+  const [targetCurrency, setTargetCurrency] = useState('KES');
   const [transactions] = useState([
-    { id: 1, type: 'deposit', amount: 5000, date: '2026-04-01', status: 'completed', method: 'M-Pesa' },
-    { id: 2, type: 'withdrawal', amount: 2000, date: '2026-04-03', status: 'completed', method: 'Bank Transfer' },
-    { id: 3, type: 'payment', amount: 1500, date: '2026-04-04', status: 'completed', method: 'Job #829' },
+    { id: 1, type: 'deposit', amount: 5000, date: '2026-04-21T07:00:00Z', status: 'completed', method: 'M-Pesa' },
+    { id: 2, type: 'withdrawal', amount: 2000, date: '2026-04-21T06:30:00Z', status: 'completed', method: 'Bank Transfer' },
+    { id: 3, type: 'payment', amount: 1500, date: '2026-04-04T07:00:00Z', status: 'completed', method: 'Job #829' },
   ]);
 
-  const exchangeRates: { [key: string]: number } = { USD: 0.0076, EUR: 0.0070, GBP: 0.0060 };
-  const convertedBalance = balance * (exchangeRates[targetCurrency] || 1);
+  const exchangeRates: { [key: string]: number } = { KES: 1, USD: 0.0076, EUR: 0.0070, GBP: 0.0060 };
+  const rate = exchangeRates[targetCurrency] || 1;
+  const convertedBalance = balance * rate;
+
+  const handleDownloadPdf = (period: string) => {
+    const doc = new jsPDF();
+    const now = new Date();
+    
+    const filteredTransactions = transactions.filter(tx => {
+      const txDate = new Date(tx.date);
+      if (period === 'all') return true;
+      if (period === 'hour') return (now.getTime() - txDate.getTime()) < 3600000;
+      return true;
+    });
+
+    doc.text(`WÈRA Wallet Statement (${targetCurrency}) - Period: ${period}`, 10, 10);
+    
+    const tableData = filteredTransactions.map(tx => [
+      new Date(tx.date).toLocaleString(),
+      tx.type,
+      (tx.amount * rate).toFixed(2),
+      tx.status
+    ]);
+
+    (doc as any).autoTable({
+      head: [['Date', 'Type', `Amount (${targetCurrency})`, 'Status']],
+      body: tableData,
+    });
+    
+    doc.save(`statement_${period}.pdf`);
+  };
 
   const handleDeposit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -1985,31 +2139,24 @@ const WalletPage = () => {
             <div className="relative z-10 flex justify-between items-start">
               <div>
                 <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Available Balance</p>
-                <h2 className="text-3xl sm:text-4xl font-black mb-1 text-slate-100">KES {balance.toLocaleString()}</h2>
-                <p className="text-sm text-slate-300">= {convertedBalance.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} {targetCurrency}</p>
+                <h2 className="text-3xl sm:text-4xl font-black mb-1 text-slate-100">{targetCurrency} {convertedBalance.toLocaleString(undefined, {minimumFractionDigits: 2})}</h2>
               </div>
               <select 
                 className="bg-slate-700 text-white text-xs p-1 rounded border-none"
                 value={targetCurrency}
                 onChange={(e) => setTargetCurrency(e.target.value)}
               >
+                <option value="KES">KES</option>
                 <option value="USD">USD</option>
                 <option value="EUR">EUR</option>
                 <option value="GBP">GBP</option>
               </select>
             </div>
             <div className="mt-8 flex space-x-4">
-              <Button variant="outline" className="bg-slate-700 text-white border-slate-600 hover:bg-slate-600 flex-1">
-                <ArrowUpRight className="w-4 h-4 mr-2" /> Withdraw
-              </Button>
-              <Button variant="outline" className="border-slate-600 text-slate-300 hover:bg-slate-700 flex-1">
-                <History className="w-4 h-4 mr-2" /> History
-              </Button>
+              <Button onClick={() => handleDownloadPdf('all')} variant="outline" className="bg-slate-700 text-white border-slate-600 hover:bg-slate-600 flex-1 text-xs">PDF (All Time)</Button>
+              <Button onClick={() => handleDownloadPdf('hour')} variant="outline" className="bg-slate-700 text-white border-slate-600 hover:bg-slate-600 flex-1 text-xs">PDF (Last Hour)</Button>
             </div>
             <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-slate-600 rounded-full blur-[80px]" />
-            <div className="absolute top-0 right-0 p-4 opacity-20">
-              <div className="w-24 h-24 border-4 border-slate-400 rounded-full" />
-            </div>
           </Card>
 
           {/* Transaction History */}
@@ -2029,7 +2176,7 @@ const WalletPage = () => {
                     </div>
                     <div>
                       <p className="font-bold text-sm text-slate-800 capitalize">{tx.type} via {tx.method}</p>
-                      <p className="text-[10px] text-slate-400 font-medium">{tx.date}</p>
+                      <p className="text-[10px] text-slate-400 font-medium">{new Date(tx.date).toLocaleString()}</p>
                     </div>
                   </div>
                   <div className="text-right">
@@ -2037,7 +2184,7 @@ const WalletPage = () => {
                       "font-black text-sm",
                       tx.type === 'deposit' ? "text-blue-700" : "text-slate-800"
                     )}>
-                      {tx.type === 'deposit' ? '+' : '-'} KES {tx.amount.toLocaleString()}
+                      {tx.type === 'deposit' ? '+' : '-'} {targetCurrency} {(tx.amount * rate).toLocaleString()}
                     </p>
                     <span className="text-[8px] font-black uppercase tracking-tighter bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded">
                       {tx.status}
@@ -2066,6 +2213,8 @@ const WalletPage = () => {
                   <option value="M-Pesa">M-Pesa</option>
                   <option value="Airtel Money">Airtel Money</option>
                   <option value="Telkom T-Kash">Telkom T-Kash</option>
+                  <option value="Visa">Visa</option>
+                  <option value="Mastercard">Mastercard</option>
                   <option value="Bank Transfer">Bank Transfer</option>
                   <option value="PayPal">PayPal</option>
                 </select>
@@ -3323,24 +3472,45 @@ const TrainingPage = () => {
 // --- Main App ---
 
 export default function App() {
-  const [user, setUser] = useState<any>(null);
+  const [userSession, setUserSession] = useState<UserSession | null>(null);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
+      if (session) {
+        setUserSession({
+          id: session.user.id,
+          email: session.user.email!,
+          role: session.user.user_metadata?.role as UserRole || UserRole.WORKER,
+        });
+      }
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
+      if (session) {
+        setUserSession({
+          id: session.user.id,
+          email: session.user.email!,
+          role: session.user.user_metadata?.role as UserRole || UserRole.WORKER,
+        });
+      } else {
+        setUserSession(null);
+      }
     });
 
     return () => subscription.unsubscribe();
   }, []);
 
+  // Protected Route Wrapper
+  const ProtectedRoute = ({ children, allowedRoles }: { children: React.ReactNode, allowedRoles: UserRole[] }) => {
+    if (!userSession) return <Navigate to="/login" />;
+    if (!allowedRoles.includes(userSession.role)) return <Navigate to="/" />;
+    return <>{children}</>;
+  };
+
   return (
     <Router>
       <div className="min-h-screen flex flex-col">
-        <Navbar user={user} />
+        <Navbar user={userSession} />
         <main className="flex-grow">
           <Routes>
             <Route path="/" element={<LandingPage />} />
@@ -3352,10 +3522,18 @@ export default function App() {
             <Route path="/verify" element={<CertificateVerificationPage />} />
             <Route path="/companies" element={<CompanyOnboardingPage />} />
             <Route path="/login" element={<LoginPage />} />
-            <Route path="/profile" element={<WorkerProfilePage />} />
-            <Route path="/profile/:workerId" element={<WorkerProfilePage />} />
-            <Route path="/wallet" element={<WalletPage />} />
-            {/* Add more routes as needed */}
+            
+            {/* Protected Routes */}
+            <Route path="/profile" element={
+              <ProtectedRoute allowedRoles={[UserRole.WORKER, UserRole.EMPLOYER]}>
+                <WorkerProfilePage />
+              </ProtectedRoute>
+            } />
+            <Route path="/wallet" element={
+              <ProtectedRoute allowedRoles={[UserRole.WORKER]}>
+                <WalletPage />
+              </ProtectedRoute>
+            } />
           </Routes>
         </main>
         <footer className="bg-wera-black text-white py-12">
